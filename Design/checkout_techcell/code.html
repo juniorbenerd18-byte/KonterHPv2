@@ -1,0 +1,334 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Checkout - TECHCELL</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#004395",
+                      "primary-fixed-dim": "#bec6e0",
+                      "tertiary-fixed": "#d8e2ff",
+                      "surface-variant": "#e0e3e5",
+                      "on-secondary-fixed-variant": "#004e5c",
+                      "error-container": "#ffdad6",
+                      "background": "#f7f9fb",
+                      "surface-container-high": "#e6e8ea",
+                      "on-background": "#191c1e",
+                      "outline": "#76777d",
+                      "on-tertiary-container": "#3980f4",
+                      "surface-container-highest": "#e0e3e5",
+                      "surface-dim": "#d8dadc",
+                      "inverse-on-surface": "#eff1f3",
+                      "tertiary": "#000000",
+                      "tertiary-container": "#001a42",
+                      "primary-fixed": "#dae2fd",
+                      "on-secondary-container": "#006172",
+                      "surface-bright": "#f7f9fb",
+                      "surface-container-low": "#f2f4f6",
+                      "on-surface-variant": "#45464d",
+                      "primary-container": "#131b2e",
+                      "primary": "#000000",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed": "#001f26",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "error": "#ba1a1a",
+                      "on-error": "#ffffff",
+                      "surface-tint": "#565e74",
+                      "on-surface": "#191c1e",
+                      "on-primary-fixed": "#131b2e",
+                      "secondary-container": "#57dffe",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#c6c6cd",
+                      "on-primary": "#ffffff",
+                      "surface-container": "#eceef0",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed-dim": "#adc6ff",
+                      "surface": "#f7f9fb",
+                      "on-primary-container": "#7c839b",
+                      "inverse-primary": "#bec6e0",
+                      "inverse-surface": "#2d3133",
+                      "secondary-fixed-dim": "#4cd7f6",
+                      "secondary-fixed": "#acedff",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#00687a",
+                      "on-tertiary-fixed": "#001a42"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "80px",
+                      "unit": "4px",
+                      "margin-mobile": "20px",
+                      "gutter": "24px",
+                      "container-max-width": "1280px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-md": [
+                              "JetBrains Mono"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .circuit-bg {
+            background-color: #131b2e; /* primary-container */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 104, 122, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 104, 122, 0.15) 0%, transparent 40%);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 0 2px rgba(0, 104, 122, 0.3);
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col circuit-bg text-white">
+<!-- TopNavBar (Intentional suppression: Transactional Page. Render minimal header) -->
+<header class="w-full border-b border-white/10 backdrop-blur-md sticky top-0 z-50 bg-primary-container/80">
+<div class="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-6 flex items-center justify-center">
+<a class="font-headline-lg text-headline-lg font-extrabold tracking-tighter text-white flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">memory</span>
+                TECHCELL
+            </a>
+</div>
+</header>
+<main class="flex-grow w-full max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 md:py-16">
+<div class="mb-12">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-white mb-2">Secure Checkout</h1>
+<p class="font-body-lg text-body-lg text-primary-fixed-dim">Complete your high-tech upgrade.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Left Column: Forms -->
+<div class="lg:col-span-7 space-y-8">
+<!-- Shipping Section -->
+<section class="bg-surface-container/5 rounded-xl border border-white/10 p-6 md:p-8 backdrop-blur-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-secondary text-3xl">local_shipping</span>
+<h2 class="font-headline-md text-headline-md text-white">Shipping Details</h2>
+</div>
+<!-- Promo Banner -->
+<div class="mb-8 p-4 rounded-lg bg-secondary/10 border border-secondary/30 flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-0.5">info</span>
+<div>
+<p class="font-body-md text-body-md text-secondary-fixed">
+<strong>Gratis Ongkir</strong> untuk pengantaran ke rumah (Maksimal radius 4km). Berlaku untuk produk baru &amp; HP selesai diservis.
+                            </p>
+</div>
+</div>
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm uppercase text-white" for="fullName">Full Name</label>
+<input class="w-full border rounded-lg px-4 py-3 text-white placeholder-white/30 focus:border-secondary focus:ring-0 input-glow transition-all border-secondary/30 shadow-[0_0_15px_rgba(0,104,122,0.5)] bg-white/10" id="fullName" placeholder="John Doe" type="text">
+</div>
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm uppercase text-white" for="phone">Phone Number</label>
+<input class="w-full border rounded-lg px-4 py-3 text-white placeholder-white/30 focus:border-secondary focus:ring-0 input-glow transition-all border-secondary/30 shadow-[0_0_15px_rgba(0,104,122,0.5)] bg-white/10" id="phone" placeholder="+62 812-3456-7890" type="tel">
+</div>
+</div>
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm uppercase text-white" for="address">Shipping Address</label>
+<textarea class="w-full border rounded-lg px-4 py-3 text-white placeholder-white/30 focus:border-secondary focus:ring-0 input-glow transition-all resize-none border-secondary/30 shadow-[0_0_15px_rgba(0,104,122,0.5)] bg-white/10" id="address" placeholder="Enter your full address" rows="3"></textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm uppercase text-white" for="city">City</label>
+<input class="w-full border rounded-lg px-4 py-3 text-white placeholder-white/30 focus:border-secondary focus:ring-0 input-glow transition-all border-secondary/30 shadow-[0_0_15px_rgba(0,104,122,0.5)] bg-white/10" id="city" placeholder="Jakarta" type="text">
+</div>
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm uppercase text-white" for="zip">Postal Code</label>
+<input class="w-full border rounded-lg px-4 py-3 text-white placeholder-white/30 focus:border-secondary focus:ring-0 input-glow transition-all border-secondary/30 shadow-[0_0_15px_rgba(0,104,122,0.5)] bg-white/10" id="zip" placeholder="12345" type="text">
+</div>
+</div>
+</form>
+</section>
+<!-- Payment Section -->
+<section class="bg-surface-container/5 rounded-xl border border-white/10 p-6 md:p-8 backdrop-blur-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-secondary text-3xl">account_balance_wallet</span>
+<h2 class="font-headline-md text-headline-md text-white">Payment Method</h2>
+</div>
+<div class="p-4 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded flex items-center justify-center p-2">
+<!-- Placeholder for Bank Logo -->
+<span class="font-headline-md text-headline-md text-primary font-bold">BCA</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary-fixed-dim">Selected Method</p>
+<p class="font-headline-md text-headline-md text-white">Virtual Account: BCA</p>
+</div>
+</div>
+<button class="font-label-md text-label-md text-secondary hover:text-secondary-fixed transition-colors">Change</button>
+</div>
+</section>
+</div>
+<!-- Right Column: Order Summary -->
+<div class="lg:col-span-5 relative">
+<!-- Sticky Wrapper for desktop -->
+<div class="sticky top-28 bg-surface-container/5 rounded-xl border border-white/10 p-6 md:p-8 backdrop-blur-sm">
+<h2 class="font-headline-md text-headline-md text-white border-b border-white/10 pb-4 mb-6">Order Summary</h2>
+<!-- Items -->
+<div class="space-y-6 mb-8">
+<!-- Item 1 -->
+<div class="flex gap-4">
+<div class="w-20 h-20 bg-white rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden p-2 relative">
+<img class="object-contain w-full h-full mix-blend-multiply" data-alt="A high-end, sleek modern smartphone floating slightly in a pristine white studio setting. The device features a seamless glass front and a metallic edge, glowing softly under bright, high-key studio lighting. The aesthetic is clean, minimalist, and ultra-modern, suitable for a premium tech product shot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnTOPBdsVjgfQjm9sGfrfao70OX4ENYVn2oVkHmWXQYPV55N6xOpeOp-RciATgQOrCUB0tY5Gr1Qe_k3SRfdxDRjb7WLhQ4b-aAZYkfAKDWtBigdmAnQoKbWggX3QMbdEPcRpfRVno7XZGaVfimBb4Y87-kFsUVFPx_She4xLZqKQgM5tBn0lQM59J4IpQ6ChrzrAHgySpfAbJsreAcS-ZPldmC_CWFpQ3-Tckwhy6nm7whDaZesym">
+<span class="absolute -top-2 -right-2 bg-secondary text-on-secondary w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px]">1</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-body-md text-body-md text-white font-semibold">X-Pro Max Ultra</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed-dim">Space Grey, 512GB</p>
+<p class="font-body-md text-body-md text-secondary mt-1">Rp 24.500.000</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex gap-4">
+<div class="w-20 h-20 bg-white rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden p-2 relative">
+<img class="object-contain w-full h-full mix-blend-multiply" data-alt="A pair of premium, futuristic gaming headsets resting on a clean white surface. The headsets have a matte black finish with subtle cyan LED accents. The lighting is crisp and bright, emphasizing the high-quality materials and ergonomic design. The overall feel is modern, tech-forward, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5N9IPPkhMSTmDDq1G8CGe7WAXnl_Goibd0FcKBSl0XLxM4QJeaWAv_D8GRrw56o7z4xlVFjRgnNqxYhCLiUL_cw_hK6zsiP_pxkMOdpU0QDZYG4LBFZ0q5yT1L4T_ssl_zOyo_PlwNTQs9yWsXzglEZr9qQ3H4McBh9bVxyRNa3g2Rv3HxOkBpahEAne-xrFNnd0sd4YQVG2_Ak9YfZ3IQBLIB3_jsm48njaadU88JX_a6eU_gkpU">
+<span class="absolute -top-2 -right-2 bg-secondary text-on-secondary w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px]">1</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-body-md text-body-md text-white font-semibold">Nexus Pro Gaming Headset</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed-dim">Carbon Black</p>
+<p class="font-body-md text-body-md text-secondary mt-1">Rp 3.200.000</p>
+</div>
+</div>
+</div>
+<!-- Totals -->
+<div class="space-y-3 border-t border-white/10 pt-6 mb-8">
+<div class="flex justify-between font-body-md text-body-md text-primary-fixed-dim">
+<span class="">Subtotal</span>
+<span class="">Rp 27.700.000</span>
+</div>
+<div class="flex justify-between font-body-md text-body-md text-primary-fixed-dim items-center">
+<span class="flex items-center gap-1">Shipping <span class="material-symbols-outlined text-[16px] text-secondary cursor-help" title="Eligible for local delivery">info</span></span>
+<span class="text-secondary font-semibold">Gratis</span>
+</div>
+<div class="flex justify-between font-body-md text-body-md text-primary-fixed-dim">
+<span class="">Tax (11%)</span>
+<span class="">Rp 3.047.000</span>
+</div>
+</div>
+<div class="flex justify-between items-end border-t border-white/10 pt-6 mb-8">
+<span class="font-headline-md text-headline-md text-white">Total</span>
+<span class="font-headline-lg text-headline-lg text-secondary font-extrabold tracking-tight">Rp 30.747.000</span>
+</div>
+<!-- CTA -->
+<button class="w-full bg-secondary text-primary font-headline-md text-headline-md py-4 rounded-lg hover:bg-secondary-fixed transition-colors duration-300 shadow-[0_0_15px_rgba(0,104,122,0.5)] flex items-center justify-center gap-2 group">
+                        Bayar Sekarang
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<div class="mt-4 flex items-center justify-center gap-2 text-primary-fixed-dim opacity-70">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span class="font-label-sm text-label-sm">Secure 256-bit SSL Encryption</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Minimal for transactional flow) -->
+<footer class="w-full border-t border-white/10 mt-auto bg-primary-container">
+<div class="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 text-center">
+<p class="font-label-sm text-label-sm text-primary-fixed-dim">© 2024 TECHCELL. GATEWAY TO THE FUTURE.</p>
+</div>
+</footer>
+
+
+</body></html>

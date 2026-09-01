@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TECHCELL - Smartphone Catalog</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eceef0",
+                        "primary-container": "#131b2e",
+                        "primary": "#000000",
+                        "on-secondary": "#ffffff",
+                        "outline": "#76777d",
+                        "on-secondary-container": "#006172",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-fixed": "#131b2e",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary-fixed": "#001f26",
+                        "on-tertiary-fixed": "#001a42",
+                        "secondary": "#00687a",
+                        "outline-variant": "#c6c6cd",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "background": "#f7f9fb",
+                        "surface": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "surface-tint": "#565e74",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "on-tertiary-container": "#3980f4",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "on-surface-variant": "#45464d",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#57dffe",
+                        "on-background": "#191c1e",
+                        "tertiary-container": "#001a42",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "tertiary": "#000000",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-fixed": "#acedff",
+                        "inverse-primary": "#bec6e0",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-surface": "#191c1e",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#bec6e0",
+                        "tertiary-fixed": "#d8e2ff",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max-width": "1280px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "80px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased pt-24">
+<!-- TopNavBar -->
+<header class="bg-surface/60 dark:bg-surface-container/60 backdrop-blur-xl text-primary dark:text-primary-fixed font-body-md text-body-md fixed top-0 w-full z-50 border-b border-outline-variant/30 shadow-sm">
+<div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop py-4 max-w-container-max-width mx-auto">
+<a class="font-headline-md text-headline-md font-bold tracking-tighter text-primary dark:text-primary-fixed" href="#">
+                TECHCELL
+            </a>
+<nav class="hidden md:flex space-x-8 items-center">
+<a class="text-secondary dark:text-secondary-fixed-dim font-bold border-b-2 border-secondary pb-1 active:scale-95 transition-transform hover:bg-secondary/5 transition-colors duration-200" href="#">
+                    Smartphone
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary pb-1 active:scale-95 transition-transform hover:bg-secondary/5 transition-colors duration-200" href="#">
+                    Aksesoris
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary pb-1 active:scale-95 transition-transform hover:bg-secondary/5 transition-colors duration-200" href="#">
+                    Pulsa &amp; Data
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary pb-1 active:scale-95 transition-transform hover:bg-secondary/5 transition-colors duration-200" href="#">
+                    Promo
+                </a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary pb-1 active:scale-95 transition-transform hover:bg-secondary/5 transition-colors duration-200" href="#">
+                    Servis
+                </a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 border border-outline-variant/50 focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary/20 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md p-0 w-48 font-body-md" placeholder="Cari smartphone..." type="text"/>
+</div>
+<button aria-label="Shopping Cart" class="text-primary hover:text-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+<button aria-label="Account" class="text-primary hover:text-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+<button aria-label="Menu" class="md:hidden text-primary hover:text-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-12">
+<!-- Hero Banner -->
+<section class="mb-16 rounded-xl overflow-hidden relative bg-primary-container text-on-primary-fixed shadow-lg border border-outline-variant/10">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay" data-alt="A highly detailed render of the latest flagship smartphone, sleek titanium body, floating elegantly against a deep navy blue background with subtle cyan geometric circuitry patterns. Professional studio lighting highlighting the curved screen edges and camera module. The mood is premium, tech-forward, and modern, fitting a high-end electronics retail site." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA6AkC_uBwyhSmpYPCixXWEJTKfAgI5_cSbIpNut4jnEuc5kY3bCYywMCsSq45Vsw1kyWqE7-OnDmhLV0_UOspJEJKMHWUycavIVvVVPHsw57B1pNNPduD7UkDqNDAHDPdnAEotrotBfSK6THqipWoKkR6e3m-RJomn5Mwd9M6y7WCSQeBRrAN6nmEbM-DugGni0NHUx_nR8zdQqOQ3qMMhjzFlT_2So8Mkj53PZr1Pc-MoSXpL3tzq')"></div>
+<div class="relative z-10 px-8 py-20 md:py-32 md:px-16 flex flex-col items-start w-full md:w-2/3 lg:w-1/2">
+<span class="bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-wider mb-4 border border-secondary">
+                    New Arrival
+                </span>
+<h1 class="font-display-lg text-display-lg text-on-primary-fixed mb-4">
+                    Galaxy S24 Ultra
+                </h1>
+<p class="font-body-lg text-body-lg text-on-primary-container mb-8">
+                    Rasakan era baru AI mobile. Dilengkapi dengan Snapdragon 8 Gen 3 dan kamera 200MP untuk detail yang luar biasa.
+                </p>
+<div class="flex gap-4">
+<button class="bg-secondary text-primary font-label-md text-label-md px-6 py-3 rounded hover:bg-secondary-fixed transition-colors shadow-md">
+                        Beli Sekarang
+                    </button>
+<button class="bg-transparent border-2 border-tertiary-fixed text-tertiary-fixed font-label-md text-label-md px-6 py-3 rounded hover:bg-tertiary-fixed/10 transition-colors">
+                        Lihat Spesifikasi
+                    </button>
+</div>
+</div>
+</section>
+<!-- Catalog Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Sidebar / Filters -->
+<aside class="md:col-span-3 lg:col-span-3 hidden md:block">
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-6 sticky top-28 shadow-sm">
+<h2 class="font-headline-md text-headline-md text-primary mb-6 border-b border-outline-variant/20 pb-4">
+                        Filter Produk
+                    </h2>
+<!-- Kategori -->
+<div class="mb-6 border-b border-outline-variant/20 pb-4">
+<h3 class="font-label-md text-label-md font-bold text-on-surface-variant mb-3 uppercase tracking-wider">Merek</h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary/50 bg-surface-container-highest cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Samsung</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary/50 bg-surface-container-highest cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Apple</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary/50 bg-surface-container-highest cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Xiaomi</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary/50 bg-surface-container-highest cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Oppo</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary/50 bg-surface-container-highest cursor-pointer" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Vivo</span>
+</label>
+</div>
+</div>
+<!-- Harga -->
+<div class="mb-6">
+<h3 class="font-label-md text-label-md font-bold text-on-surface-variant mb-3 uppercase tracking-wider">Rentang Harga</h3>
+<div class="flex items-center gap-2 mb-4">
+<input class="w-full bg-surface-container-highest border border-outline-variant/30 rounded px-3 py-2 font-body-md text-body-md focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Min" type="number"/>
+<span class="text-on-surface-variant">-</span>
+<input class="w-full bg-surface-container-highest border border-outline-variant/30 rounded px-3 py-2 font-body-md text-body-md focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Max" type="number"/>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-secondary/10 border border-outline-variant/30 hover:border-secondary/50 text-secondary font-label-md text-label-md py-2 rounded transition-all">
+                            Terapkan Harga
+                        </button>
+</div>
+</div>
+</aside>
+<!-- Product Grid -->
+<section class="col-span-1 md:col-span-9 lg:col-span-9">
+<div class="flex justify-between items-center mb-6">
+<p class="font-body-md text-body-md text-on-surface-variant">Menampilkan 1-12 dari 45 produk</p>
+<div class="flex items-center gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Urutkan:</label>
+<select class="bg-surface-container-highest border border-outline-variant/30 rounded px-3 py-1.5 font-body-md text-body-md focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all">
+<option>Paling Relevan</option>
+<option>Harga Terendah</option>
+<option>Harga Tertinggi</option>
+<option>Terbaru</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Product Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden hover:border-secondary hover:shadow-[0_0_15px_rgba(0,104,122,0.15)] transition-all duration-300 group flex flex-col">
+<div class="relative pt-4 px-4 bg-white flex justify-center items-center h-48">
+<span class="absolute top-4 left-4 bg-error text-on-error px-2 py-1 rounded text-xs font-bold tracking-wider z-10">
+                                Diskon 15%
+                            </span>
+<img class="h-full object-contain group-hover:scale-105 transition-transform duration-300" data-alt="A front-facing render of a modern Samsung Galaxy smartphone in phantom black, isolated on a clean white background. Soft, diffused lighting highlighting the glass display and thin bezels." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSWJ0I05b0VbXVBji1D0qknIwBLFsegTg3p7GNJt16H2wrb8rDbf4Zk0QsIY4J3P0hZT3K8mqyZ5xmCrb8wvG8m17YC8QqRkkYcWHE3u6icdSP2MUTCOrxx3D3JjjAMYiEtq58oafZZSRb7v4fXhY7vKlrpn5pqcLs8KfALreGUVlnqbAeJCcPGGUsxarRbY9MmrfRpm6tpv_YQgpBTLvEjf7QvgPWyj6yv_HTtMp0rOwjfwMGeeS8"/>
+</div>
+<div class="p-5 flex-grow flex flex-col">
+<h3 class="font-body-lg text-body-lg text-primary font-semibold mb-1 line-clamp-2">Samsung Galaxy S23 Ultra 5G 12/256GB</h3>
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined icon-filled text-[#f59e0b] text-sm" data-icon="star">star</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">4.9 (124 ulasan)</span>
+</div>
+<div class="mt-auto">
+<p class="text-on-surface-variant line-through text-sm mb-1">Rp 19.999.000</p>
+<p class="font-headline-md text-headline-md text-secondary mb-4">Rp 16.999.000</p>
+<button class="w-full bg-secondary text-primary font-label-md text-label-md py-2.5 rounded hover:bg-secondary-fixed transition-colors">
+                                    Beli Sekarang
+                                </button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden hover:border-secondary hover:shadow-[0_0_15px_rgba(0,104,122,0.15)] transition-all duration-300 group flex flex-col">
+<div class="relative pt-4 px-4 bg-white flex justify-center items-center h-48">
+<span class="absolute top-4 left-4 bg-secondary text-primary px-2 py-1 rounded text-xs font-bold tracking-wider z-10">
+                                Free Ongkir
+                            </span>
+<img class="h-full object-contain group-hover:scale-105 transition-transform duration-300" data-alt="A premium Apple iPhone 15 Pro in natural titanium color, shown slightly angled. Isolated on a pure white background. High detail on the textured edges and camera array. Bright studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqvrHz1QMdPEqCWWMRFDImsC_pL5JgnJvgTcsjMaNBdA-dEonWcKZW0XGJCRD17jqNbrpkp51LzcRLjlO_TsXZHYzBW9BZm54u0WYWgQybz5L_TqsSjdtcbI6piBNTJ-gvuPYObhDT_iCsCaOVlQsxBBOvGyelBxd5WGodQdW3KI_PVUJVIEpUooL0NYcwUr7-LGHMxBVytK5B0S1pIlvxgzugD3LlkhppDum_3MK8WjFTllL7ebYk"/>
+</div>
+<div class="p-5 flex-grow flex flex-col">
+<h3 class="font-body-lg text-body-lg text-primary font-semibold mb-1 line-clamp-2">Apple iPhone 15 Pro 256GB - Natural Titanium</h3>
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined icon-filled text-[#f59e0b] text-sm" data-icon="star">star</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">5.0 (89 ulasan)</span>
+</div>
+<div class="mt-auto">
+<p class="text-transparent line-through text-sm mb-1 select-none">Rp 0</p> <!-- Spacer -->
+<p class="font-headline-md text-headline-md text-secondary mb-4">Rp 20.999.000</p>
+<button class="w-full bg-secondary text-primary font-label-md text-label-md py-2.5 rounded hover:bg-secondary-fixed transition-colors">
+                                    Beli Sekarang
+                                </button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden hover:border-secondary hover:shadow-[0_0_15px_rgba(0,104,122,0.15)] transition-all duration-300 group flex flex-col">
+<div class="relative pt-4 px-4 bg-white flex justify-center items-center h-48">
+<img class="h-full object-contain group-hover:scale-105 transition-transform duration-300" data-alt="A sleek Xiaomi 14 smartphone in jade green, displaying a vivid screen. Isolated against a stark white background with crisp, even lighting emphasizing the glossy finish." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7QyenQbZEGY8K2LyAaanIz95SrofZYOWYuuIercHgwBmHWOBZP4TACnSMXdH_mGjmeFXH5fcV2JpRUbvNvqQe4S7K99YI2pAsfseLCtO_4fbwj8JZSBrmqG3lObCjk1r2xbNaPH-fcYQZeHQlhl4wsEvvaKWsKAp0RIp773WJUWI5FysEWbRPGFm-gx4DLKd_E1x_IzpMEHUYOsDlY1o8fF3j77FZekvoIpgv1ISY96HXk3u6Wo4L"/>
+</div>
+<div class="p-5 flex-grow flex flex-col">
+<h3 class="font-body-lg text-body-lg text-primary font-semibold mb-1 line-clamp-2">Xiaomi 14 12/256GB Leica Camera - Jade Green</h3>
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined icon-filled text-[#f59e0b] text-sm" data-icon="star">star</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">4.8 (56 ulasan)</span>
+</div>
+<div class="mt-auto">
+<p class="text-on-surface-variant line-through text-sm mb-1">Rp 12.500.000</p>
+<p class="font-headline-md text-headline-md text-secondary mb-4">Rp 11.999.000</p>
+<button class="w-full bg-secondary text-primary font-label-md text-label-md py-2.5 rounded hover:bg-secondary-fixed transition-colors">
+                                    Beli Sekarang
+                                </button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden hover:border-secondary hover:shadow-[0_0_15px_rgba(0,104,122,0.15)] transition-all duration-300 group flex flex-col">
+<div class="relative pt-4 px-4 bg-white flex justify-center items-center h-48">
+<span class="absolute top-4 left-4 bg-error text-on-error px-2 py-1 rounded text-xs font-bold tracking-wider z-10">
+                                Promo
+                            </span>
+<img class="h-full object-contain group-hover:scale-105 transition-transform duration-300" data-alt="An Oppo Reno 11 Pro in pearl white with a shimmering texture on the back. Rendered in high resolution against a white background, studio lighting capturing the iridescent reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWAi-oimCx7uYZO8t_CHFXGBGRYhSjSZuTWmZ4CA5sCZIWGh7VPqLkqHORBJY8hefW7hVWZdecL_UOe029lSxHo1RgNyQP16xuH-XLD8ZkvFdL_HXdDuRDRBAF9vpX60YMRYAzG6-bPBmriSGSLqxcF_BMVLdhqN7r49nwFgcV_ylpH4CxzzMPoCkdQkFL8vg9n9EVnLw4eAzRvcPQ0o9H7q_qumB5XQ9wcAhTlHz6viEyJoVQm4HR"/>
+</div>
+<div class="p-5 flex-grow flex flex-col">
+<h3 class="font-body-lg text-body-lg text-primary font-semibold mb-1 line-clamp-2">Oppo Reno 11 Pro 5G 12/512GB</h3>
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined icon-filled text-[#f59e0b] text-sm" data-icon="star">star</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">4.7 (210 ulasan)</span>
+</div>
+<div class="mt-auto">
+<p class="text-on-surface-variant line-through text-sm mb-1">Rp 8.999.000</p>
+<p class="font-headline-md text-headline-md text-secondary mb-4">Rp 8.499.000</p>
+<button class="w-full bg-secondary text-primary font-label-md text-label-md py-2.5 rounded hover:bg-secondary-fixed transition-colors">
+                                    Beli Sekarang
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-12 flex justify-center">
+<nav class="flex items-center gap-2">
+<button class="p-2 border border-outline-variant/30 rounded text-on-surface-variant hover:border-secondary hover:text-secondary transition-colors" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-secondary text-primary font-bold rounded">1</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 hover:border-secondary hover:text-secondary text-on-surface-variant rounded transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 hover:border-secondary hover:text-secondary text-on-surface-variant rounded transition-colors">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 hover:border-secondary hover:text-secondary text-on-surface-variant rounded transition-colors">8</button>
+<button class="p-2 border border-outline-variant/30 rounded text-on-surface-variant hover:border-secondary hover:text-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</nav>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary-container dark:bg-tertiary-container text-on-primary-fixed dark:text-on-tertiary-fixed font-body-md text-body-md w-full border-t border-outline-variant/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-16 max-w-container-max-width mx-auto">
+<div class="col-span-1">
+<a class="font-headline-md text-headline-md font-extrabold text-secondary-fixed block mb-4" href="#">
+                    TECHCELL
+                </a>
+<p class="text-on-primary-container dark:text-on-tertiary-container opacity-80 mb-6">
+                    Pusat smartphone dan aksesoris terpercaya dengan garansi resmi dan pelayanan terbaik di Indonesia.
+                </p>
+</div>
+<div class="col-span-1">
+<h4 class="text-secondary-fixed font-bold mb-4 font-label-md text-label-md uppercase tracking-wider">Perusahaan</h4>
+<ul class="space-y-3">
+<li><a class="text-on-primary-container dark:text-on-tertiary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Tentang Kami</a></li>
+<li><a class="text-on-primary-container dark:text-on-tertiary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Hubungi Kami</a></li>
+<li><a class="text-on-primary-container dark:text-on-tertiary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Lokasi Toko</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="text-secondary-fixed font-bold mb-4 font-label-md text-label-md uppercase tracking-wider">Bantuan</h4>
+<ul class="space-y-3">
+<li><a class="text-on-primary-container dark:text-on-tertiary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Syarat &amp; Ketentuan</a></li>
+<li><a class="text-on-primary-container dark:text-on-tertiary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Kebijakan Privasi</a></li>
+<li><a class="text-on-primary-container dark:text-on-tertiary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Panduan Belanja</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="text-secondary-fixed font-bold mb-4 font-label-md text-label-md uppercase tracking-wider">Ikuti Kami</h4>
+<div class="flex space-x-4">
+<a class="w-10 h-10 rounded-full bg-surface-tint/20 flex items-center justify-center text-on-primary-container hover:bg-secondary hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-surface-tint/20 flex items-center justify-center text-on-primary-container hover:bg-secondary hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</a>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant/10 px-margin-mobile md:px-margin-desktop py-6 text-center text-on-primary-container dark:text-on-tertiary-container opacity-80 font-label-sm text-label-sm">
+            © 2024 TECHCELL Expert Connectivity. All rights reserved.
+        </div>
+</footer>
+</body></html>

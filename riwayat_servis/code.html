@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TECHCELL - Riwayat Servis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&amp;family=Inter:wght@400&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f7f9fb;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c6c6cd;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "secondary": "#00687a",
+                        "tertiary-fixed": "#d8e2ff",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-fixed": "#001f26",
+                        "surface-tint": "#565e74",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container-high": "#e6e8ea",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#000000",
+                        "on-primary-fixed": "#131b2e",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#acedff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-container": "#001a42",
+                        "outline": "#76777d",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#bec6e0",
+                        "background": "#f7f9fb",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "on-tertiary-container": "#3980f4",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-primary-container": "#7c839b",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#45464d",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#006172",
+                        "surface-variant": "#e0e3e5",
+                        "primary": "#000000",
+                        "on-surface": "#191c1e",
+                        "secondary-container": "#57dffe",
+                        "primary-container": "#131b2e",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed": "#001a42",
+                        "surface-container-low": "#f2f4f6",
+                        "on-background": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "primary-fixed": "#dae2fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max-width": "1280px",
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "80px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl bg-surface-container-lowest/60 border-b border-outline-variant shadow-sm transition-all duration-300 h-16">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-full w-full max-w-container-max-width mx-auto">
+<!-- Brand -->
+<div class="flex items-center gap-4">
+<a class="flex items-center" href="#">
+<img alt="TECHCELL NexusCenter" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-9442jdHglc6f9RHnYuvHU67bYfaElA0BXo05chKha_kzA5u35-7XtGQ8btAHTQ7QYw7bEPwQezN5NADbfSLiLzPBizN4oMUpzt70PocSsDgDeEMmo5NzZZ_AU74_C2_AFpoNSGYZx82JtcF_24d6btxSKwpJnDW0rBFy_wVlaC5pa6B6SH15yOxD0mi6_1RYfHUX9phDDhTsIfETJjo7ZX54W3TQAhd4bLs_gSGIXrhbjnU2PjRSEyJPj_aBveLoRJ0"/>
+</a>
+</div>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-secondary transition-colors" href="#">Shop</a>
+<a class="text-secondary font-bold font-body-md text-body-md border-b-2 border-secondary h-16 flex items-center" href="#">Repairs</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-secondary transition-colors" href="#">Tech Hub</a>
+</nav>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface hover:text-secondary transition-colors p-2 active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+<button class="text-secondary hover:text-secondary-container transition-colors p-2 active:scale-95 duration-150 rounded-full bg-secondary-container/10">
+<span class="material-symbols-outlined" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface p-2">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-24 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto w-full flex flex-col md:flex-row gap-gutter">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col py-8 gap-2 bg-surface-container-low h-fit w-64 flex-shrink-0 border-r border-outline-variant rounded-xl sticky top-28 shadow-sm relative overflow-hidden">
+<!-- Decorative Grid Pattern -->
+<div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: radial-gradient(#00687a 1px, transparent 1px); background-size: 16px 16px;"></div>
+<div class="px-6 mb-6 relative z-10">
+<h2 class="font-headline-md text-headline-md text-primary">Settings</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage your TECHCELL profile</p>
+</div>
+<nav class="flex flex-col gap-1 px-4 relative z-10">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer active:bg-surface-dim group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer active:bg-surface-dim group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-md text-label-md">Riwayat Pesanan</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary font-semibold bg-secondary-container/10 border-l-4 border-secondary cursor-pointer active:bg-surface-dim" href="#">
+<span class="material-symbols-outlined text-secondary" data-icon="build" style="font-variation-settings: 'FILL' 1;">build</span>
+<span class="font-label-md text-label-md text-secondary">Riwayat Servis</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer active:bg-surface-dim group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="shopping_basket">shopping_basket</span>
+<span class="font-label-md text-label-md">Keranjang Belanja</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer active:bg-surface-dim group mt-4 border-t border-outline-variant pt-4" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Help &amp; Support</span>
+</a>
+</nav>
+</aside>
+<!-- Page Content: Riwayat Servis -->
+<section class="flex-grow w-full">
+<div class="mb-8">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-2">Riwayat Servis</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Lacak status perbaikan perangkat Anda saat ini dan sebelumnya.</p>
+</div>
+<!-- Filters -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-outline-variant">
+<div class="flex gap-2 bg-surface-container p-1 rounded-lg">
+<button class="px-4 py-2 rounded bg-surface-container-lowest shadow-sm text-primary font-label-md text-label-md">Semua</button>
+<button class="px-4 py-2 rounded text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md">Dalam Proses</button>
+<button class="px-4 py-2 rounded text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md">Selesai</button>
+</div>
+<div class="relative w-full sm:w-64">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-4 py-2 font-body-md text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all" placeholder="Cari ID Servis atau Perangkat..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant" data-icon="search">search</span>
+</div>
+</div>
+<!-- Service List (Bento-ish Grid / Cards) -->
+<div class="grid grid-cols-1 gap-4">
+<!-- Item 1: Dalam Proses -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 hover:border-secondary hover:shadow-[0_0_15px_rgba(0,104,122,0.08)] transition-all duration-300 relative overflow-hidden group">
+<!-- Accent Line -->
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary-fixed-dim"></div>
+<div class="flex flex-col md:flex-row justify-between gap-6">
+<div class="flex gap-6 items-start">
+<div class="w-20 h-20 bg-surface-container rounded-lg flex items-center justify-center flex-shrink-0 border border-surface-variant">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="smartphone">smartphone</span>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h3 class="font-headline-md text-headline-md text-primary">iPhone 15 Pro Max</h3>
+<span class="bg-secondary/10 text-secondary px-2.5 py-0.5 rounded-full font-label-sm text-label-sm border border-secondary/20 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span> Dalam Proses
+                                    </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Screen Replacement - Retak Kaca Depan</p>
+<div class="flex flex-wrap gap-4 text-sm text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="tag">tag</span> SRV-2024-0891</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="calendar_month">calendar_month</span> Masuk: 12 Okt 2023</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-start md:items-end justify-between border-t md:border-t-0 md:border-l border-outline-variant pt-4 md:pt-0 md:pl-6 min-w-[200px]">
+<div class="mb-4 md:mb-0">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Estimasi Biaya</p>
+<p class="font-label-md text-label-md text-secondary">Rp 4.500.000</p>
+</div>
+<button class="w-full md:w-auto bg-transparent border-2 border-secondary text-secondary hover:bg-secondary hover:text-on-secondary px-6 py-2 rounded-lg font-label-md text-label-md transition-colors flex items-center justify-center gap-2">
+                                Lihat Detail
+                                <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Item 2: Menunggu Sparepart -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 hover:border-secondary hover:shadow-[0_0_15px_rgba(0,104,122,0.08)] transition-all duration-300 relative overflow-hidden group">
+<!-- Accent Line -->
+<div class="absolute top-0 left-0 w-1 h-full bg-[#f59e0b]"></div>
+<div class="flex flex-col md:flex-row justify-between gap-6">
+<div class="flex gap-6 items-start">
+<div class="w-20 h-20 bg-surface-container rounded-lg flex items-center justify-center flex-shrink-0 border border-surface-variant">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="laptop_mac">laptop_mac</span>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h3 class="font-headline-md text-headline-md text-primary">MacBook Pro M2</h3>
+<span class="bg-[#fffbeb] text-[#d97706] px-2.5 py-0.5 rounded-full font-label-sm text-label-sm border border-[#fde68a] flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="hourglass_empty">hourglass_empty</span> Menunggu Sparepart
+                                    </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Battery Replacement - Service Recommended</p>
+<div class="flex flex-wrap gap-4 text-sm text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="tag">tag</span> SRV-2024-0842</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="calendar_month">calendar_month</span> Masuk: 05 Okt 2023</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-start md:items-end justify-between border-t md:border-t-0 md:border-l border-outline-variant pt-4 md:pt-0 md:pl-6 min-w-[200px]">
+<div class="mb-4 md:mb-0">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Total Biaya</p>
+<p class="font-label-md text-label-md text-secondary">Rp 2.850.000</p>
+</div>
+<button class="w-full md:w-auto bg-transparent border-2 border-outline text-on-surface-variant hover:border-secondary hover:text-secondary px-6 py-2 rounded-lg font-label-md text-label-md transition-colors flex items-center justify-center gap-2">
+                                Lihat Detail
+                            </button>
+</div>
+</div>
+</article>
+<!-- Item 3: Selesai -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 hover:border-secondary hover:shadow-[0_0_15px_rgba(0,104,122,0.08)] transition-all duration-300 relative overflow-hidden group opacity-80 hover:opacity-100">
+<!-- Accent Line -->
+<div class="absolute top-0 left-0 w-1 h-full bg-[#10b981]"></div>
+<div class="flex flex-col md:flex-row justify-between gap-6">
+<div class="flex gap-6 items-start">
+<div class="w-20 h-20 bg-surface-container rounded-lg flex items-center justify-center flex-shrink-0 border border-surface-variant grayscale group-hover:grayscale-0 transition-all">
+<span class="material-symbols-outlined text-outline text-4xl group-hover:text-secondary" data-icon="tablet_mac">tablet_mac</span>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h3 class="font-headline-md text-headline-md text-primary">iPad Air (5th Gen)</h3>
+<span class="bg-[#ecfdf5] text-[#059669] px-2.5 py-0.5 rounded-full font-label-sm text-label-sm border border-[#a7f3d0] flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle">check_circle</span> Selesai
+                                    </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Pembersihan Internal &amp; Diagnostik</p>
+<div class="flex flex-wrap gap-4 text-sm text-on-surface-variant font-label-sm text-label-sm mb-3">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="tag">tag</span> SRV-2024-0711</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="calendar_month">calendar_month</span> Selesai: 28 Sep 2023</span>
+</div>
+<!-- Promo/Info Tag for Completed -->
+<div class="inline-flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-md border border-outline-variant">
+<span class="material-symbols-outlined text-[#059669] text-[16px]" data-icon="local_shipping">local_shipping</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bisa Antar ke Rumah - Gratis Ongkir</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-start md:items-end justify-between border-t md:border-t-0 md:border-l border-outline-variant pt-4 md:pt-0 md:pl-6 min-w-[200px]">
+<div class="mb-4 md:mb-0">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Total Biaya</p>
+<p class="font-label-md text-label-md text-on-surface line-through decoration-outline text-sm">Rp 350.000</p>
+<p class="font-label-md text-label-md text-primary">Rp 250.000</p>
+</div>
+<button class="w-full md:w-auto bg-surface-container hover:bg-surface-container-high text-on-surface px-6 py-2 rounded-lg font-label-md text-label-md transition-colors flex items-center justify-center gap-2 border border-outline-variant">
+                                Lihat Invoice
+                                <span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination (Simplified) -->
+<div class="flex justify-center items-center gap-2 mt-12">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors disabled:opacity-50">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-secondary text-on-secondary font-label-md text-label-md">1</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors font-label-md text-label-md">2</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary dark:bg-primary-container text-on-primary w-full py-12 border-t border-primary-fixed-dim/20 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop gap-4 max-w-container-max-width mx-auto">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-secondary">TECHCELL</span>
+</div>
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-primary/70 hover:text-secondary-container transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-primary/70 hover:text-secondary-container transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-primary/70 hover:text-secondary-container transition-colors" href="#">Contact Us</a>
+<a class="font-label-sm text-label-sm text-on-primary/70 hover:text-secondary-container transition-colors" href="#">Store Locator</a>
+</nav>
+<div class="font-label-sm text-label-sm text-on-primary/50 text-center md:text-right mt-4 md:mt-0">
+                © 2024 TECHCELL. Gateway to the future of mobile connectivity.
+            </div>
+</div>
+</footer>
+</body></html>

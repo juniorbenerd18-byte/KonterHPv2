@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TECHCELL - Aksesoris</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#7c839b",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed": "#dae2fd",
+                        "on-surface": "#191c1e",
+                        "surface-tint": "#565e74",
+                        "tertiary": "#000000",
+                        "on-background": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-fixed": "#d8e2ff",
+                        "secondary-container": "#57dffe",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#006172",
+                        "on-tertiary-container": "#3980f4",
+                        "primary": "#000000",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed": "#acedff",
+                        "surface": "#f7f9fb",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-dim": "#d8dadc",
+                        "surface-variant": "#e0e3e5",
+                        "outline": "#76777d",
+                        "secondary": "#00687a",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#bec6e0",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-on-surface": "#eff1f3",
+                        "primary-container": "#131b2e",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "tertiary-container": "#001a42",
+                        "inverse-primary": "#bec6e0",
+                        "on-secondary-fixed": "#001f26",
+                        "on-surface-variant": "#45464d",
+                        "on-tertiary-fixed": "#001a42"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max-width": "1280px",
+                        "margin-desktop": "80px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-md": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .product-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 104, 122, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface/60 backdrop-blur-xl text-primary font-body-md fixed top-0 w-full z-50 border-b border-outline-variant/30 shadow-sm">
+<div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop py-4 max-w-container-max-width mx-auto">
+<div class="font-headline-md text-headline-md font-bold tracking-tighter text-primary">TECHCELL</div>
+<nav class="hidden md:flex space-x-8 items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Smartphone</a>
+<a class="text-secondary font-bold border-b-2 border-secondary pb-1" href="#">Aksesoris</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Pulsa &amp; Data</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Promo</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Servis</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="p-2 text-on-surface hover:bg-secondary/5 rounded-full transition-colors active:scale-95 transition-transform">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button class="p-2 text-on-surface hover:bg-secondary/5 rounded-full transition-colors active:scale-95 transition-transform hidden md:block">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+<button class="md:hidden p-2 text-on-surface hover:bg-secondary/5 rounded-full transition-colors active:scale-95 transition-transform">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-grow pt-[80px] md:pt-[96px] pb-16">
+<!-- Hero Banner -->
+<section class="bg-primary text-on-primary relative overflow-hidden mb-16">
+<div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(#00687a 1px, transparent 1px), linear-gradient(90deg, #00687a 1px, transparent 1px); background-size: 40px 40px;"></div>
+<div class="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 relative z-10 flex flex-col md:flex-row items-center gap-8">
+<div class="w-full md:w-1/2">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-secondary-container">Aksesoris Premium untuk Gayamu</h1>
+<p class="font-body-lg text-body-lg text-primary-fixed-dim mb-8">Tingkatkan pengalaman digital Anda dengan koleksi aksesoris terbaru dan berkualitas tinggi. Dari audio imersif hingga pengisian daya ultra-cepat.</p>
+</div>
+<div class="w-full md:w-1/2 flex justify-center">
+<div class="w-full h-64 md:h-80 rounded-xl overflow-hidden relative shadow-2xl border border-secondary/20">
+<img class="w-full h-full object-cover" data-alt="A highly detailed close-up shot of premium wireless over-ear headphones floating in mid-air. The headphones have a sleek, modern metallic finish reflecting subtle cyan neon lights against a deep navy blue background. The lighting is cinematic, highlighting the intricate design details and high-quality materials of the earcups and headband. A distinct corporate modern tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9Ypsk2tlj_sZOOfaHUwkGsnWrtX9dzcuOAH3FAEAfdfWEBIcS4-2eUJquEVhIVoFdF4TJUgztmFU9-riYlt6s-d0x9cy1LVJDbxMEFzlFNNIBe86jc5abEIiMVGQlBFAoctXhJk41s-kCNIlIMS3FY2doE3QtECLY6SIEYxSp244jiUDSpPScV9WQ8EvatHWSGUCRtQP_9F_uQjIemLVeW6npdfWDo7XUe0uyWgb5bzaVFiWhSHGV"/>
+</div>
+</div>
+</div>
+</section>
+<div class="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Sidebar Filters -->
+<aside class="w-full lg:w-1/4 flex flex-col gap-8">
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-6 shadow-sm">
+<h3 class="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">tune</span>
+                            Filter
+                        </h3>
+<div class="mb-6">
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase mb-3 tracking-widest">Kategori</h4>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-5 w-5 text-secondary border-outline rounded bg-surface-container-lowest focus:ring-secondary focus:ring-2 focus:ring-offset-1" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Casing</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="form-checkbox h-5 w-5 text-secondary border-outline rounded bg-surface-container-lowest focus:ring-secondary focus:ring-2 focus:ring-offset-1" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Charger &amp; Kabel</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-5 w-5 text-secondary border-outline rounded bg-surface-container-lowest focus:ring-secondary focus:ring-2 focus:ring-offset-1" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Audio</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-5 w-5 text-secondary border-outline rounded bg-surface-container-lowest focus:ring-secondary focus:ring-2 focus:ring-offset-1" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Powerbank</span>
+</label>
+</div>
+</div>
+<hr class="border-outline-variant/30 mb-6"/>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase mb-3 tracking-widest">Merek</h4>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="form-checkbox h-5 w-5 text-secondary border-outline rounded bg-surface-container-lowest focus:ring-secondary focus:ring-2 focus:ring-offset-1" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Spigen</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-5 w-5 text-secondary border-outline rounded bg-surface-container-lowest focus:ring-secondary focus:ring-2 focus:ring-offset-1" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Anker</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="form-checkbox h-5 w-5 text-secondary border-outline rounded bg-surface-container-lowest focus:ring-secondary focus:ring-2 focus:ring-offset-1" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors">Sony</span>
+</label>
+</div>
+</div>
+</div>
+</aside>
+<!-- Product Grid -->
+<div class="w-full lg:w-3/4">
+<div class="flex justify-between items-center mb-6">
+<p class="font-body-md text-body-md text-on-surface-variant">Menampilkan <span class="font-bold text-on-surface">24</span> produk</p>
+<select class="form-select bg-surface-container-lowest border border-outline-variant/50 rounded-lg font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-50 py-2 pl-4 pr-10">
+<option>Terbaru</option>
+<option>Harga: Rendah - Tinggi</option>
+<option>Harga: Tinggi - Rendah</option>
+</select>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Product Card 1 -->
+<div class="product-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden transition-all duration-300 flex flex-col group cursor-pointer relative hover:border-secondary">
+<div class="absolute top-3 left-3 bg-secondary text-on-secondary font-label-sm text-label-sm px-2 py-1 rounded z-10">Baru</div>
+<div class="absolute top-3 right-3 text-on-surface-variant hover:text-error z-10 p-1 bg-surface/80 rounded-full backdrop-blur transition-colors">
+<span class="material-symbols-outlined text-lg block">favorite</span>
+</div>
+<div class="h-48 w-full p-6 flex items-center justify-center bg-surface-container-low group-hover:bg-surface transition-colors">
+<img class="max-h-full object-contain" data-alt="A studio photograph of a premium, fast-charging wall adapter with multiple USB-C ports. The adapter is sleek and minimalist, finished in matte black. It is placed centrally on a pristine white background. High-key lighting emphasizes its sharp edges and modern tech aesthetic, suitable for a high-end electronics catalog." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8YIpTrURcWw1JYhtXjzV7IqilWPBvujf49Ou9FNzAP0OP_l1hAwYcAwiu-QNdthvYe_SUzSyydr7lbIbJA6FcCNkp0CrAKpT-Dqn89vHlCBqaRB1VGK2cTzN8AMhNLjBQIWntYDWLzkdINlK7zy7czcQmksbo3YwnCFhN55swnQXGF9XSTuQNJcn8hHUid4gQEcQAXpeN1_DduNSkDJ3EvgJZiB7h2YLjHGEYmvKP5kRtkU-kaioJ"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Charger</p>
+<h3 class="font-headline-md text-body-lg font-semibold text-primary mb-2 line-clamp-2 leading-tight">Anker Nano Pro 40W Dual USB-C</h3>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm text-secondary-container fill-current">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">4.9</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(128)</span>
+</div>
+<div class="mt-auto flex items-end justify-between">
+<p class="font-label-md text-label-md text-secondary font-bold">Rp 399.000</p>
+<button class="bg-secondary text-on-secondary rounded-full p-2 hover:bg-secondary/90 transition-colors flex items-center justify-center active:scale-95 shadow-md shadow-secondary/20">
+<span class="material-symbols-outlined text-base">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="product-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden transition-all duration-300 flex flex-col group cursor-pointer relative hover:border-secondary">
+<div class="absolute top-3 right-3 text-on-surface-variant hover:text-error z-10 p-1 bg-surface/80 rounded-full backdrop-blur transition-colors">
+<span class="material-symbols-outlined text-lg block">favorite</span>
+</div>
+<div class="h-48 w-full p-6 flex items-center justify-center bg-surface-container-low group-hover:bg-surface transition-colors">
+<img class="max-h-full object-contain" data-alt="A clean product shot of a rugged, impact-resistant smartphone case in carbon fiber finish. The case is angled slightly to show its textured back and reinforced corners. Set against a pure white background with bright, even studio lighting that highlights the premium materials and tech-forward design of the accessory." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuBYsWHlpXnWWtZkhAXsFpaX4_1oyzBAMSR_sX7LM5kAJk_4CH3Cr31KECCRsKCs1K37AOviqZ6fzwLbQ69SeE-kX2qry9SC7SUj7RclF9WeA7Uj0yfIOV_H67R0l95znyJrle6cLPC9lk8_Mg8aywK-ugOyuS_Lv8_71yea1SiEwP3WvGom8s6XDIK9vTEmmdQIjJpKpwEJ3DQiP4abba50DpprL6xGitWRTeLEc0R_SZwZ63NvUO"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Casing</p>
+<h3 class="font-headline-md text-body-lg font-semibold text-primary mb-2 line-clamp-2 leading-tight">Spigen Tough Armor for iPhone 15 Pro</h3>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm text-secondary-container fill-current">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">4.8</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(85)</span>
+</div>
+<div class="mt-auto flex items-end justify-between">
+<p class="font-label-md text-label-md text-secondary font-bold">Rp 450.000</p>
+<button class="bg-secondary text-on-secondary rounded-full p-2 hover:bg-secondary/90 transition-colors flex items-center justify-center active:scale-95 shadow-md shadow-secondary/20">
+<span class="material-symbols-outlined text-base">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="product-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden transition-all duration-300 flex flex-col group cursor-pointer relative hover:border-secondary">
+<div class="absolute top-3 left-3 bg-error text-on-error font-label-sm text-label-sm px-2 py-1 rounded z-10">-15%</div>
+<div class="absolute top-3 right-3 text-on-surface-variant hover:text-error z-10 p-1 bg-surface/80 rounded-full backdrop-blur transition-colors">
+<span class="material-symbols-outlined text-lg block">favorite</span>
+</div>
+<div class="h-48 w-full p-6 flex items-center justify-center bg-surface-container-low group-hover:bg-surface transition-colors">
+<img class="max-h-full object-contain" data-alt="A high-quality image of true wireless earbuds resting inside their sleek charging case. The earbuds are glossy black with subtle metallic accents. The case is open, revealing the charging contacts. The background is a stark, clean white. The lighting is precise, creating crisp reflections on the glossy surfaces, embodying a modern, high-tech corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDC_f2qwfElv51j38GH85BhTDCohRY0zGwClQzJY0-V1_Lc312SQ0w5KBYQ6sWv4ba9r6voxy4HkI2tN77Y0b--rUpU0BwItqSJUu30RHoKf-VcbITd4H-QVPFvc7GxDpMPcSwyRREXDVVfgMB7-pN2sAroZrKlH6iDC1I81z46TS-7Ndr1RETVSNp7fHqovH5KC2w6gJBT-en8AQDdjE0-3w-VTHioM71EWSEcBV38iy4lETc43qQ3"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Audio</p>
+<h3 class="font-headline-md text-body-lg font-semibold text-primary mb-2 line-clamp-2 leading-tight">Sony WF-1000XM5 TWS Noise Cancelling</h3>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm text-secondary-container fill-current">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">5.0</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(42)</span>
+</div>
+<div class="mt-auto flex items-end justify-between">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant line-through mb-1">Rp 4.499.000</p>
+<p class="font-label-md text-label-md text-secondary font-bold">Rp 3.824.000</p>
+</div>
+<button class="bg-secondary text-on-secondary rounded-full p-2 hover:bg-secondary/90 transition-colors flex items-center justify-center active:scale-95 shadow-md shadow-secondary/20">
+<span class="material-symbols-outlined text-base">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center mt-12">
+<nav class="flex items-center gap-2">
+<button class="p-2 border border-outline-variant/50 rounded-lg text-on-surface-variant hover:bg-surface-variant disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 border border-secondary bg-secondary text-on-secondary rounded-lg font-label-md text-label-md flex items-center justify-center">1</button>
+<button class="w-10 h-10 border border-outline-variant/50 text-on-surface hover:bg-surface-variant rounded-lg font-label-md text-label-md flex items-center justify-center transition-colors">2</button>
+<button class="w-10 h-10 border border-outline-variant/50 text-on-surface hover:bg-surface-variant rounded-lg font-label-md text-label-md flex items-center justify-center transition-colors">3</button>
+<span class="text-on-surface-variant px-2">...</span>
+<button class="p-2 border border-outline-variant/50 rounded-lg text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary-container text-on-primary-fixed font-body-md w-full border-t border-outline-variant/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-16 max-w-container-max-width mx-auto">
+<div class="col-span-1 md:col-span-1 mb-8 md:mb-0">
+<div class="font-headline-md text-headline-md font-extrabold text-secondary-fixed mb-4">TECHCELL</div>
+<p class="text-on-primary-container opacity-80 mb-6 font-body-md text-body-md">Expert Connectivity. Menyediakan gadget dan aksesoris terbaik untuk mendukung gaya hidup digital Anda.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-secondary-fixed hover:text-white cursor-pointer transition-colors">nest_eco_leaf</span>
+<span class="material-symbols-outlined text-secondary-fixed hover:text-white cursor-pointer transition-colors">language</span>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-headline-md text-body-lg font-bold text-white mb-2">Layanan</h4>
+<a class="text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Tentang Kami</a>
+<a class="text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Syarat &amp; Ketentuan</a>
+<a class="text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Kebijakan Privasi</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-headline-md text-body-lg font-bold text-white mb-2">Bantuan</h4>
+<a class="text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Hubungi Kami</a>
+<a class="text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Lokasi Toko</a>
+<a class="text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all cursor-pointer" href="#">Lacak Pesanan</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-headline-md text-body-lg font-bold text-white mb-2">Newsletter</h4>
+<p class="text-on-primary-container opacity-80 font-body-md text-body-md">Dapatkan info promo terbaru.</p>
+<div class="flex mt-2">
+<input class="bg-surface-tint/20 border border-outline-variant/30 text-white px-4 py-2 rounded-l-lg focus:outline-none focus:border-secondary-fixed w-full" placeholder="Email Anda" type="email"/>
+<button class="bg-secondary-fixed text-on-secondary-fixed px-4 py-2 rounded-r-lg font-bold hover:bg-white transition-colors">Kirim</button>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant/10 py-6 text-center text-on-primary-container opacity-80 font-label-md text-label-md px-margin-mobile">
+            © 2024 TECHCELL Expert Connectivity. All rights reserved.
+        </div>
+</footer>
+</body></html>

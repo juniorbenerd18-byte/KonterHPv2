@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Track Driver - TECHCELL</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&amp;family=Inter:wght@400&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error": "#ffffff",
+                      "error": "#ba1a1a",
+                      "secondary-fixed": "#acedff",
+                      "secondary": "#00687a",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "surface-container": "#eceef0",
+                      "surface-bright": "#f7f9fb",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#2d3133",
+                      "surface-container-highest": "#e0e3e5",
+                      "primary-container": "#131b2e",
+                      "secondary-container": "#57dffe",
+                      "on-primary-fixed": "#131b2e",
+                      "inverse-primary": "#bec6e0",
+                      "tertiary-fixed-dim": "#adc6ff",
+                      "tertiary": "#000000",
+                      "on-surface": "#191c1e",
+                      "surface-container-high": "#e6e8ea",
+                      "surface": "#f7f9fb",
+                      "error-container": "#ffdad6",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-background": "#191c1e",
+                      "on-secondary-fixed": "#001f26",
+                      "secondary-fixed-dim": "#4cd7f6",
+                      "background": "#f7f9fb",
+                      "primary-fixed-dim": "#bec6e0",
+                      "on-primary-container": "#7c839b",
+                      "tertiary-container": "#001a42",
+                      "on-surface-variant": "#45464d",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#565e74",
+                      "outline-variant": "#c6c6cd",
+                      "on-tertiary-fixed-variant": "#004395",
+                      "on-tertiary-fixed": "#001a42",
+                      "tertiary-fixed": "#d8e2ff",
+                      "on-secondary-container": "#006172",
+                      "primary-fixed": "#dae2fd",
+                      "on-secondary-fixed-variant": "#004e5c",
+                      "surface-container-low": "#f2f4f6",
+                      "surface-dim": "#d8dadc",
+                      "surface-variant": "#e0e3e5",
+                      "primary": "#000000",
+                      "outline": "#76777d",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-container": "#3980f4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "container-max-width": "1280px",
+                      "margin-desktop": "80px",
+                      "gutter": "24px",
+                      "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-md": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid theme('colors.outline-variant');
+        }
+
+        /* Tonal shadow utility */
+        .tonal-shadow {
+            box-shadow: 0 4px 24px -8px rgba(0, 104, 122, 0.08); /* Secondary color shadow */
+        }
+        
+        .tonal-shadow-hover:hover {
+            box-shadow: 0 8px 32px -8px rgba(0, 104, 122, 0.15);
+            border-color: theme('colors.secondary');
+        }
+
+        /* Map Placeholder Styles */
+        .map-bg {
+            background-color: #f0f0f0;
+            background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .map-route {
+            stroke-dasharray: 8;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface-container-lowest/60 backdrop-blur-md dark:bg-primary-container/60 border-b border-outline-variant dark:border-on-surface-variant/20 shadow-sm">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max-width mx-auto">
+<!-- Brand -->
+<a class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-primary dark:text-primary-fixed" href="#">TECHCELL</a>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex space-x-8">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors font-body-md text-body-md hover:bg-secondary-container/10 dark:hover:bg-secondary/10 px-3 py-2 rounded-DEFAULT active:scale-95 duration-200" href="#">Smartphones</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors font-body-md text-body-md hover:bg-secondary-container/10 dark:hover:bg-secondary/10 px-3 py-2 rounded-DEFAULT active:scale-95 duration-200" href="#">Accessories</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors font-body-md text-body-md hover:bg-secondary-container/10 dark:hover:bg-secondary/10 px-3 py-2 rounded-DEFAULT active:scale-95 duration-200" href="#">Pulsa &amp; Data</a>
+<a aria-current="page" class="text-secondary dark:text-secondary-fixed-dim font-bold border-b-2 border-secondary pb-1 font-body-md text-body-md active:scale-95 duration-200" href="#">Service Tracking</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors font-body-md text-body-md hover:bg-secondary-container/10 dark:hover:bg-secondary/10 px-3 py-2 rounded-DEFAULT active:scale-95 duration-200" href="#">Booking Service</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center space-x-4">
+<div class="hidden md:flex space-x-2 text-primary dark:text-inverse-primary">
+<button class="p-2 hover:bg-secondary-container/10 rounded-full transition-colors active:scale-95 duration-200">
+<span aria-label="shopping_cart" class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button class="p-2 hover:bg-secondary-container/10 rounded-full transition-colors active:scale-95 duration-200">
+<span aria-label="account_circle" class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+<a class="text-primary dark:text-inverse-primary font-body-md text-body-md font-medium hover:bg-secondary-container/10 px-4 py-2 rounded-DEFAULT transition-colors active:scale-95 duration-200" href="#">Login</a>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden p-2 text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto w-full">
+<!-- Header Section -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2">Track Delivery</h1>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm">local_shipping</span>
+                    Order <span class="font-label-md text-label-md text-primary bg-surface-container px-2 py-1 rounded-DEFAULT border border-outline-variant">#DEL-2024-001</span>
+</p>
+</div>
+<div class="flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full border border-secondary/20">
+<span class="material-symbols-outlined text-sm filled-icon">bolt</span>
+<span class="font-label-md text-label-md">Free Delivery within 4km</span>
+</div>
+</div>
+<!-- Split View Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter h-[calc(100vh-280px)] min-h-[600px]">
+<!-- Map Area (7 columns) -->
+<div class="lg:col-span-7 relative bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden tonal-shadow">
+<!-- Placeholder for Interactive Map -->
+<div class="absolute inset-0 map-bg" data-location="Jakarta, Indonesia" style="">
+<!-- Stylized Map UI Elements (Simulated) -->
+<!-- Route Line SVG -->
+<svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+<path class="map-route" d="M 200,400 Q 300,250 500,300 T 700,150" fill="none" stroke="#00687a" stroke-linecap="round" stroke-width="4"></path>
+<!-- Outline for better visibility -->
+<path class="map-route" d="M 200,400 Q 300,250 500,300 T 700,150" fill="none" stroke="#57dffe" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+<!-- Store Location Pin -->
+<div class="absolute bottom-[40%] left-[25%] -translate-x-1/2 translate-y-1/2 flex flex-col items-center">
+<div class="bg-primary text-on-primary p-2 rounded-full shadow-lg border-2 border-white relative z-10">
+<span class="material-symbols-outlined text-sm">storefront</span>
+</div>
+<div class="w-1 h-6 bg-primary -mt-1"></div>
+<div class="w-4 h-1 bg-black/20 rounded-full blur-sm mt-1"></div>
+</div>
+<!-- Customer Destination Pin -->
+<div class="absolute top-[25%] right-[20%] -translate-x-1/2 translate-y-1/2 flex flex-col items-center">
+<div class="bg-surface-container-lowest text-primary p-2 rounded-full shadow-lg border-2 border-primary relative z-10">
+<span class="material-symbols-outlined text-sm">home</span>
+</div>
+<div class="w-1 h-6 bg-primary -mt-1"></div>
+<div class="w-4 h-1 bg-black/20 rounded-full blur-sm mt-1"></div>
+</div>
+<!-- Driver Current Location Pin (Moving) -->
+<div class="absolute top-[48%] left-[55%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-20 animate-pulse">
+<div class="absolute inset-0 bg-secondary/30 rounded-full scale-150 animate-ping"></div>
+<div class="bg-secondary text-on-secondary p-3 rounded-full shadow-xl border-2 border-white relative flex items-center justify-center">
+<span class="material-symbols-outlined">two_wheeler</span>
+</div>
+<div class="bg-surface-container-lowest px-2 py-1 rounded shadow-sm text-xs font-label-sm font-bold text-secondary mt-2 border border-outline-variant">ETA: 12 MINS</div>
+</div>
+</div>
+<!-- Map Controls (Overlay) -->
+<div class="absolute right-4 top-4 flex flex-col gap-2">
+<button class="bg-surface-container-lowest p-2 rounded border border-outline-variant shadow-sm hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="bg-surface-container-lowest p-2 rounded border border-outline-variant shadow-sm hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="bg-surface-container-lowest p-2 rounded border border-outline-variant shadow-sm hover:bg-surface-container transition-colors mt-4">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+</div>
+<!-- Status Panel (5 columns) -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- Real-time Status Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant tonal-shadow flex flex-col gap-6">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary">On the Way</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Driver is heading to your location.</p>
+</div>
+<div class="text-right">
+<div class="font-display-lg text-display-lg text-secondary leading-none">12</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">MINUTES ETA</div>
+</div>
+</div>
+<!-- Progress Tracker -->
+<div class="relative pt-8 pb-4">
+<!-- Connecting Line -->
+<div class="absolute top-[2rem] left-[1.5rem] right-[1.5rem] h-1 bg-surface-container"></div>
+<div class="absolute top-[2rem] left-[1.5rem] w-[60%] h-1 bg-secondary rounded-full"></div>
+<div class="flex justify-between relative z-10">
+<!-- Step 1: Confirmed -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center border-4 border-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined text-lg">check</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary text-center">Confirmed</span>
+</div>
+<!-- Step 2: Picked Up -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center border-4 border-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined text-lg">storefront</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary text-center">Picked Up</span>
+</div>
+<!-- Step 3: On The Way (Current) -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-surface-container-lowest text-secondary flex items-center justify-center border-4 border-secondary shadow-sm relative">
+<div class="absolute -inset-1 bg-secondary/20 rounded-full animate-ping"></div>
+<span class="material-symbols-outlined text-lg">two_wheeler</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-bold text-center">On Way</span>
+</div>
+<!-- Step 4: Arrived -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-surface-container text-outline flex items-center justify-center border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined text-lg">home</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-center">Arrived</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Driver Profile Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant tonal-shadow-hover transition-all duration-300">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-4">Driver Info</h3>
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-surface-container overflow-hidden border border-outline-variant flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of an Indonesian delivery driver wearing a professional dark uniform jacket with subtle cyan accents, smiling confidently. Bright, neutral lighting with a clean, high-tech white background. Professional, high-quality, modern corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAif0TtcuXHQ7cG7H2xJCwpeA8n-Vz50XuxNS32j6eG9Gd9V84gz1xKxHNEB9aT5sNX4UghcS_UPMKGmeSXVpwjIZd8IzDw5jwE0gFNYUrLyGfQuQ8na7x8KMC43nfInfiEpsC8rE4Q1vtGoq5kjYUquHpeKajd7MyvFwEOGOEA2c98_-w9XHa9XFjZFwGhnv83ALCtfKdTv5KJtyqKuCcJqUyXh9-GFGFH8Bdtw4OmLfftmYc4FrtLBA"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-headline-md text-headline-md text-primary leading-tight">Budi Santoso</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-outline text-sm">directions_bike</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Motorcycle Courier</span>
+</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-secondary text-sm filled-icon">star</span>
+<span class="font-label-sm text-label-sm text-primary">4.9</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(120+ trips)</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-6">
+<button class="flex items-center justify-center gap-2 bg-transparent border-2 border-outline-variant text-primary font-label-md text-label-md py-3 px-4 rounded-lg hover:border-primary transition-colors">
+<span class="material-symbols-outlined">call</span>
+                            Call
+                        </button>
+<button class="flex items-center justify-center gap-2 bg-secondary text-on-secondary font-label-md text-label-md py-3 px-4 rounded-lg hover:bg-secondary/90 transition-colors">
+<span class="material-symbols-outlined">chat</span>
+                            Chat
+                        </button>
+</div>
+</div>
+<!-- Delivery Summary -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant tonal-shadow mt-auto">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-4">Delivery Address</h3>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary mt-1">location_on</span>
+<div>
+<p class="font-body-md text-body-md text-primary font-bold">Tech Hub Tower, Floor 14</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Jl. Sudirman Kav 24, Jakarta Selatan, 12920</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2 bg-surface-container inline-block px-2 py-1 rounded border border-outline-variant">Note: Leave at reception if not present.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-16 bg-surface-container-highest dark:bg-primary-container border-t border-outline-variant dark:border-on-surface-variant/10 text-on-surface dark:text-on-primary-fixed font-label-md text-label-md">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-16 max-w-container-max-width mx-auto">
+<!-- Brand Column -->
+<div class="col-span-1 md:col-span-1 mb-8 md:mb-0">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim mb-4">TECHCELL</div>
+<p class="text-on-surface-variant dark:text-on-primary-container mb-4 max-w-xs">Expertly Technical Connectivity.</p>
+<p class="text-on-surface-variant dark:text-on-primary-container text-xs">© 2024 TECHCELL. All rights reserved.</p>
+</div>
+<!-- Links Columns (Simplified for visual balance) -->
+<div class="col-span-1">
+<h4 class="font-bold mb-4 text-primary">Support</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:underline transition-all cursor-pointer" href="#">Warranty Info</a></li>
+<li><a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:underline transition-all cursor-pointer" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="font-bold mb-4 text-primary">Legal</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:underline transition-all cursor-pointer" href="#">Terms of Service</a></li>
+<li><a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:underline transition-all cursor-pointer" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="font-bold mb-4 text-primary">Visit Us</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant dark:text-on-primary-container hover:text-primary hover:underline transition-all cursor-pointer" href="#">Store Locator</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>

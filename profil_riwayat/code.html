@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Profile - TECHCELL</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800;900&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed": "#001a42",
+                      "on-background": "#191c1e",
+                      "on-primary-fixed": "#131b2e",
+                      "primary-fixed-dim": "#bec6e0",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-container": "#001a42",
+                      "tertiary-fixed": "#d8e2ff",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-container": "#3980f4",
+                      "secondary-fixed": "#acedff",
+                      "on-secondary-fixed": "#001f26",
+                      "on-error": "#ffffff",
+                      "surface-variant": "#e0e3e5",
+                      "on-primary-container": "#7c839b",
+                      "on-secondary": "#ffffff",
+                      "inverse-primary": "#bec6e0",
+                      "surface-dim": "#d8dadc",
+                      "surface-container-high": "#e6e8ea",
+                      "secondary-fixed-dim": "#4cd7f6",
+                      "inverse-surface": "#2d3133",
+                      "on-surface-variant": "#45464d",
+                      "surface-tint": "#565e74",
+                      "tertiary-fixed-dim": "#adc6ff",
+                      "surface": "#f7f9fb",
+                      "tertiary": "#000000",
+                      "surface-bright": "#f7f9fb",
+                      "surface-container-highest": "#e0e3e5",
+                      "primary-container": "#131b2e",
+                      "background": "#f7f9fb",
+                      "secondary": "#00687a",
+                      "on-surface": "#191c1e",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#004395",
+                      "secondary-container": "#57dffe",
+                      "primary-fixed": "#dae2fd",
+                      "outline-variant": "#c6c6cd",
+                      "inverse-on-surface": "#eff1f3",
+                      "primary": "#000000",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed-variant": "#004e5c",
+                      "surface-container": "#eceef0",
+                      "on-secondary-container": "#006172",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#f2f4f6",
+                      "outline": "#76777d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "80px",
+                      "margin-mobile": "20px",
+                      "gutter": "24px",
+                      "container-max-width": "1280px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-md": [
+                              "JetBrains Mono"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: theme('colors.surface-container-lowest');
+            background-image: linear-gradient(theme('colors.surface-variant') 1px, transparent 1px),
+            linear-gradient(90deg, theme('colors.surface-variant') 1px, transparent 1px);
+            background-size: 32px 32px;
+            background-position: center;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid theme('colors.surface-variant');
+        }
+
+        .hover-glow:hover {
+            box-shadow: 0 0 15px theme('colors.secondary-container/30');
+            border-color: theme('colors.secondary-container');
+        }
+
+        /* Material Symbols utility */
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        
+        .material-symbols-outlined.fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-md dark:bg-background/60 border-b border-outline-variant/30 shadow-sm transition-all duration-300">
+<div class="max-w-container-max-width mx-auto flex items-center justify-between px-margin-mobile md:px-margin-desktop h-20">
+<!-- Brand -->
+<a class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg font-extrabold tracking-tighter text-primary dark:text-primary-fixed-dim shrink-0" href="#">
+                TECHCELL
+            </a>
+<!-- Search (Right aligned per JSON instruction) -->
+<div class="hidden md:flex items-center flex-1 justify-end ml-gutter">
+<div class="relative w-64 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-secondary transition-colors">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container rounded-DEFAULT border-none focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all text-on-surface font-body-md text-body-md placeholder:text-on-surface-variant/70" placeholder="Search products..." type="text"/>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="hidden md:flex items-center gap-8 ml-8">
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim transition-colors hover:bg-secondary-container/10 dark:hover:bg-secondary/10 duration-300 px-3 py-2 rounded-DEFAULT" href="#">Home</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim transition-colors hover:bg-secondary-container/10 dark:hover:bg-secondary/10 duration-300 px-3 py-2 rounded-DEFAULT" href="#">Products</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim transition-colors hover:bg-secondary-container/10 dark:hover:bg-secondary/10 duration-300 px-3 py-2 rounded-DEFAULT" href="#">Support</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim transition-colors hover:bg-secondary-container/10 dark:hover:bg-secondary/10 duration-300 px-3 py-2 rounded-DEFAULT" href="#">About</a>
+</div>
+<!-- Trailing Icons / Actions -->
+<div class="flex items-center gap-4 ml-6 pl-6 border-l border-outline-variant/30">
+<button class="p-2 rounded-full text-on-surface hover:bg-secondary-container/10 hover:text-primary transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button class="p-2 rounded-full text-on-surface hover:bg-secondary-container/10 hover:text-primary transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<!-- Active Profile -->
+<button class="w-10 h-10 rounded-full overflow-hidden border-2 border-secondary-container hover:shadow-[0_0_10px_rgba(87,223,254,0.5)] transition-all active:scale-95 ml-2">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A clean, professional headshot of an adult with a neutral expression, brightly lit against a stark white background. The image has a crisp, modern aesthetic suitable for a sleek tech company avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQHRUrYlEhLsa6Pdsty962X3sS102j_qlehDKARGjRHv_Y3alibeb_UWMMQ0F3mzyfISMwFVbX26L3eH_DUMjwvZpK-Z-G1-exaw4aKRs73t4JJ2IEQPJN2w5HbyyeOvPqlE7rUhsuNkEQbYmSRp9YyP9A_ZoZuxdMnOLrC7HYtIcHgnXu2lrXwCubyww-EGy2-t7P4NSXDGo0ktEhEdbhTp-veu7hYFr0kb7YtLiTmlHnHKeX-0LPEQ"/>
+</button>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden p-2 text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Layout -->
+<main class="flex-grow pt-28 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Sidebar / User Info (4 columns on desktop) -->
+<aside class="md:col-span-4 lg:col-span-3 space-y-6">
+<div class="glass-panel p-6 rounded-xl flex flex-col items-center text-center">
+<div class="relative w-24 h-24 mb-4">
+<img alt="Profile Picture" class="w-full h-full rounded-full object-cover border-4 border-surface-container-lowest shadow-sm" data-alt="A clean, professional headshot of an adult with a neutral expression, brightly lit against a stark white background. The image has a crisp, modern aesthetic suitable for a sleek tech company avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ9kTMZqJPVwfsY1IUmV3P-_OHBdpwD1PaN8YTcOml9MvUeLa9bzM_aJXncS4JcmXnPZjpC-6Tj-z1jj4xrKXNkIh4wUmhWPgArbrXyBDZCWDMejD-VXRDo89EsNGhC0JQKLKlChlByNRSmJSTXq-iYDcNppNjKy4vFuDC0ToVf56HUD_mQ-sRkG7hOq30wGTTeA1srokFq8b2R-9Vohk3tsB_VnjoZJAD32AtpX-LeRyMjQAvosedpA"/>
+<button class="absolute bottom-0 right-0 bg-secondary w-8 h-8 rounded-full flex items-center justify-center text-on-primary hover:bg-primary transition-colors border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary mb-1">Alex Mercer</h1>
+<p class="font-label-md text-label-md text-on-surface-variant mb-4">alex.mercer@example.com</p>
+<div class="w-full flex items-center justify-center gap-2 py-2 px-4 bg-surface-container-low rounded-DEFAULT border border-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[20px]">verified_user</span>
+<span class="font-label-sm text-label-sm text-on-surface">Verified Account</span>
+</div>
+</div>
+<!-- Navigation Links in Sidebar -->
+<nav class="glass-panel rounded-xl overflow-hidden">
+<ul class="flex flex-col">
+<li>
+<a class="flex items-center gap-3 px-6 py-4 text-on-surface hover:bg-surface-container transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">person</span>
+                            My Profile
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-6 py-4 bg-secondary-container/10 border-l-4 border-secondary text-primary font-headline-md text-headline-md text-[18px]" href="#">
+<span class="material-symbols-outlined fill-icon text-secondary">receipt_long</span>
+                            Riwayat Pesanan
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-6 py-4 text-on-surface hover:bg-surface-container transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">favorite</span>
+                            Wishlist
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-6 py-4 text-on-surface hover:bg-surface-container transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+                            Settings
+                        </a>
+</li>
+</ul>
+</nav>
+</aside>
+<!-- Main Content (8 columns on desktop) -->
+<div class="md:col-span-8 lg:col-span-9 space-y-8">
+<div class="glass-panel rounded-xl p-6 md:p-8">
+<header class="mb-8">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Riwayat Pesanan</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Track, review, and manage your recent purchases.</p>
+</header>
+<!-- Status Tabs -->
+<div class="flex overflow-x-auto no-scrollbar border-b border-surface-variant mb-6 pb-px">
+<button class="whitespace-nowrap px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors relative" onclick="switchTab('tab-unpaid')">
+                        Belum Dibayar
+                        <span class="absolute right-2 top-2 bg-error text-on-error rounded-full w-5 h-5 flex items-center justify-center text-[10px]">1</span>
+</button>
+<button class="whitespace-nowrap px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors relative" onclick="switchTab('tab-packed')">
+                        Dikemas
+                    </button>
+<button class="whitespace-nowrap px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors relative" onclick="switchTab('tab-shipped')">
+                        Dikirim
+                    </button>
+<button class="whitespace-nowrap px-6 py-3 font-label-md text-label-md text-secondary border-b-2 border-secondary transition-colors relative" id="active-tab-indicator" onclick="switchTab('tab-rating')">
+                        Beri Rating
+                        <span class="absolute right-2 top-2 bg-secondary text-on-primary rounded-full w-5 h-5 flex items-center justify-center text-[10px]">2</span>
+</button>
+</div>
+<!-- Content Area -->
+<div class="space-y-6">
+<!-- Example Rating Card (Active Tab Content) -->
+<div class="border border-surface-variant rounded-lg p-6 hover-glow transition-all duration-300 bg-surface-container-lowest">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 pb-4 border-b border-surface-variant/50 gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Delivered</span>
+<span class="text-surface-variant mx-2">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Order #TC-99482-XY</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Delivered on Oct 24, 2024</span>
+</div>
+<div class="flex flex-col sm:flex-row gap-6">
+<div class="w-full sm:w-24 h-24 bg-surface rounded flex-shrink-0 flex items-center justify-center border border-surface-variant">
+<img alt="Product Image" class="w-20 h-20 object-contain" data-alt="A sleek, modern smartphone levitating against a pure white background. The device features a metallic edge and a dark glossy screen reflecting minimal light. The lighting is crisp and even, highlighting the premium quality of the tech product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9bXWKr-bDt6ZOHfHdUqDf_jsEK6Dg0cP4Tssr4KseIn8VqSrlmt0y_AeGsUeHorwlZuUtLk-xiQp6o2WW8ucXaQOwGd4J6ezHJKyjdKgayct_HFVHuQJr5NiQNtJjrKCxQoLn93PAbf-3gPfOtCZuhZ8T4sGyEl-D6yFduPF5f2NpOjIrmsRUCrCh7wvZJudZcuvc5dD4ZWDfa_7Hsa_9Byis4GT5Z3aYe5FcFyP1ZCVygSW151zIwQ"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-md text-headline-md text-primary text-[20px] mb-1">NeuraLink Pro Smartphone</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Phantom Black • 512GB</p>
+<p class="font-label-md text-label-md text-secondary mb-4">$1,099.00</p>
+<div class="bg-surface p-4 rounded border border-surface-variant mb-4 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex flex-col gap-1 w-full md:w-auto">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Rate this product</span>
+<div class="flex gap-1 star-rating cursor-pointer">
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="1">star</span>
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="2">star</span>
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="3">star</span>
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="4">star</span>
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="5">star</span>
+</div>
+</div>
+<button class="w-full md:w-auto bg-secondary text-on-primary px-6 py-2 rounded-DEFAULT font-label-md text-label-md hover:bg-primary transition-colors focus:ring-2 focus:ring-secondary focus:ring-offset-2">
+                                        Write Review
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Another Rating Card -->
+<div class="border border-surface-variant rounded-lg p-6 hover-glow transition-all duration-300 bg-surface-container-lowest">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 pb-4 border-b border-surface-variant/50 gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Delivered</span>
+<span class="text-surface-variant mx-2">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Order #TC-88371-AB</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Delivered on Oct 20, 2024</span>
+</div>
+<div class="flex flex-col sm:flex-row gap-6">
+<div class="w-full sm:w-24 h-24 bg-surface rounded flex-shrink-0 flex items-center justify-center border border-surface-variant">
+<img alt="Product Image" class="w-20 h-20 object-contain" data-alt="A pair of high-end, minimalist wireless earbuds resting on a pristine white surface. The design is sleek and metallic, with a subtle blue glowing indicator light. The overall aesthetic is highly modern, clean, and technical." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5z5jEbNEX_nstrsYu_3XbISnb-QOC6lnwLgZMUjsBtymV8ZG8L_PBQW14QDHkkvKzy5Zc92bfICJfWX8n9pw5wHI3Wp7-XhgCY3W3xsebwe2eGYLN8Oiepkrh074-Eimb5ZZ4c4M-ZwKC1Rz3r6fa5OBfqHrwr8yl50Li_v0ToIp1XjZ19eYhX8ahmDodJbFxp4KJZvhTzMf4A3jf-ZIEAob3oH1ZSlj6CkqeFWmq5KQrwQEBUXbNzA"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-md text-headline-md text-primary text-[20px] mb-1">AuralSync Wireless Earbuds</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Glacier White • ANC Included</p>
+<p class="font-label-md text-label-md text-secondary mb-4">$249.00</p>
+<div class="bg-surface p-4 rounded border border-surface-variant mb-4 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex flex-col gap-1 w-full md:w-auto">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Rate this product</span>
+<div class="flex gap-1 star-rating cursor-pointer">
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="1">star</span>
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="2">star</span>
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="3">star</span>
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="4">star</span>
+<span class="material-symbols-outlined text-outline-variant hover:text-secondary-container transition-colors" data-rating="5">star</span>
+</div>
+</div>
+<button class="w-full md:w-auto bg-transparent border-2 border-primary text-primary px-6 py-2 rounded-DEFAULT font-label-md text-label-md hover:bg-surface-container transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                                        Write Review
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-primary-container dark:bg-tertiary-container border-t border-primary-fixed-variant/20 px-margin-mobile md:px-margin-desktop py-12 flex flex-col md:flex-row justify-between items-center gap-gutter">
+<div class="text-center md:text-left">
+<h4 class="font-display-lg-mobile text-display-lg-mobile font-black text-secondary-container mb-2">TECHCELL</h4>
+<p class="font-label-md text-label-md text-on-primary-container dark:text-tertiary-fixed">© 2024 TECHCELL. Future of Connectivity.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="font-label-md text-label-md text-on-primary-container/70 hover:text-secondary-container transition-colors duration-200 hover:opacity-80" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md text-on-primary-container/70 hover:text-secondary-container transition-colors duration-200 hover:opacity-80" href="#">Terms of Service</a>
+<a class="font-label-md text-label-md text-on-primary-container/70 hover:text-secondary-container transition-colors duration-200 hover:opacity-80" href="#">Warranty Info</a>
+<a class="font-label-md text-label-md text-on-primary-container/70 hover:text-secondary-container transition-colors duration-200 hover:opacity-80" href="#">Contact Us</a>
+</nav>
+</footer>
+<script>
+        // Simple star rating interaction
+        document.querySelectorAll('.star-rating').forEach(ratingContainer => {
+            const stars = ratingContainer.querySelectorAll('span');
+            
+            stars.forEach(star => {
+                star.addEventListener('mouseover', function() {
+                    const ratingValue = this.getAttribute('data-rating');
+                    resetStars(stars);
+                    fillStars(stars, ratingValue);
+                });
+
+                star.addEventListener('mouseout', function() {
+                    const activeRating = ratingContainer.getAttribute('data-active-rating') || 0;
+                    resetStars(stars);
+                    if(activeRating > 0) fillStars(stars, activeRating);
+                });
+
+                star.addEventListener('click', function() {
+                    const ratingValue = this.getAttribute('data-rating');
+                    ratingContainer.setAttribute('data-active-rating', ratingValue);
+                    resetStars(stars);
+                    fillStars(stars, ratingValue);
+                });
+            });
+        });
+
+        function fillStars(stars, value) {
+            for(let i=0; i<value; i++) {
+                stars[i].classList.add('fill-icon', 'text-secondary');
+                stars[i].classList.remove('text-outline-variant');
+            }
+        }
+
+        function resetStars(stars) {
+            stars.forEach(star => {
+                star.classList.remove('fill-icon', 'text-secondary');
+                star.classList.add('text-outline-variant');
+            });
+        }
+
+        // Mock tab switching for visual feedback (since only 'Beri Rating' is populated in this mock)
+        function switchTab(tabId) {
+            console.log("Switched to tab:", tabId);
+            // In a real app, this would hide/show content sections.
+        }
+    </script>
+</body></html>
