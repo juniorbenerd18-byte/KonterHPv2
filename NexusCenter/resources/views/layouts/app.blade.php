@@ -145,9 +145,9 @@
 
     <!-- Top Navigation Bar -->
     <header class="glass-nav fixed top-0 w-full z-50 no-print transition-colors duration-200">
-        <div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop py-3.5 max-w-container-max-width mx-auto">
+        <div class="flex items-center justify-between px-4 sm:px-6 lg:px-10 py-3.5 max-w-[1440px] mx-auto w-full">
             <!-- Brand -->
-            <a href="{{ auth()->check() && auth()->user()->isStaff() ? route('dashboard') : url('/') }}" class="flex items-center gap-2 group">
+            <a href="{{ auth()->check() && auth()->user()->isStaff() ? route('dashboard') : url('/') }}" class="flex items-center gap-2.5 group shrink-0">
                 <div class="w-9 h-9 bg-primary-container rounded-lg flex items-center justify-center shadow-sm">
                     <span class="material-symbols-outlined text-secondary-fixed-dim text-[22px]">memory</span>
                 </div>
@@ -157,7 +157,7 @@
             </a>
 
             <!-- Navigation Links -->
-            <nav class="hidden md:flex items-center gap-0.5 lg:gap-1.5 font-sans">
+            <nav class="hidden md:flex items-center gap-1.5 lg:gap-3 xl:gap-4 font-sans">
                 @auth
                     @if(auth()->user()->isPengguna())
                         <a href="{{ url('/') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->is('/') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">

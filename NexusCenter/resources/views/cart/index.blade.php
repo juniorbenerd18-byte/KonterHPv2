@@ -185,10 +185,30 @@ function checkDistance() {
     }
     res.innerHTML = '<span class="text-blue-700 font-bold">📡 Menghitung jarak dari konter...</span>';
 
-    const STORE_LAT = -6.200000;
-    const STORE_LNG = 106.816666;
+    const STORE_LAT = -7.588800;
+    const STORE_LNG = 110.748300;
 
-    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1`)
+    // Check if user pasted coordinates or Google Maps link directly
+    const coordMatch = addr.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) || addr.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+    if (coordMatch) {
+        const lat = parseFloat(coordMatch[1]);
+        const lng = parseFloat(coordMatch[2]);
+        const dLat = (lat - STORE_LAT) * Math.PI / 180;
+        const dLon = (lng - STORE_LNG) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(STORE_LAT * Math.PI / 180) * Math.cos(lat * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        const distKm = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        if (distKm <= 4.0) {
+            res.innerHTML = `<span class="text-green-700 font-bold">✓ Jarak: ${distKm.toFixed(1)} km (≤ 4km). Selamat! Anda mendapatkan Gratis Ongkir.</span>`;
+        } else {
+            res.innerHTML = `<span class="text-amber-700 font-bold">⚠️ Jarak: ${distKm.toFixed(1)} km (> 4km). Melebihi batas gratis ongkir (${(distKm - 4.0).toFixed(1)} km).</span>`;
+        }
+        return;
+    }
+
+    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
         .then(r => r.json())
         .then(data => {
             if (data && data.length > 0) {

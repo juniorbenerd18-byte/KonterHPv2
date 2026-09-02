@@ -1,8 +1,13 @@
 @extends('layouts.app')
 @section('title', 'Checkout Pembelian — TECHCELL NexusCenter')
 
+@push('styles')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+@endpush
+
 @section('content')
-<div class="fade-in max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-12">
+<div class="fade-in max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-12">
     <h1 class="font-display font-extrabold text-2xl md:text-3xl text-on-surface mb-8 flex items-center gap-3">
         <span class="material-symbols-outlined text-secondary text-3xl">payments</span>
         Checkout Pesanan
@@ -14,7 +19,7 @@
             <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 md:p-8 shadow-card">
                 <h3 class="font-display font-bold text-lg text-on-surface mb-6 border-b border-outline-variant/20 pb-3 flex items-center gap-2">
                     <span class="material-symbols-outlined text-secondary">person</span>
-                    Informasi Pembeli
+                    Informasi Pembeli & Alamat Pengiriman
                 </h3>
 
                 <form method="POST" action="{{ route('checkout.process') }}" class="space-y-6">
@@ -28,7 +33,7 @@
 
                     <div>
                         <label class="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-2">Nomor Telepon / WhatsApp *</label>
-                        <input type="text" name="customer_phone" value="{{ old('customer_phone') }}" required
+                        <input type="text" name="customer_phone" value="{{ old('customer_phone', auth()->check() ? auth()->user()->phone : '') }}" required
                             class="w-full bg-surface-container-low border border-outline-variant/40 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all font-mono"
                             placeholder="Contoh: 081234567890">
                     </div>
@@ -49,109 +54,37 @@
 
                     <div id="address-field-wrap">
                         <div class="flex items-center justify-between mb-2">
-                            <label class="block text-xs font-mono font-bold text-on-surface-variant uppercase">Alamat Lengkap Pengiriman *</label>
+                            <label class="block text-xs font-mono font-bold text-on-surface-variant uppercase">Alamat Lengkap / Salinan Google Maps *</label>
                             <button type="button" onclick="detectGPSLocation()" class="text-xs font-mono text-secondary hover:underline font-bold flex items-center gap-1">
                                 <span class="material-symbols-outlined text-[16px]">my_location</span> Deteksi GPS Saya
                             </button>
                         </div>
-                        <textarea name="customer_address" id="customer_address_input" rows="2" required onchange="calcDistanceByAddress()"
+                        <textarea name="customer_address" id="customer_address_input" rows="2" required oninput="handleAddressInputChange()"
                             class="w-full bg-surface-container-low border border-outline-variant/40 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
-                            placeholder="Jl. Raya No. XX, Kelurahan, Kecamatan, Patokan..."></textarea>
+                            placeholder="Jl. Raya Gawok No. XX, Sukoharjo... (Bisa juga tempelkan link/teks dari Google Maps)">{{ old('customer_address', auth()->check() ? auth()->user()->address : '') }}</textarea>
                         
-                        <input type="hidden" name="customer_lat" id="customer_lat">
-                        <input type="hidden" name="customer_lng" id="customer_lng">
+                        <p class="text-[11px] font-mono text-on-surface-variant/80 mt-1">💡 Anda dapat mengetik alamat atau menempelkan (paste) salinan link/koordinat dari Google Maps.</p>
+
+                        <input type="hidden" name="customer_lat" id="customer_lat" value="{{ old('customer_lat', auth()->check() ? auth()->user()->latitude : '') }}">
+                        <input type="hidden" name="customer_lng" id="customer_lng" value="{{ old('customer_lng', auth()->check() ? auth()->user()->longitude : '') }}">
+
+                        {{-- Leaflet Interactive Map Pin Picker --}}
+                        <div class="mt-3 border border-outline-variant/30 rounded-xl overflow-hidden shadow-inner">
+                            <div class="bg-surface-container-low px-3 py-2 border-b border-outline-variant/20 flex items-center justify-between text-xs font-mono">
+                                <span class="font-bold text-primary flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+                                    Peta Pin Lokasi Rumah (Geser pin jika kurang pas)
+                                </span>
+                                <span id="pin-coord-text" class="text-[11px] text-secondary font-bold"></span>
+                            </div>
+                            <div id="checkout-map" class="w-full h-[220px] bg-surface-container"></div>
+                        </div>
 
                         {{-- Distance Badge --}}
-                        <div id="distance-badge-wrap" class="mt-2 p-3 rounded-xl text-xs font-mono hidden">
+                        <div id="distance-badge-wrap" class="mt-3 p-3 rounded-xl text-xs font-mono hidden">
                             <div id="distance-badge-content" class="flex items-center gap-2"></div>
                         </div>
                     </div>
-
-                    <script>
-                    const STORE_LAT = -6.200000;
-                    const STORE_LNG = 106.816666;
-
-                    function haversineDistance(lat1, lon1, lat2, lon2) {
-                        const R = 6371; // km
-                        const dLat = (lat2 - lat1) * Math.PI / 180;
-                        const dLon = (lon2 - lon1) * Math.PI / 180;
-                        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                                  Math.sin(dLon/2) * Math.sin(dLon/2);
-                        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                        return R * c;
-                    }
-
-                    function updateDistanceUI(distKm, textLocation = '') {
-                        const wrap = document.getElementById('distance-badge-wrap');
-                        const content = document.getElementById('distance-badge-content');
-                        wrap.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'text-green-800', 'bg-amber-50', 'border-amber-200', 'text-amber-800');
-                        
-                        if (distKm <= 4.0) {
-                            wrap.classList.add('bg-green-50', 'border', 'border-green-200', 'text-green-800');
-                            content.innerHTML = `<span class="material-symbols-outlined text-green-600 text-[18px]">verified</span> 
-                                <div><strong>Jarak ke Konter: ${distKm.toFixed(1)} km</strong> (≤ 4km) — <span class="font-bold text-green-700">GRATIS ONGKIR!</span></div>`;
-                        } else {
-                            const extraDist = (distKm - 4.0).toFixed(1);
-                            wrap.classList.add('bg-amber-50', 'border', 'border-amber-200', 'text-amber-800');
-                            content.innerHTML = `<span class="material-symbols-outlined text-amber-600 text-[18px]">warning</span> 
-                                <div><strong>Jarak ke Konter: ${distKm.toFixed(1)} km</strong> (> 4km) — Melebihi batas ${extraDist} km. Estimasi ongkir tambahan dihitung oleh admin/kurir.</div>`;
-                        }
-                    }
-
-                    function detectGPSLocation() {
-                        const badge = document.getElementById('distance-badge-wrap');
-                        badge.classList.remove('hidden');
-                        badge.className = 'mt-2 p-3 rounded-xl text-xs font-mono bg-blue-50 border border-blue-200 text-blue-800';
-                        document.getElementById('distance-badge-content').innerHTML = '📡 Mengambil koordinat GPS lokasi Anda...';
-
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(function(pos) {
-                                const lat = pos.coords.latitude;
-                                const lng = pos.coords.longitude;
-                                document.getElementById('customer_lat').value = lat;
-                                document.getElementById('customer_lng').value = lng;
-
-                                const distKm = haversineDistance(STORE_LAT, STORE_LNG, lat, lng);
-                                updateDistanceUI(distKm);
-                            }, function(err) {
-                                badge.className = 'mt-2 p-3 rounded-xl text-xs font-mono bg-red-50 border border-red-200 text-red-800';
-                                document.getElementById('distance-badge-content').innerHTML = '⚠️ Gagal mendeteksi lokasi GPS secara otomatis. Silakan ketik alamat Anda secara manual.';
-                            });
-                        }
-                    }
-
-                    function calcDistanceByAddress() {
-                        const addr = document.getElementById('customer_address_input').value.trim();
-                        if (addr.length < 5) return;
-                        
-                        // OpenStreetMap Nominatim Geocoding API (Free)
-                        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1`)
-                            .then(r => r.json())
-                            .then(data => {
-                                if (data && data.length > 0) {
-                                    const lat = parseFloat(data[0].lat);
-                                    const lng = parseFloat(data[0].lon);
-                                    document.getElementById('customer_lat').value = lat;
-                                    document.getElementById('customer_lng').value = lng;
-                                    const distKm = haversineDistance(STORE_LAT, STORE_LNG, lat, lng);
-                                    updateDistanceUI(distKm);
-                                }
-                            }).catch(e => console.log(e));
-                    }
-
-                    function toggleAddressBox(show) {
-                        const wrap = document.getElementById('address-field-wrap');
-                        const input = document.getElementById('customer_address_input');
-                        if (show) {
-                            wrap.style.display = 'block';
-                            input.setAttribute('required', 'required');
-                        } else {
-                            wrap.style.display = 'none';
-                            input.removeAttribute('required');
-                        }
-                    }
-                    </script>
 
                     <div>
                         <label class="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-2">Metode Pembayaran *</label>
@@ -229,3 +162,171 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// Konter Techcell Lokasi Gawok, Sukoharjo, Central Java
+const STORE_LAT = -7.588800;
+const STORE_LNG = 110.748300;
+
+let checkoutMap = null;
+let mapMarker = null;
+
+function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+function updateDistanceUI(distKm) {
+    const wrap = document.getElementById('distance-badge-wrap');
+    const content = document.getElementById('distance-badge-content');
+    wrap.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'text-green-800', 'bg-amber-50', 'border-amber-200', 'text-amber-800');
+    
+    if (distKm <= 4.0) {
+        wrap.classList.add('bg-green-50', 'border', 'border-green-200', 'text-green-800');
+        content.innerHTML = `<span class="material-symbols-outlined text-green-600 text-[18px]">verified</span> 
+            <div><strong>Jarak ke Konter Gawok: ${distKm.toFixed(1)} km</strong> (≤ 4km) — <span class="font-bold text-green-700">GRATIS ONGKIR!</span></div>`;
+    } else {
+        const extraDist = (distKm - 4.0).toFixed(1);
+        wrap.classList.add('bg-amber-50', 'border', 'border-amber-200', 'text-amber-800');
+        content.innerHTML = `<span class="material-symbols-outlined text-amber-600 text-[18px]">warning</span> 
+            <div><strong>Jarak ke Konter Gawok: ${distKm.toFixed(1)} km</strong> (> 4km) — Melebihi batas ${extraDist} km. Ongkir tambahan dihitung oleh kurir.</div>`;
+    }
+}
+
+function setCoordinates(lat, lng, moveMap = true) {
+    lat = parseFloat(lat);
+    lng = parseFloat(lng);
+    document.getElementById('customer_lat').value = lat;
+    document.getElementById('customer_lng').value = lng;
+    document.getElementById('pin-coord-text').textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+
+    if (mapMarker) {
+        mapMarker.setLatLng([lat, lng]);
+    }
+    if (moveMap && checkoutMap) {
+        checkoutMap.setView([lat, lng], 15);
+    }
+
+    const distKm = haversineDistance(STORE_LAT, STORE_LNG, lat, lng);
+    updateDistanceUI(distKm);
+}
+
+function parseGoogleMapsUrlOrCoords(text) {
+    if (!text) return null;
+    // Format 1: Direct lat,lng numbers like -7.5888, 110.7483 or @-7.5888,110.7483
+    let match = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+    if (!match) {
+        // Format 2: q=-7.5888,110.7483
+        match = text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+    }
+    if (!match) {
+        // Format 3: !3d-7.5888!4d110.7483
+        const latMatch = text.match(/!3d(-?\d+\.\d+)/);
+        const lngMatch = text.match(/!4d(-?\d+\.\d+)/);
+        if (latMatch && lngMatch) {
+            return { lat: parseFloat(latMatch[1]), lng: parseFloat(lngMatch[1]) };
+        }
+    }
+    if (match) {
+        return { lat: parseFloat(match[1]), lng: parseFloat(match[2]) };
+    }
+    return null;
+}
+
+let debounceTimer = null;
+function handleAddressInputChange() {
+    const addr = document.getElementById('customer_address_input').value.trim();
+    
+    // First check if address contains raw coordinates or Google Maps link
+    const parsedCoords = parseGoogleMapsUrlOrCoords(addr);
+    if (parsedCoords) {
+        setCoordinates(parsedCoords.lat, parsedCoords.lng);
+        return;
+    }
+
+    if (addr.length < 4) return;
+
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        // Geocode via Nominatim constrained to Indonesia & Central Java / Gawok area
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    setCoordinates(data[0].lat, data[0].lon);
+                }
+            }).catch(e => console.log(e));
+    }, 600);
+}
+
+function detectGPSLocation() {
+    const badge = document.getElementById('distance-badge-wrap');
+    badge.classList.remove('hidden');
+    badge.className = 'mt-2 p-3 rounded-xl text-xs font-mono bg-blue-50 border border-blue-200 text-blue-800';
+    document.getElementById('distance-badge-content').innerHTML = '📡 Mengambil koordinat GPS lokasi Anda...';
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            setCoordinates(pos.coords.latitude, pos.coords.longitude);
+        }, function(err) {
+            badge.className = 'mt-2 p-3 rounded-xl text-xs font-mono bg-red-50 border border-red-200 text-red-800';
+            document.getElementById('distance-badge-content').innerHTML = '⚠️ Gagal mendeteksi lokasi GPS secara otomatis. Silakan geser pin pada peta atau ketik alamat secara manual.';
+        });
+    }
+}
+
+function toggleAddressBox(show) {
+    const wrap = document.getElementById('address-field-wrap');
+    const input = document.getElementById('customer_address_input');
+    if (show) {
+        wrap.style.display = 'block';
+        input.setAttribute('required', 'required');
+        if (checkoutMap) setTimeout(() => checkoutMap.invalidateSize(), 200);
+    } else {
+        wrap.style.display = 'none';
+        input.removeAttribute('required');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const initLat = parseFloat(document.getElementById('customer_lat').value) || STORE_LAT;
+    const initLng = parseFloat(document.getElementById('customer_lng').value) || STORE_LNG;
+
+    checkoutMap = L.map('checkout-map').setView([initLat, initLng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(checkoutMap);
+
+    const houseIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: "<div style='background-color:#00687a;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 4px 6px rgba(0,0,0,0.3);cursor:grab;'><span class='material-symbols-outlined' style='font-size:18px;'>home</span></div>",
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+    });
+
+    mapMarker = L.marker([initLat, initLng], { icon: houseIcon, draggable: true }).addTo(checkoutMap);
+    
+    mapMarker.on('dragend', function(e) {
+        const position = mapMarker.getLatLng();
+        setCoordinates(position.lat, position.lng, false);
+    });
+
+    checkoutMap.on('click', function(e) {
+        setCoordinates(e.latlng.lat, e.latlng.lng, false);
+    });
+
+    if (document.getElementById('customer_lat').value && document.getElementById('customer_lng').value) {
+        setCoordinates(initLat, initLng);
+    }
+});
+</script>
+@endpush

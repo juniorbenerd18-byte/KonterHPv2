@@ -101,6 +101,16 @@ class CheckoutController extends Controller
                     $vi['product']->decrement('stock', $vi['qty']);
                 }
 
+                // Auto-save/update address in User profile so user doesn't need to re-enter it next time
+                if (auth()->check()) {
+                    auth()->user()->update([
+                        'phone'     => $request->customer_phone,
+                        'address'   => $request->customer_address ?: auth()->user()->address,
+                        'latitude'  => $request->customer_lat ?: auth()->user()->latitude,
+                        'longitude' => $request->customer_lng ?: auth()->user()->longitude,
+                    ]);
+                }
+
                 return $sale;
             });
         } catch (\Exception $e) {

@@ -105,19 +105,49 @@
                                 <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-3 font-mono text-sm text-primary focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all">
                             </div>
                             <div class="flex flex-col gap-1.5">
+                                <label class="font-mono text-xs font-bold text-on-surface-variant uppercase">Nomor Telepon / WhatsApp</label>
+                                <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="Contoh: 081234567890" class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-3 font-mono text-sm text-primary focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all">
+                            </div>
+                            <div class="flex flex-col gap-1.5">
                                 <label class="font-mono text-xs font-bold text-on-surface-variant uppercase">Password Baru (Opsional)</label>
                                 <input type="password" name="password" placeholder="Kosongkan jika tidak ingin diubah" class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-3 font-mono text-sm text-primary focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all">
                             </div>
-                            <div class="flex flex-col gap-1.5">
-                                <label class="font-mono text-xs font-bold text-on-surface-variant uppercase">Tipe Akun / Hak Akses</label>
-                                <input type="text" readonly value="{{ ucfirst($user->role) }}" class="bg-surface-container-low/60 border border-outline-variant/20 rounded-xl p-3 font-mono text-sm text-on-surface-variant outline-none cursor-not-allowed">
+                        </div>
+
+                        {{-- Section Alamat Pengiriman Utama --}}
+                        <div class="mt-8 pt-6 border-t border-outline-variant/20 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-secondary">home_pin</span>
+                                    Alamat Pengiriman Utama (Cukup isi 1x)
+                                </h3>
+                                <button type="button" onclick="detectProfileGPS()" class="text-xs font-mono text-secondary hover:underline font-bold flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">my_location</span> Deteksi GPS
+                                </button>
+                            </div>
+                            
+                            <textarea name="address" id="profile_address" rows="2" oninput="handleProfileAddressChange()" class="w-full bg-surface-container-low border border-outline-variant/40 rounded-xl p-3 font-body text-sm text-primary focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Alamat lengkap (Jl. Raya Gawok No. XX, Sukoharjo...) atau tempelkan link/koordinat Google Maps">{{ old('address', $user->address) }}</textarea>
+                            <p class="text-[11px] font-mono text-on-surface-variant/80">💡 Alamat ini akan otomatis tersimpan dan digunakan saat checkout pesanan berikutnya.</p>
+
+                            <input type="hidden" name="latitude" id="profile_lat" value="{{ old('latitude', $user->latitude) }}">
+                            <input type="hidden" name="longitude" id="profile_lng" value="{{ old('longitude', $user->longitude) }}">
+
+                            <div class="border border-outline-variant/30 rounded-xl overflow-hidden shadow-inner">
+                                <div class="bg-surface-container-low px-3 py-2 border-b border-outline-variant/20 flex items-center justify-between text-xs font-mono">
+                                    <span class="font-bold text-primary flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[16px] text-secondary">map</span>
+                                        Geser Pin Lokasi Rumah Anda
+                                    </span>
+                                    <span id="profile-pin-text" class="text-[11px] text-secondary font-bold"></span>
+                                </div>
+                                <div id="profile-map" class="w-full h-[220px] bg-surface-container"></div>
                             </div>
                         </div>
 
                         <div class="mt-8 pt-6 border-t border-outline-variant/20 flex justify-end">
                             <button type="submit" class="bg-secondary text-white font-mono text-xs font-bold px-6 py-3 rounded-xl hover:bg-secondary/90 transition-all shadow-md flex items-center gap-2 active:scale-95">
                                 <span class="material-symbols-outlined text-[18px]">save</span>
-                                Simpan Perubahan Profil
+                                Simpan Perubahan Profil & Alamat
                             </button>
                         </div>
                     </section>
@@ -197,7 +227,83 @@
     </div>
 </div>
 
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+@endpush
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+const DEFAULT_STORE_LAT = -7.588800;
+const DEFAULT_STORE_LNG = 110.748300;
+
+let profileMap = null;
+let profileMarker = null;
+
+function setProfileCoordinates(lat, lng, moveMap = true) {
+    lat = parseFloat(lat);
+    lng = parseFloat(lng);
+    document.getElementById('profile_lat').value = lat;
+    document.getElementById('profile_lng').value = lng;
+    document.getElementById('profile-pin-text').textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+
+    if (profileMarker) {
+        profileMarker.setLatLng([lat, lng]);
+    }
+    if (moveMap && profileMap) {
+        profileMap.setView([lat, lng], 15);
+    }
+}
+
+function parseProfileGoogleMapsUrlOrCoords(text) {
+    if (!text) return null;
+    let match = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) || text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+    if (!match) {
+        const latMatch = text.match(/!3d(-?\d+\.\d+)/);
+        const lngMatch = text.match(/!4d(-?\d+\.\d+)/);
+        if (latMatch && lngMatch) {
+            return { lat: parseFloat(latMatch[1]), lng: parseFloat(lngMatch[1]) };
+        }
+    }
+    if (match) {
+        return { lat: parseFloat(match[1]), lng: parseFloat(match[2]) };
+    }
+    return null;
+}
+
+let profileDebounceTimer = null;
+function handleProfileAddressChange() {
+    const addr = document.getElementById('profile_address').value.trim();
+    const parsedCoords = parseProfileGoogleMapsUrlOrCoords(addr);
+    if (parsedCoords) {
+        setProfileCoordinates(parsedCoords.lat, parsedCoords.lng);
+        return;
+    }
+
+    if (addr.length < 4) return;
+
+    clearTimeout(profileDebounceTimer);
+    profileDebounceTimer = setTimeout(() => {
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    setProfileCoordinates(data[0].lat, data[0].lon);
+                }
+            }).catch(e => console.log(e));
+    }, 600);
+}
+
+function detectProfileGPS() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            setProfileCoordinates(pos.coords.latitude, pos.coords.longitude);
+        }, function(err) {
+            alert('Gagal mengambil GPS: ' + err.message);
+        });
+    }
+}
+
 function switchProfileTab(tab) {
     const tabAccount = document.getElementById('sidebar-tab-account');
     const tabOrders = document.getElementById('sidebar-tab-orders');
@@ -223,16 +329,47 @@ function switchProfileTab(tab) {
 function previewAndSubmitAvatar() {
     const fileInput = document.getElementById('avatar-file-input');
     if (fileInput.files && fileInput.files[0]) {
-        // Automatically submit the profile form to save avatar
         document.getElementById('profile-form').submit();
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('tab') === 'orders' || window.location.hash === '#orders-section') {
         switchProfileTab('orders');
     }
+
+    const initLat = parseFloat(document.getElementById('profile_lat').value) || DEFAULT_STORE_LAT;
+    const initLng = parseFloat(document.getElementById('profile_lng').value) || DEFAULT_STORE_LNG;
+
+    profileMap = L.map('profile-map').setView([initLat, initLng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(profileMap);
+
+    const houseIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: "<div style='background-color:#00687a;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 4px 6px rgba(0,0,0,0.3);cursor:grab;'><span class='material-symbols-outlined' style='font-size:18px;'>home</span></div>",
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+    });
+
+    profileMarker = L.marker([initLat, initLng], { icon: houseIcon, draggable: true }).addTo(profileMap);
+
+    profileMarker.on('dragend', function(e) {
+        const position = profileMarker.getLatLng();
+        setProfileCoordinates(position.lat, position.lng, false);
+    });
+
+    profileMap.on('click', function(e) {
+        setProfileCoordinates(e.latlng.lat, e.latlng.lng, false);
+    });
+
+    if (document.getElementById('profile_lat').value && document.getElementById('profile_lng').value) {
+        setProfileCoordinates(initLat, initLng);
+    }
 });
 </script>
+@endpush
 @endsection

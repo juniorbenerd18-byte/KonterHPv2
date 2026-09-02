@@ -118,9 +118,9 @@
     let courierLat   = {{ $delivery->courier_lat ?? 'null' }};
     let courierLng   = {{ $delivery->courier_lng ?? 'null' }};
 
-    // Default center fallback (Jakarta / Default) if unlocatable
-    const defaultLat = -6.200000;
-    const defaultLng = 106.816666;
+    // Default center fallback (Gawok, Sukoharjo) if unlocatable
+    const defaultLat = -7.588800;
+    const defaultLng = 110.748300;
 
     const map = L.map('live-map').setView([destLat || defaultLat, destLng || defaultLng], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -139,7 +139,7 @@
 
     // Auto-geocode address if coordinates are missing
     if (!destLat || !destLng) {
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(custAddr)}&format=json&limit=1`)
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(custAddr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
             .then(r => r.json())
             .then(data => {
                 if (data && data.length > 0) {
@@ -161,6 +161,28 @@
     let courierMarker = courierLat ? L.marker([courierLat, courierLng], { icon: motorIcon }).addTo(map).bindPopup("<b>Kurir TECHCELL</b>") : null;
     let routeLine = null;
 
+    function drawFastestTrackRoute(cLat, cLng, dLat, dLng) {
+        if (!dLat || !dLng) return;
+        fetch(`https://router.project-osrm.org/route/v1/driving/${cLng},${cLat};${dLng},${dLat}?overview=full&geometries=geojson`)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.routes && data.routes.length > 0) {
+                    const routeCoords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                    if (routeLine) map.removeLayer(routeLine);
+                    routeLine = L.polyline(routeCoords, { color: '#00687a', weight: 5, opacity: 0.85 }).addTo(map);
+                    map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
+                } else {
+                    fallbackTrackPolyline(cLat, cLng, dLat, dLng);
+                }
+            }).catch(() => fallbackTrackPolyline(cLat, cLng, dLat, dLng));
+    }
+
+    function fallbackTrackPolyline(cLat, cLng, dLat, dLng) {
+        if (routeLine) map.removeLayer(routeLine);
+        routeLine = L.polyline([[cLat, cLng], [dLat, dLng]], { color: '#00687a', weight: 4, opacity: 0.8, dashArray: '8, 12' }).addTo(map);
+        map.fitBounds([[cLat, cLng], [dLat, dLng]], { padding: [40, 40] });
+    }
+
     // Fetch Live Location API every 5 seconds
     function pollLocation() {
         fetch(`/api/delivery/location/${deliveryId}`)
@@ -174,16 +196,8 @@
                         courierMarker.setLatLng(newLatLng);
                     }
 
-                    // Draw Route Line
-                    if (routeLine) map.removeLayer(routeLine);
-                    routeLine = L.polyline([[data.courier_lat, data.courier_lng], [destLat, destLng]], {
-                        color: '#00687a',
-                        weight: 4,
-                        opacity: 0.8,
-                        dashArray: '8, 12'
-                    }).addTo(map);
-
-                    map.fitBounds([[data.courier_lat, data.courier_lng], [destLat, destLng]], { padding: [50, 50] });
+                    // Draw OSRM Road Route
+                    drawFastestTrackRoute(data.courier_lat, data.courier_lng, destLat, destLng);
                 }
 
                 if (data.distance_meters !== null) {

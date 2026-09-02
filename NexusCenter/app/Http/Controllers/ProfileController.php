@@ -29,15 +29,23 @@ class ProfileController extends Controller
         $user = auth()->user();
 
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6',
-            'avatar'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone'     => 'nullable|string|max:25',
+            'address'   => 'nullable|string',
+            'latitude'  => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'password'  => 'nullable|string|min:6',
+            'avatar'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $data = [
-            'name'  => $request->name,
-            'email' => $request->email,
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'phone'     => $request->phone,
+            'address'   => $request->address,
+            'latitude'  => $request->latitude,
+            'longitude' => $request->longitude,
         ];
 
         if ($request->filled('password')) {
@@ -54,6 +62,6 @@ class ProfileController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('profile.index')->with('success', 'Profil berhasil diperbarui!');
+        return redirect()->route('profile.index')->with('success', 'Profil dan alamat berhasil diperbarui!');
     }
 }

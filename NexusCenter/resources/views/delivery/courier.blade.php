@@ -98,7 +98,7 @@
             @if($delivery->status !== 'selesai')
             <div class="space-y-2 pt-2">
                 <!-- Tombol Navigasi Google Maps -->
-                <a href="https://www.google.com/maps/dir/?api=1&destination=@if($delivery->customer_lat && $delivery->customer_lng){{ $delivery->customer_lat }},{{ $delivery->customer_lng }}@else{{ urlencode($delivery->customer_address) }}@endif" target="_blank"
+                <a id="btn-nav-gmaps" href="https://www.google.com/maps/dir/?api=1&destination=@if($delivery->customer_lat && $delivery->customer_lng){{ $delivery->customer_lat }},{{ $delivery->customer_lng }}@else{{ urlencode($delivery->customer_address) }}@endif&travelmode=driving" target="_blank"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white font-mono font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs transition-all">
                     <span class="material-symbols-outlined text-xl">near_me</span>
                     🗺️ NAVIGASI RUTE (GOOGLE MAPS)
@@ -168,8 +168,8 @@
         let destLat        = {{ $delivery->customer_lat ?? 'null' }};
         let destLng        = {{ $delivery->customer_lng ?? 'null' }};
 
-        const defaultLat = -6.200000;
-        const defaultLng = 106.816666;
+        const defaultLat = -7.588800;
+        const defaultLng = 110.748300;
 
         // Initialize Map
         const map = L.map('map').setView([destLat || defaultLat, destLng || defaultLng], 14);
@@ -192,7 +192,7 @@
 
         // Auto-geocode address if coordinates are missing
         if (!destLat || !destLng) {
-            fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(custAddr)}&format=json&limit=1`)
+            fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(custAddr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
                 .then(r => r.json())
                 .then(data => {
                     if (data && data.length > 0) {
@@ -215,6 +215,40 @@
         let courierMarker = null;
         let routeLine = null;
         let watchId = null;
+
+        // Draw fastest road route using OSRM Driving API
+        function drawFastestRoadRoute(fromLat, fromLng, toLat, toLng) {
+            if (!toLat || !toLng) return;
+            fetch(`https://router.project-osrm.org/route/v1/driving/${fromLng},${fromLat};${toLng},${toLat}?overview=full&geometries=geojson`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data && data.routes && data.routes.length > 0) {
+                        const routeCoords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                        if (routeLine) map.removeLayer(routeLine);
+                        routeLine = L.polyline(routeCoords, {
+                            color: '#00687a',
+                            weight: 5,
+                            opacity: 0.85
+                        }).addTo(map);
+                        map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
+                    } else {
+                        fallbackStraightPolyline(fromLat, fromLng, toLat, toLng);
+                    }
+                }).catch(err => {
+                    fallbackStraightPolyline(fromLat, fromLng, toLat, toLng);
+                });
+        }
+
+        function fallbackStraightPolyline(fromLat, fromLng, toLat, toLng) {
+            if (routeLine) map.removeLayer(routeLine);
+            routeLine = L.polyline([[fromLat, fromLng], [toLat, toLng]], {
+                color: '#00687a',
+                weight: 4,
+                opacity: 0.8,
+                dashArray: '8, 12'
+            }).addTo(map);
+            map.fitBounds([houseMarker.getLatLng(), courierMarker.getLatLng()], { padding: [40, 40] });
+        }
 
         function startTracking() {
             if (!navigator.geolocation) {
@@ -252,16 +286,14 @@
                         courierMarker.setLatLng([lat, lng]);
                     }
 
-                    // Draw Route Line
-                    if (routeLine) map.removeLayer(routeLine);
-                    routeLine = L.polyline([[lat, lng], [destLat, destLng]], {
-                        color: '#00687a',
-                        weight: 4,
-                        opacity: 0.8,
-                        dashArray: '8, 12'
-                    }).addTo(map);
+                    // Update Google Maps button link to use exact origin lat/lng
+                    const btnNav = document.getElementById('btn-nav-gmaps');
+                    if (btnNav && destLat && destLng) {
+                        btnNav.href = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${destLat},${destLng}&travelmode=driving`;
+                    }
 
-                    map.fitBounds([houseMarker.getLatLng(), courierMarker.getLatLng()], { padding: [40, 40] });
+                    // Draw OSRM Fastest Road Route
+                    drawFastestRoadRoute(lat, lng, destLat, destLng);
 
                     // Send to Laravel API
                     fetch(`/api/delivery/update-location/${deliveryId}`, {

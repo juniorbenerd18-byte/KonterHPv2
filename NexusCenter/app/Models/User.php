@@ -25,6 +25,10 @@ class User extends Authenticatable
         'role',
         'is_active',
         'avatar',
+        'phone',
+        'address',
+        'latitude',
+        'longitude',
     ];
 
     public function getAvatarUrlAttribute(): ?string
