@@ -139,7 +139,11 @@
 
     // Auto-geocode address if coordinates are missing
     if (!destLat || !destLng) {
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(custAddr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
+        let searchQuery = custAddr;
+        if (!/sukoharjo|surakarta|solo|jawa\s+tengah|gawok/i.test(searchQuery)) {
+            searchQuery += ', Sukoharjo, Jawa Tengah';
+        }
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1&countrycodes=id&bounded=1&viewbox=110.40,-7.75,111.00,-7.40`)
             .then(r => r.json())
             .then(data => {
                 if (data && data.length > 0) {

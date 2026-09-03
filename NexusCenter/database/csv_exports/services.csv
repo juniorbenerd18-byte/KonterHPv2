@@ -1,0 +1,2 @@
+id,nota_number,customer_name,customer_phone,device,service_type,issue,price,deposit,status,estimated_date,technician,notes,created_at,updated_at,user_id
+3,SRV-20260901-0001,andre,0823-2568-0356,"redmi 12c","Ganti Baterai",hfhaoffsjhohfhuugids,0,0,Diambil,,,"[LUNAS] Pelunasan sisa via Tunai sebesar Rp 0 pada 01/09/2026 03:46","2026-09-01 03:42:43","2026-09-01 03:46:33",3

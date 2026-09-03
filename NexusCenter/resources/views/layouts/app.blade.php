@@ -145,28 +145,28 @@
 
     <!-- Top Navigation Bar -->
     <header class="glass-nav fixed top-0 w-full z-50 no-print transition-colors duration-200">
-        <div class="flex items-center justify-between px-4 sm:px-6 lg:px-10 py-3.5 max-w-[1440px] mx-auto w-full">
+        <div class="flex items-center justify-between px-4 sm:px-8 lg:px-12 py-4 max-w-[1720px] mx-auto w-full">
             <!-- Brand -->
-            <a href="{{ auth()->check() && auth()->user()->isStaff() ? route('dashboard') : url('/') }}" class="flex items-center gap-2.5 group shrink-0">
-                <div class="w-9 h-9 bg-primary-container rounded-lg flex items-center justify-center shadow-sm">
-                    <span class="material-symbols-outlined text-secondary-fixed-dim text-[22px]">memory</span>
+            <a href="{{ auth()->check() && auth()->user()->isStaff() ? route('dashboard') : url('/') }}" class="flex items-center gap-3 group shrink-0">
+                <div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-secondary-fixed-dim text-[26px]">memory</span>
                 </div>
-                <span class="font-display font-extrabold text-[22px] tracking-tight text-primary-container leading-none">
-                    TECHCELL <span class="text-secondary font-bold text-sm text-outline tracking-normal font-mono">NexusCenter</span>
+                <span class="font-display font-extrabold text-2xl md:text-[28px] tracking-tight text-primary-container leading-none">
+                    NexusCenter
                 </span>
             </a>
 
             <!-- Navigation Links -->
-            <nav class="hidden md:flex items-center gap-1.5 lg:gap-3 xl:gap-4 font-sans">
+            <nav class="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-6 font-sans">
                 @auth
                     @if(auth()->user()->isPengguna())
-                        <a href="{{ url('/') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->is('/') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <a href="{{ url('/') }}" class="whitespace-nowrap px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ request()->is('/') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
                             Home
                         </a>
-                        <a href="{{ route('products.index', ['category' => 'smartphone']) }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->fullUrlIs('*category=smartphone*') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <a href="{{ route('products.index', ['category' => 'smartphone']) }}" class="whitespace-nowrap px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ request()->fullUrlIs('*category=smartphone*') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
                             Smartphone
                         </a>
-                        <a href="{{ route('products.index', ['category' => 'aksesoris']) }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->fullUrlIs('*category=aksesoris*') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <a href="{{ route('products.index', ['category' => 'aksesoris']) }}" class="whitespace-nowrap px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ request()->fullUrlIs('*category=aksesoris*') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
                             Aksesoris
                         </a>
                         <a href="{{ route('pulsa.index') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('pulsa.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">

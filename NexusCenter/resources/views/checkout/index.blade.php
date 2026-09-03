@@ -201,7 +201,7 @@ function updateDistanceUI(distKm) {
     }
 }
 
-function setCoordinates(lat, lng, moveMap = true) {
+function setCoordinates(lat, lng, moveMap = true, updateAddressText = false) {
     lat = parseFloat(lat);
     lng = parseFloat(lng);
     document.getElementById('customer_lat').value = lat;
@@ -217,22 +217,35 @@ function setCoordinates(lat, lng, moveMap = true) {
 
     const distKm = haversineDistance(STORE_LAT, STORE_LNG, lat, lng);
     updateDistanceUI(distKm);
+
+    if (updateAddressText) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    document.getElementById('customer_address_input').value = data.display_name;
+                }
+            }).catch(e => console.log(e));
+    }
 }
 
 function parseGoogleMapsUrlOrCoords(text) {
     if (!text) return null;
-    // Format 1: Direct lat,lng numbers like -7.5888, 110.7483 or @-7.5888,110.7483
-    let match = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+    let match = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) 
+        || text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/)
+        || text.match(/ll=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
     if (!match) {
-        // Format 2: q=-7.5888,110.7483
-        match = text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
-    }
-    if (!match) {
-        // Format 3: !3d-7.5888!4d110.7483
         const latMatch = text.match(/!3d(-?\d+\.\d+)/);
         const lngMatch = text.match(/!4d(-?\d+\.\d+)/);
         if (latMatch && lngMatch) {
             return { lat: parseFloat(latMatch[1]), lng: parseFloat(lngMatch[1]) };
+        }
+    }
+    if (!match) {
+        // Match raw lat, lng numbers separated by space or comma
+        const rawMatch = text.match(/(-?\d{1,2}\.\d+)\s*[\s,]\s*(1\d{2}\.\d+)/);
+        if (rawMatch) {
+            return { lat: parseFloat(rawMatch[1]), lng: parseFloat(rawMatch[2]) };
         }
     }
     if (match) {
@@ -245,23 +258,38 @@ let debounceTimer = null;
 function handleAddressInputChange() {
     const addr = document.getElementById('customer_address_input').value.trim();
     
-    // First check if address contains raw coordinates or Google Maps link
+    // Check if address contains raw coordinates or Google Maps link
     const parsedCoords = parseGoogleMapsUrlOrCoords(addr);
     if (parsedCoords) {
         setCoordinates(parsedCoords.lat, parsedCoords.lng);
         return;
     }
 
-    if (addr.length < 4) return;
+    if (addr.length < 3) return;
 
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-        // Geocode via Nominatim constrained to Indonesia & Central Java / Gawok area
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
+        // Append Gawok/Sukoharjo context if not present to avoid jumping to Jakarta (Pempek Gawok Menteng)
+        let searchQuery = addr;
+        if (!/sukoharjo|surakarta|solo|jawa\s+tengah|gawok/i.test(searchQuery)) {
+            searchQuery += ', Sukoharjo, Jawa Tengah';
+        }
+
+        // Geocode via Nominatim strictly bounded to Sukoharjo/Central Java area
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1&countrycodes=id&bounded=1&viewbox=110.40,-7.75,111.00,-7.40`)
             .then(r => r.json())
             .then(data => {
                 if (data && data.length > 0) {
                     setCoordinates(data[0].lat, data[0].lon);
+                } else {
+                    // Fallback search without bounded strictly if not found
+                    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr + ', Jawa Tengah')}&format=json&limit=1&countrycodes=id`)
+                        .then(r => r.json())
+                        .then(d2 => {
+                            if (d2 && d2.length > 0) {
+                                setCoordinates(d2[0].lat, d2[0].lon);
+                            }
+                        });
                 }
             }).catch(e => console.log(e));
     }, 600);
@@ -275,7 +303,7 @@ function detectGPSLocation() {
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos) {
-            setCoordinates(pos.coords.latitude, pos.coords.longitude);
+            setCoordinates(pos.coords.latitude, pos.coords.longitude, true, true);
         }, function(err) {
             badge.className = 'mt-2 p-3 rounded-xl text-xs font-mono bg-red-50 border border-red-200 text-red-800';
             document.getElementById('distance-badge-content').innerHTML = '⚠️ Gagal mendeteksi lokasi GPS secara otomatis. Silakan geser pin pada peta atau ketik alamat secara manual.';
@@ -317,11 +345,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     mapMarker.on('dragend', function(e) {
         const position = mapMarker.getLatLng();
-        setCoordinates(position.lat, position.lng, false);
+        setCoordinates(position.lat, position.lng, false, true);
     });
 
     checkoutMap.on('click', function(e) {
-        setCoordinates(e.latlng.lat, e.latlng.lng, false);
+        setCoordinates(e.latlng.lat, e.latlng.lng, false, true);
     });
 
     if (document.getElementById('customer_lat').value && document.getElementById('customer_lng').value) {

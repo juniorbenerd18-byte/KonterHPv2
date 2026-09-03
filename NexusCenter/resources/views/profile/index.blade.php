@@ -119,7 +119,7 @@
                             <div class="flex items-center justify-between">
                                 <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
                                     <span class="material-symbols-outlined text-secondary">home_pin</span>
-                                    Alamat Pengiriman Utama (Cukup isi 1x)
+                                    Alamat Pengiriman Utama
                                 </h3>
                                 <button type="button" onclick="detectProfileGPS()" class="text-xs font-mono text-secondary hover:underline font-bold flex items-center gap-1">
                                     <span class="material-symbols-outlined text-[16px]">my_location</span> Deteksi GPS
@@ -240,7 +240,7 @@ const DEFAULT_STORE_LNG = 110.748300;
 let profileMap = null;
 let profileMarker = null;
 
-function setProfileCoordinates(lat, lng, moveMap = true) {
+function setProfileCoordinates(lat, lng, moveMap = true, updateAddressText = false) {
     lat = parseFloat(lat);
     lng = parseFloat(lng);
     document.getElementById('profile_lat').value = lat;
@@ -253,16 +253,34 @@ function setProfileCoordinates(lat, lng, moveMap = true) {
     if (moveMap && profileMap) {
         profileMap.setView([lat, lng], 15);
     }
+
+    if (updateAddressText) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    document.getElementById('profile_address').value = data.display_name;
+                }
+            }).catch(e => console.log(e));
+    }
 }
 
 function parseProfileGoogleMapsUrlOrCoords(text) {
     if (!text) return null;
-    let match = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) || text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+    let match = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) 
+        || text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/)
+        || text.match(/ll=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
     if (!match) {
         const latMatch = text.match(/!3d(-?\d+\.\d+)/);
         const lngMatch = text.match(/!4d(-?\d+\.\d+)/);
         if (latMatch && lngMatch) {
             return { lat: parseFloat(latMatch[1]), lng: parseFloat(lngMatch[1]) };
+        }
+    }
+    if (!match) {
+        const rawMatch = text.match(/(-?\d{1,2}\.\d+)\s*[\s,]\s*(1\d{2}\.\d+)/);
+        if (rawMatch) {
+            return { lat: parseFloat(rawMatch[1]), lng: parseFloat(rawMatch[2]) };
         }
     }
     if (match) {
@@ -280,15 +298,28 @@ function handleProfileAddressChange() {
         return;
     }
 
-    if (addr.length < 4) return;
+    if (addr.length < 3) return;
 
     clearTimeout(profileDebounceTimer);
     profileDebounceTimer = setTimeout(() => {
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
+        let searchQuery = addr;
+        if (!/sukoharjo|surakarta|solo|jawa\s+tengah|gawok/i.test(searchQuery)) {
+            searchQuery += ', Sukoharjo, Jawa Tengah';
+        }
+
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1&countrycodes=id&bounded=1&viewbox=110.40,-7.75,111.00,-7.40`)
             .then(r => r.json())
             .then(data => {
                 if (data && data.length > 0) {
                     setProfileCoordinates(data[0].lat, data[0].lon);
+                } else {
+                    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr + ', Jawa Tengah')}&format=json&limit=1&countrycodes=id`)
+                        .then(r => r.json())
+                        .then(d2 => {
+                            if (d2 && d2.length > 0) {
+                                setProfileCoordinates(d2[0].lat, d2[0].lon);
+                            }
+                        });
                 }
             }).catch(e => console.log(e));
     }, 600);
@@ -297,7 +328,7 @@ function handleProfileAddressChange() {
 function detectProfileGPS() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos) {
-            setProfileCoordinates(pos.coords.latitude, pos.coords.longitude);
+            setProfileCoordinates(pos.coords.latitude, pos.coords.longitude, true, true);
         }, function(err) {
             alert('Gagal mengambil GPS: ' + err.message);
         });
@@ -359,11 +390,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     profileMarker.on('dragend', function(e) {
         const position = profileMarker.getLatLng();
-        setProfileCoordinates(position.lat, position.lng, false);
+        setProfileCoordinates(position.lat, position.lng, false, true);
     });
 
     profileMap.on('click', function(e) {
-        setProfileCoordinates(e.latlng.lat, e.latlng.lng, false);
+        setProfileCoordinates(e.latlng.lat, e.latlng.lng, false, true);
     });
 
     if (document.getElementById('profile_lat').value && document.getElementById('profile_lng').value) {

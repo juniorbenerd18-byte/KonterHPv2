@@ -1,0 +1,13 @@
+id,type,title,message,link,is_read,created_at,updated_at
+1,sale,"🛒 Pesanan Baru #INV-20260831-0001","Pesanan baru sebesar Rp 42.297.000 oleh Pengguna",http://127.0.0.1:8000/penjualan/1/struk,1,"2026-08-31 12:12:28","2026-09-01 02:19:40"
+2,sale,"🛒 Pesanan Baru #INV-20260831-0002","Pesanan baru sebesar Rp 11.999.000 oleh junior",http://127.0.0.1:8000/penjualan/2/struk,1,"2026-08-31 13:05:44","2026-08-31 13:12:51"
+3,service,"🔧 Booking Servis Baru #SRV-20260831-0001","Booking Kerusakan Kamera & Speaker (iphone 13 pro) oleh junior",http://127.0.0.1:8000/servis/1/nota,1,"2026-08-31 13:40:33","2026-08-31 13:44:42"
+4,sale,"🛒 Pesanan Baru #INV-20260831-0003","Pesanan baru sebesar Rp 89.000 oleh junior",http://127.0.0.1:8000/penjualan/3/struk,1,"2026-08-31 13:54:48","2026-09-01 02:19:40"
+5,service,"🚚 Tugas Pengantaran Baru #TRK-20260831-0001","Pengantaran ke junior oleh Kurir Mas Budi Kurir",http://127.0.0.1:8000/manajemen-pengantaran,1,"2026-08-31 14:26:25","2026-09-01 02:19:40"
+6,service,"🚚 Tugas Pengantaran Baru #TRK-20260831-0001","Pengantaran ke junior oleh Kurir Mas Budi Kurir",http://127.0.0.1:8000/manajemen-pengantaran,1,"2026-08-31 14:46:49","2026-09-01 02:19:34"
+7,service,"🔧 Booking Servis Baru #SRV-20260901-0001","Booking Ganti Baterai (Redmi 10c) oleh junior",,1,"2026-09-01 02:00:30","2026-09-01 02:13:30"
+8,sale,"🛒 Pesanan Baru #INV-20260901-0001","Pesanan baru sebesar Rp 19.999.000 oleh junior",http://127.0.0.1:8000/penjualan/4/struk,1,"2026-09-01 02:18:26","2026-09-01 02:18:48"
+9,sale,"🛒 Pesanan Baru #INV-20260901-0002","Pesanan baru sebesar Rp 19.999.000 oleh junior",http://127.0.0.1:8000/penjualan/5/struk,1,"2026-09-01 02:21:54","2026-09-01 02:22:24"
+10,service,"🚚 Tugas Pengantaran Baru #TRK-20260901-0001","Pengantaran ke junior oleh Kurir Mas Budi Kurir",http://127.0.0.1:8000/manajemen-pengantaran,0,"2026-09-01 03:26:16","2026-09-01 03:26:16"
+11,service,"🔧 Booking Servis Baru #SRV-20260901-0001","Booking Ganti Baterai (redmi 12c) oleh andre",,1,"2026-09-01 03:42:43","2026-09-01 03:54:15"
+12,service,"🚚 Kurir Mas Budi Kurir Mulai Mengantar Pesanan Anda!","Pengantaran #TRK-20260901-0001 ke junior sedang bergerak. Klik untuk melacak posisi driver realtime.",http://127.0.0.1:8000/lacak-pengantaran/TRK-20260901-0001,0,"2026-09-02 06:07:31","2026-09-02 06:07:31"

@@ -103,7 +103,7 @@
                     <div class="flex flex-col gap-3">
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="radio" name="delivery-method" value="pickup" class="w-4 h-4 text-secondary focus:ring-secondary">
-                            <span class="font-body text-sm text-on-surface group-hover:text-secondary transition-colors">Ambil di Konter TECHCELL</span>
+                            <span class="font-body text-sm text-on-surface group-hover:text-secondary transition-colors">Ambil di Konter NexusCenter</span>
                         </label>
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="radio" name="delivery-method" value="delivery" checked class="w-4 h-4 text-secondary focus:ring-secondary">
@@ -112,9 +112,9 @@
                     </div>
 
                     <div class="mt-4 pt-4 border-t border-outline-variant/20 space-y-3">
-                        <input type="text" id="distance-address" placeholder="Masukkan alamat Anda untuk cek jarak..." class="w-full bg-surface border border-outline-variant/50 rounded-lg p-2.5 text-xs font-mono focus:ring-secondary focus:border-secondary transition-all">
+                        <input type="text" id="distance-address" value="{{ old('address', auth()->check() ? auth()->user()->address : '') }}" placeholder="Masukkan alamat Anda untuk cek jarak..." class="w-full bg-surface border border-outline-variant/50 rounded-lg p-2.5 text-xs font-mono focus:ring-secondary focus:border-secondary transition-all">
                         <button type="button" onclick="checkDistance()" class="w-full bg-secondary-container text-on-secondary-container font-mono text-xs font-bold py-2 rounded-lg hover:opacity-90 transition-all shadow-sm">
-                            Check Distance
+                            Cek Jarak Ongkir
                         </button>
                         <p id="distance-result" class="text-[11px] font-mono text-on-surface-variant opacity-80 italic">
                             Gratis antar jika jarak &lt; 4km dari konter.
@@ -208,7 +208,12 @@ function checkDistance() {
         return;
     }
 
-    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1&countrycodes=id&viewbox=107.5,-8.5,111.5,-6.5`)
+    let searchQuery = addr;
+    if (!/sukoharjo|surakarta|solo|jawa\s+tengah|gawok/i.test(searchQuery)) {
+        searchQuery += ', Sukoharjo, Jawa Tengah';
+    }
+
+    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1&countrycodes=id&bounded=1&viewbox=110.40,-7.75,111.00,-7.40`)
         .then(r => r.json())
         .then(data => {
             if (data && data.length > 0) {
@@ -234,5 +239,11 @@ function checkDistance() {
             res.innerHTML = '<span class="text-green-700 font-bold">✓ Estimasi jarak &lt; 4km — Gratis Ongkir.</span>';
         });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('distance-address') && document.getElementById('distance-address').value.trim() !== '') {
+        checkDistance();
+    }
+});
 </script>
 @endsection

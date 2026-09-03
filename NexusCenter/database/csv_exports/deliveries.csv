@@ -1,0 +1,2 @@
+id,tracking_code,service_id,sale_id,courier_name,courier_phone,customer_name,customer_phone,customer_address,customer_lat,customer_lng,courier_lat,courier_lng,delivery_pin,status,notes,started_at,completed_at,created_at,updated_at
+3,TRK-20260901-0001,,5,"Mas Budi Kurir",813-2631-1280,junior,"+62 823-2568-0356","CPCG+M2M, Jl. Raya Klewer - Gawok, Sampang, Sraten, Kec. Gatak, Kabupaten Sukoharjo, Jawa Tengah 57557",-6.2,106.816666,-7.5796767863414,110.78574319764,5394,diantar,,"2026-09-02 06:07:31",,"2026-09-01 03:26:16","2026-09-02 06:07:44"

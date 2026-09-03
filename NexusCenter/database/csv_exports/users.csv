@@ -1,0 +1,4 @@
+id,name,email,email_verified_at,password,avatar,remember_token,created_at,updated_at,role,is_active
+1,Admin,admin@nexuscenter.id,,$2y$12$DT0DGMHbE3L6CZcS3vTsVu/sfGYh8olf6/oW32zjlZEWek0Z5MDgC,,,"2026-08-31 11:36:14","2026-08-31 11:36:14",admin,1
+2,budi,kasir@nexuscenter.id,,$2y$12$V87EYOTt4Dj1iZNMCmeOp.41VT1Bh47fzYNGYtITyPcONnkBl44yO,,,"2026-08-31 11:36:15","2026-08-31 13:42:23",kasir,1
+3,junior,pengguna@nexuscenter.id,,$2y$12$Hyxnb9P9Lvw2Nsvj74pqo.E/eSqwTy6qpT4o1.MVS5r3BMkfx9HDq,,,"2026-08-31 11:36:15","2026-08-31 13:05:25",pengguna,1
