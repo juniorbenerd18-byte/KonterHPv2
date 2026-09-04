@@ -12,9 +12,13 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
-// Auth
+use App\Http\Controllers\UserController;
+
+// Auth & Registration
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Public Landing Page & Promo
@@ -23,22 +27,15 @@ Route::get('/', function () {
         return redirect()->route('dashboard');
     }
     $products = \App\Models\Product::where('is_active', true)->latest()->take(8)->get();
-    return view('welcome', compact('products'));
+    return view('new_home.index', compact('products'));
 })->name('home');
 
 Route::get('/promo', [PromoController::class, 'index'])->name('promos.index');
-Route::get('/lacak-servis', [ServiceController::class, 'track'])->name('services.track');
-Route::get('/booking-servis', function () {
-    return view('services.booking');
-})->name('services.booking');
-Route::post('/booking-servis', [ServiceController::class, 'storeBooking'])->name('services.booking.store');
 
-// FIX #1: Nota servis bisa diakses publik (pelanggan booking perlu lihat konfirmasi tanpa login)
+// Nota servis dapat diakses via link
 Route::get('/servis/{service}/nota', [ServiceController::class, 'receipt'])->name('services.receipt');
 
-// GPS Courier Delivery Routes (Public Access for Tracking & Courier HP)
-Route::get('/lacak-pengantaran', [\App\Http\Controllers\DeliveryController::class, 'userDeliveries'])->name('delivery.userIndex');
-Route::get('/lacak-pengantaran/{tracking_code}', [\App\Http\Controllers\DeliveryController::class, 'track'])->name('delivery.track');
+// GPS Courier Delivery Routes for Courier HP & APIs
 Route::get('/k/{tracking_code}', [\App\Http\Controllers\DeliveryController::class, 'courierTask'])->name('delivery.courier.task');
 Route::get('/tugas-kurir', [\App\Http\Controllers\DeliveryController::class, 'courierDashboard'])->name('delivery.courier.dashboard');
 Route::get('/api/delivery/location/{delivery}', [\App\Http\Controllers\DeliveryController::class, 'getLocation'])->name('api.delivery.location');
@@ -53,8 +50,18 @@ Route::get('/pulsa-data', function () {
 // Protected routes for all authenticated users (Admin, Kasir, Pengguna)
 Route::middleware('auth')->group(function () {
     // Shared features for Pengguna / All Users
+    Route::get('/lacak-servis', [ServiceController::class, 'track'])->name('services.track');
+    Route::get('/booking-servis', function () {
+        return view('services.booking');
+    })->name('services.booking');
+    Route::post('/booking-servis', [ServiceController::class, 'storeBooking'])->name('services.booking.store');
+
+    Route::get('/lacak-pengantaran', [\App\Http\Controllers\DeliveryController::class, 'userDeliveries'])->name('delivery.userIndex');
+    Route::get('/lacak-pengantaran/{tracking_code}', [\App\Http\Controllers\DeliveryController::class, 'track'])->name('delivery.track');
+
     Route::get('/produk', [ProductController::class, 'index'])->name('products.index');
     Route::get('/api/produk', [ProductController::class, 'apiList'])->name('products.api');
+    Route::post('/produk/{product}/ulasan', [ProductController::class, 'addReview'])->name('products.review');
 
     // Cart, Checkout, Profile, Riwayat Servis & Receipts (all authenticated users)
     Route::get('/profil', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
@@ -67,8 +74,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/keranjang/kosongkan', [CartController::class, 'clear'])->name('cart.clear');
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
-    // Receipt accessible by all users (pengguna sees their own order after checkout)
+    // Receipt & Payment Confirmation accessible by all users after checkout
     Route::get('/penjualan/{sale}/struk', [SaleController::class, 'receipt'])->name('sales.receipt');
+    Route::post('/penjualan/{sale}/konfirmasi-pembayaran', [SaleController::class, 'confirmPayment'])->name('sales.confirmPayment');
 
     // Staff Only Routes (Admin & Kasir)
     Route::middleware('staff')->group(function () {
@@ -112,5 +120,12 @@ Route::middleware('auth')->group(function () {
 
         // Reports / Laporan
         Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
+
+        // User Management / Manajemen Akun Terdaftar
+        Route::get('/manajemen-user', [UserController::class, 'index'])->name('users.index');
+        Route::post('/manajemen-user', [UserController::class, 'store'])->name('users.store');
+        Route::patch('/manajemen-user/{user}/status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
+        Route::patch('/manajemen-user/{user}/role', [UserController::class, 'updateRole'])->name('users.updateRole');
+        Route::delete('/manajemen-user/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 });

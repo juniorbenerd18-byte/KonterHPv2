@@ -5,11 +5,11 @@
 <div class="fade-in max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-10">
 
     <!-- Header & Info -->
-    <div class="max-w-3xl mx-auto text-center mb-8 space-y-2">
+    <div class="max-w-3xl mx-auto bg-white border border-outline-variant/30 rounded-3xl p-6 md:p-8 text-center mb-8 space-y-2 shadow-card">
         <div class="w-14 h-14 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center mx-auto border border-secondary/20 shadow-sm">
             <span class="material-symbols-outlined text-3xl">two_wheeler</span>
         </div>
-        <h1 class="font-display font-extrabold text-2xl md:text-3xl text-primary">Live Tracking Kurir Pengantaran</h1>
+        <h1 class="font-display font-extrabold text-2xl md:text-3xl text-on-surface">Live Tracking Kurir Pengantaran</h1>
         <p class="font-mono text-xs text-on-surface-variant">Nomor Pelacakan: <strong class="text-secondary font-bold">#{{ $delivery->tracking_code }}</strong></p>
     </div>
 
@@ -38,17 +38,17 @@
         <!-- KANAN: Detail & PIN Khusus Pelanggan -->
         <div class="lg:col-span-4 space-y-6">
 
-            <!-- PIN Card -->
-            <div class="bg-gradient-to-br from-primary-container to-surface-container-container text-white rounded-2xl p-6 shadow-xl border border-outline-variant/20 relative overflow-hidden text-center space-y-3">
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary/20 rounded-full blur-2xl"></div>
-                <span class="inline-block px-3 py-1 bg-secondary/30 text-secondary-fixed-dim font-mono text-[11px] font-bold rounded-full border border-secondary/40">
-                    🔐 KODE PIN VERIFIKASI ANDA
-                </span>
-                <h3 class="font-display font-extrabold text-xs text-inverse-primary uppercase tracking-wider">Berikan Kode Ini Kepada Kurir Saat HP Tiba:</h3>
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl py-4 border border-white/20">
-                    <span class="font-mono font-bold text-4xl tracking-[0.4em] text-secondary-fixed-dim pl-3">{{ $delivery->delivery_pin }}</span>
+            <!-- PIN Card (Clean White Background) -->
+            <div class="bg-white text-slate-800 rounded-2xl p-6 shadow-xl border border-slate-200 relative overflow-hidden text-center space-y-4">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-cyan-50 text-cyan-800 font-mono text-[11px] font-bold rounded-full border border-cyan-200 shadow-sm">
+                    <span>🔐</span> KODE PIN VERIFIKASI ANDA
                 </div>
-                <p class="text-[11px] text-gray-300 font-mono leading-relaxed">
+                <h3 class="font-display font-extrabold text-xs text-slate-700 uppercase tracking-wider">Berikan Kode Ini Kepada Kurir Saat HP Tiba:</h3>
+                <div class="bg-gradient-to-r from-cyan-50 via-sky-50 to-cyan-50 rounded-2xl py-4 border-2 border-dashed border-cyan-400/60 shadow-inner">
+                    <span class="font-mono font-black text-4xl tracking-[0.4em] text-cyan-700 pl-3 drop-shadow-sm">{{ $delivery->delivery_pin }}</span>
+                </div>
+                <p class="text-[11px] text-slate-500 font-mono leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
                     Jangan berikan PIN ini sebelum Anda menerima dan memeriksa HP/barang secara langsung.
                 </p>
             </div>

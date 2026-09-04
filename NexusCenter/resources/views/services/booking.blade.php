@@ -4,15 +4,15 @@
 @section('content')
 <div class="fade-in max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-12">
     <!-- Header Banner -->
-    <div class="bg-primary-container text-on-primary-container rounded-2xl p-8 md:p-12 mb-10 relative overflow-hidden circuit-pattern border border-outline-variant/20 shadow-xl">
-        <div class="relative z-10 max-w-2xl">
-            <span class="inline-block px-3.5 py-1 bg-secondary/20 text-secondary-fixed font-mono text-xs font-bold rounded-full mb-3 border border-secondary/30">
+    <div class="bg-white border border-outline-variant/30 rounded-2xl p-8 md:p-12 mb-10 shadow-card">
+        <div class="max-w-2xl">
+            <span class="inline-block px-3.5 py-1 bg-secondary/10 text-secondary font-mono text-xs font-bold rounded-full mb-3 border border-secondary/20">
                 🔧 Booking Servis HP Online
             </span>
-            <h1 class="font-display font-extrabold text-3xl md:text-4xl text-white mb-3 tracking-tight">
-                Servis HP Profesional & Garansi Resmi
+            <h1 class="font-display font-extrabold text-3xl md:text-4xl text-on-surface mb-3 tracking-tight">
+                Servis HP Profesional &amp; Garansi Resmi
             </h1>
-            <p class="text-sm md:text-base text-inverse-primary leading-relaxed">
+            <p class="text-sm md:text-base text-on-surface-variant leading-relaxed">
                 Isi formulir pendaftaran servis HP di bawah ini. Teknisi bersertifikat kami siap memeriksa dan memperbaiki HP Anda dengan sparepart berkualitas.
             </p>
         </div>

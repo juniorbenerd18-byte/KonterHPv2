@@ -99,6 +99,7 @@ class CheckoutController extends Controller
                     ]);
 
                     $vi['product']->decrement('stock', $vi['qty']);
+                    $vi['product']->increment('review_count', $vi['qty']);
                 }
 
                 // Auto-save/update address in User profile so user doesn't need to re-enter it next time

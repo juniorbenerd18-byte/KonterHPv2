@@ -87,7 +87,42 @@ class SaleController extends Controller
 
     public function receipt(Sale $sale)
     {
-        $sale->load('items');
+        $sale->load(['items', 'delivery']);
         return view('sales.receipt', compact('sale'));
+    }
+
+    public function confirmPayment(Sale $sale, Request $request)
+    {
+        $sale->load(['items', 'delivery']);
+
+        // Auto create delivery task if delivery option was chosen
+        if ($sale->delivery_type === 'delivery' && !$sale->delivery) {
+            $trackingCode = \App\Models\Delivery::generateTrackingCode();
+            $pin          = \App\Models\Delivery::generatePin();
+
+            $delivery = \App\Models\Delivery::create([
+                'tracking_code'    => $trackingCode,
+                'sale_id'          => $sale->id,
+                'courier_name'     => 'Kurir Express TECHCELL',
+                'courier_phone'    => '081234567890',
+                'customer_name'    => $sale->customer_name,
+                'customer_phone'   => $sale->customer_phone,
+                'customer_address' => $sale->customer_address ?? 'Alamat Pemesan',
+                'customer_lat'     => $sale->customer_lat,
+                'customer_lng'     => $sale->customer_lng,
+                'delivery_pin'     => $pin,
+                'status'           => 'pending',
+                'notes'            => 'Pengantaran Pesanan Online #' . $sale->invoice_number,
+            ]);
+
+            \App\Models\Notification::create([
+                'type'    => 'service',
+                'title'   => '🚚 Tugas Pengantaran Baru #' . $delivery->tracking_code,
+                'message' => 'Pengantaran ke ' . $delivery->customer_name . ' untuk Invoice #' . $sale->invoice_number,
+                'link'    => route('delivery.index'),
+            ]);
+        }
+
+        return back()->with('success', 'Pembayaran berhasil dikonfirmasi LUNAS! Pesanan diproses' . ($sale->delivery_type === 'delivery' ? ' & Tugas Pengantaran Kurir otomatis dibuat!' : '.'));
     }
 }

@@ -5,27 +5,27 @@
 <div class="fade-in max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop py-10 space-y-8">
 
     <!-- Header Section -->
-    <div class="bg-gradient-to-r from-primary-container via-surface-container-container to-secondary/30 text-white rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-white/10">
+    <div class="bg-white border border-outline-variant/30 rounded-3xl p-8 md:p-10 shadow-card relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="space-y-3 max-w-2xl text-center md:text-left z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary/30 text-secondary-fixed-dim rounded-full text-xs font-mono font-bold border border-secondary/30">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-mono font-bold border border-secondary/20">
                 <span class="material-symbols-outlined text-sm">two_wheeler</span>
                 LIVE DRIVER & DELIVERY TRACKER
             </div>
-            <h1 class="font-display font-extrabold text-2xl md:text-4xl text-white tracking-tight">
+            <h1 class="font-display font-extrabold text-2xl md:text-4xl text-on-surface tracking-tight">
                 Lacak Pengantaran Pesanan & Driver
             </h1>
-            <p class="text-sm font-sans text-gray-300 leading-relaxed">
+            <p class="text-sm font-sans text-on-surface-variant leading-relaxed">
                 Pantau lokasi kurir pengantar secara realtime, cek estimasi jarak, dan dapatkan PIN verifikasi untuk menerima pesanan Anda dengan aman.
             </p>
         </div>
 
         <!-- Form Cari Nomor Resi / Phone -->
-        <div class="w-full md:w-80 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-lg shrink-0 z-10">
+        <div class="w-full md:w-80 bg-surface-container-low p-4 rounded-2xl border border-outline-variant/30 shadow-sm shrink-0 z-10">
             <form method="GET" action="{{ route('delivery.userIndex') }}" class="space-y-2">
-                <label class="font-mono text-xs text-gray-200 block font-semibold">Cari Kode Resi / No. HP:</label>
+                <label class="font-mono text-xs text-on-surface-variant block font-semibold">Cari Kode Resi / No. HP:</label>
                 <div class="flex gap-2">
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Contoh: TRK-2026..."
-                        class="w-full bg-white text-gray-900 text-xs font-mono px-3 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-secondary">
+                        class="w-full bg-white text-on-surface text-xs font-mono px-3 py-2.5 rounded-xl border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-secondary">
                     <button type="submit" class="bg-secondary hover:bg-secondary/90 text-white px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all shrink-0">
                         Cari
                     </button>

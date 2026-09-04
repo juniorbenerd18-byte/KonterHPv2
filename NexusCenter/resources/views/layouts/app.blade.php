@@ -146,8 +146,8 @@
     <!-- Top Navigation Bar -->
     <header class="glass-nav fixed top-0 w-full z-50 no-print transition-colors duration-200">
         <div class="flex items-center justify-between px-4 sm:px-8 lg:px-12 py-4 max-w-[1720px] mx-auto w-full">
-            <!-- Brand -->
-            <a href="{{ auth()->check() && auth()->user()->isStaff() ? route('dashboard') : url('/') }}" class="flex items-center gap-3 group shrink-0">
+            <!-- Brand Logo (with generous right margin to separate from Home nav) -->
+            <a href="{{ auth()->check() && auth()->user()->isStaff() ? route('dashboard') : url('/') }}" class="flex items-center gap-3 group shrink-0 mr-8 lg:mr-16 xl:mr-24">
                 <div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
                     <span class="material-symbols-outlined text-secondary-fixed-dim text-[26px]">memory</span>
                 </div>
@@ -158,58 +158,53 @@
 
             <!-- Navigation Links -->
             <nav class="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-6 font-sans">
-                @auth
-                    @if(auth()->user()->isPengguna())
-                        <a href="{{ url('/') }}" class="whitespace-nowrap px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ request()->is('/') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            Home
-                        </a>
-                        <a href="{{ route('products.index', ['category' => 'smartphone']) }}" class="whitespace-nowrap px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ request()->fullUrlIs('*category=smartphone*') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            Smartphone
-                        </a>
-                        <a href="{{ route('products.index', ['category' => 'aksesoris']) }}" class="whitespace-nowrap px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ request()->fullUrlIs('*category=aksesoris*') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            Aksesoris
-                        </a>
-                        <a href="{{ route('pulsa.index') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('pulsa.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            Pulsa & Data
-                        </a>
-                        <a href="{{ route('services.track') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('services.track') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            Lacak Servis
-                        </a>
-                        <a href="{{ route('delivery.userIndex') }}" class="whitespace-nowrap flex items-center gap-1 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('delivery.userIndex') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            <span class="material-symbols-outlined text-[16px]">two_wheeler</span> Lacak Driver
-                        </a>
-                        <a href="{{ route('services.booking') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('services.booking') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            Booking Servis
-                        </a>
-                        <a href="{{ route('promos.index') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('promos.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            Promo
-                        </a>
-                    @else
-                        <a href="{{ route('dashboard') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('dashboard') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            <span class="material-symbols-outlined text-[18px]">home</span> Dashboard
-                        </a>
-                        <a href="{{ route('sales.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('sales.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            <span class="material-symbols-outlined text-[18px]">point_of_sale</span> Penjualan POS
-                        </a>
-                        <a href="{{ route('products.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('products.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            <span class="material-symbols-outlined text-[18px]">inventory_2</span> Produk
-                        </a>
-                        <a href="{{ route('services.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('services.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            <span class="material-symbols-outlined text-[18px]">build</span> Servis
-                        </a>
-                        <a href="{{ route('delivery.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('delivery.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            <span class="material-symbols-outlined text-[18px]">two_wheeler</span> Pengantaran
-                        </a>
-                        <a href="{{ route('history.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('history.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            <span class="material-symbols-outlined text-[18px]">history</span> Riwayat
-                        </a>
-                        @if(auth()->user()->isAdmin())
-                        <a href="{{ route('reports.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('reports.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
-                            <span class="material-symbols-outlined text-[18px]">bar_chart</span> Laporan
-                        </a>
-                        @endif
+                @if(!auth()->check() || auth()->user()->isPengguna())
+                    <a href="{{ url('/') }}" class="whitespace-nowrap px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ request()->is('/') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        Home
+                    </a>
+                    <a href="{{ route('products.index') }}" class="whitespace-nowrap px-3 lg:px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ request()->routeIs('products.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        Produk
+                    </a>
+                    <a href="{{ route('services.track') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('services.track') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        Lacak Servis
+                    </a>
+                    <a href="{{ route('delivery.userIndex') }}" class="whitespace-nowrap flex items-center gap-1 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('delivery.userIndex') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[16px]">two_wheeler</span> Lacak Driver
+                    </a>
+                    <a href="{{ route('services.booking') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('services.booking') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        Booking Servis
+                    </a>
+                    <a href="{{ route('promos.index') }}" class="whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('promos.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        Promo
+                    </a>
+                @else
+                    <a href="{{ route('dashboard') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('dashboard') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[18px]">home</span> Dashboard
+                    </a>
+                    <a href="{{ route('sales.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('sales.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[18px]">point_of_sale</span> Penjualan POS
+                    </a>
+                    <a href="{{ route('products.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('products.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[18px]">inventory_2</span> Produk
+                    </a>
+                    <a href="{{ route('services.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('services.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[18px]">build</span> Servis
+                    </a>
+                    <a href="{{ route('delivery.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('delivery.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[18px]">two_wheeler</span> Pengantaran
+                    </a>
+                    <a href="{{ route('history.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('history.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[18px]">history</span> Riwayat
+                    </a>
+                    @if(auth()->user()->isAdmin())
+                    <a href="{{ route('reports.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('reports.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[18px]">bar_chart</span> Laporan
+                    </a>
+                    <a href="{{ route('users.index') }}" class="whitespace-nowrap flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded text-xs lg:text-sm font-medium transition-all {{ request()->routeIs('users.index') ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5' }}">
+                        <span class="material-symbols-outlined text-[18px]">group</span> Akun Terdaftar
+                    </a>
                     @endif
-                @endauth
+                @endif
             </nav>
 
             <!-- Right Controls (Search, Cart with Badge, Profile/Auth) -->
@@ -315,9 +310,14 @@
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="p-2 text-on-surface-variant hover:text-secondary rounded-full active:scale-95" title="Masuk">
-                        <span class="material-symbols-outlined text-[22px]">person</span>
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('login') }}" class="px-3 py-1.5 text-xs font-mono font-bold text-on-surface-variant hover:text-secondary hover:bg-secondary/5 rounded-lg transition-all" title="Masuk ke Akun">
+                            Masuk
+                        </a>
+                        <a href="{{ route('register') }}" class="px-3.5 py-1.5 text-xs font-mono font-bold text-white bg-secondary hover:bg-secondary/90 rounded-lg shadow-sm transition-all" title="Buat Akun Baru">
+                            Daftar Akun
+                        </a>
+                    </div>
                 @endauth
 
                 <!-- Mobile Menu Toggle -->
@@ -329,38 +329,34 @@
 
         <!-- Mobile Nav Menu -->
         <div id="mobile-menu" class="hidden md:hidden border-t border-outline-variant/20 bg-surface-container-lowest px-4 py-3 space-y-2">
-            @auth
-                @if(auth()->user()->isPengguna())
-                    <a href="{{ url('/') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Home</a>
-                    <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Katalog Produk</a>
-                    <a href="{{ route('pulsa.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Pulsa & Data</a>
-                    <a href="{{ route('services.track') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Lacak Servis HP</a>
-                    <a href="{{ route('delivery.userIndex') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-sm text-secondary">two_wheeler</span> Lacak Driver</a>
-                    <a href="{{ route('services.booking') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Booking Servis</a>
-                    <a href="{{ route('promos.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Promo Spesial</a>
-                    <a href="{{ route('cart.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-secondary font-bold">🛒 Keranjang Belanja</a>
-                    <a href="{{ route('profile.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Profil & Pesanan</a>
-                @else
-                    <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Dashboard</a>
-                    <a href="{{ route('sales.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Penjualan POS</a>
-                    <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Produk</a>
-                    <a href="{{ route('services.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Servis HP</a>
-                    <a href="{{ route('history.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Riwayat</a>
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('reports.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Laporan</a>
-                    @endif
-                @endif
-            @else
+            @if(!auth()->check() || auth()->user()->isPengguna())
                 <a href="{{ url('/') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Home</a>
                 <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Katalog Produk</a>
                 <a href="{{ route('services.track') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Lacak Servis HP</a>
-                <a href="{{ route('login') }}" class="block px-3 py-2 rounded text-sm font-semibold text-secondary">Masuk / Login</a>
-            @endauth
+                <a href="{{ route('delivery.userIndex') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-sm text-secondary">two_wheeler</span> Lacak Driver</a>
+                <a href="{{ route('services.booking') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Booking Servis</a>
+                <a href="{{ route('promos.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Promo Spesial</a>
+                <a href="{{ route('cart.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-secondary font-bold">🛒 Keranjang Belanja</a>
+                @auth
+                    <a href="{{ route('profile.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Profil & Pesanan</a>
+                @else
+                    <a href="{{ route('login') }}" class="block px-3 py-2 rounded text-sm font-semibold text-secondary">Masuk / Login</a>
+                @endauth
+            @else
+                <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Dashboard</a>
+                <a href="{{ route('sales.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Penjualan POS</a>
+                <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Produk</a>
+                <a href="{{ route('services.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Servis HP</a>
+                <a href="{{ route('history.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Riwayat</a>
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('reports.index') }}" class="block px-3 py-2 rounded text-sm font-medium text-on-surface">Laporan</a>
+                @endif
+            @endif
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="pt-16 min-h-screen">
+    <main class="pt-20 lg:pt-24 min-h-screen">
         @if(session('success'))
             <script>document.addEventListener('DOMContentLoaded', () => showToast('{{ session('success') }}', 'success'));</script>
         @endif

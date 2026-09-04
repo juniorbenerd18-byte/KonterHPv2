@@ -121,6 +121,82 @@
             @endif
         </div>
 
+        {{-- Payment Channel Box (QRIS / Virtual Account / Payment Confirmation) --}}
+        <div class="px-8 py-6 bg-gradient-to-r from-slate-900 via-primary-container to-slate-900 text-white border-t border-outline-variant/20 space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-cyan-400 text-2xl animate-pulse">account_balance_wallet</span>
+                    <div>
+                        <h4 class="font-display font-extrabold text-sm text-white">Status Pembayaran: {{ strtoupper($sale->payment_method) }}</h4>
+                        <p class="text-[11px] font-mono text-cyan-300">
+                            {{ $sale->delivery ? '🟢 Pembayaran Terkonfirmasi Lunas & Pengantaran Aktif' : 'Selesaikan pembayaran menggunakan channel di bawah ini' }}
+                        </p>
+                    </div>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase {{ $sale->delivery || session('success') ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40' : 'bg-amber-500/20 text-amber-300 border border-amber-400/40 animate-pulse' }}">
+                    {{ $sale->delivery || session('success') ? '✓ LUNAS' : 'MENUNGGU BAYAR' }}
+                </span>
+            </div>
+
+            @if($sale->payment_method === 'QRIS')
+            <!-- QRIS Simulator Box -->
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-center space-y-3">
+                <p class="font-mono text-xs text-cyan-200">Scan Kode QRIS di bawah ini dengan OVO, GoPay, DANA, atau ShopeePay:</p>
+                <div class="bg-white p-3 rounded-xl inline-block shadow-lg">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ urlencode('qris://nexuscenter/pay/' . $sale->invoice_number . '/' . $sale->total) }}"
+                         alt="QRIS Code Pembayaran" class="w-40 h-40 mx-auto">
+                    <span class="font-mono text-[10px] font-bold text-slate-800 block mt-1">NEXUSCENTER QRIS OFFICIAL</span>
+                </div>
+                <div class="flex justify-center items-center gap-3 text-[11px] font-mono text-gray-300 flex-wrap">
+                    <span>📱 GoPay</span> · <span>💜 OVO</span> · <span>💙 DANA</span> · <span>🧡 ShopeePay</span> · <span>🔴 LinkAja</span>
+                </div>
+            </div>
+
+            @elseif($sale->payment_method === 'Transfer')
+            <!-- Bank Virtual Account Transfer Box -->
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 space-y-3 font-mono text-xs">
+                <p class="text-cyan-200">Transfer ke Nomor Virtual Account berikut:</p>
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-cyan-500/40 flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] text-gray-400 block">BANK BCA VIRTUAL ACCOUNT:</span>
+                        <strong class="text-cyan-300 text-base tracking-widest" id="va-number">88012{{ str_pad($sale->id, 8, '0', STR_PAD_LEFT) }}</strong>
+                    </div>
+                    <button onclick="navigator.clipboard.writeText('88012{{ str_pad($sale->id, 8, '0', STR_PAD_LEFT) }}'); alert('Nomor Virtual Account disalin!')"
+                        class="bg-cyan-500 text-slate-950 text-[11px] font-bold px-3 py-1.5 rounded-lg hover:bg-cyan-400 transition-all">
+                        Salin VA
+                    </button>
+                </div>
+            </div>
+            @endif
+
+            <!-- Live Delivery Status & Tracking Link if exists -->
+            @if($sale->delivery)
+            <div class="bg-emerald-950/60 p-4 rounded-xl border border-emerald-500/40 flex items-center justify-between text-xs font-mono">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-emerald-400 text-xl animate-bounce">two_wheeler</span>
+                    <div>
+                        <strong class="text-emerald-300 block">Kurir Pengantaran Ditugaskan!</strong>
+                        <span class="text-gray-300">Kode Tracking: #{{ $sale->delivery->tracking_code }} | PIN: {{ $sale->delivery->delivery_pin }}</span>
+                    </div>
+                </div>
+                <a href="{{ route('delivery.track', $sale->delivery->tracking_code) }}"
+                   class="bg-emerald-500 text-slate-950 font-bold px-3.5 py-2 rounded-lg hover:bg-emerald-400 transition-all">
+                    🗺️ Lacak Peta Kurir
+                </a>
+            </div>
+            @endif
+
+            <!-- Instant Payment Confirmation Button -->
+            <form method="POST" action="{{ route('sales.confirmPayment', $sale) }}">
+                @csrf
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-mono font-extrabold py-3.5 rounded-xl shadow-lg transition-all transform active:scale-95 text-xs flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">verified_user</span>
+                    ⚡ KONFIRMASI BAYAR INSTANT (UJI PEMBAYARAN LUNAS)
+                </button>
+            </form>
+        </div>
+
         {{-- Footer --}}
         <div class="px-8 py-6 text-center border-t border-outline-variant/20">
             <div class="text-xs font-mono text-on-surface-variant leading-relaxed">

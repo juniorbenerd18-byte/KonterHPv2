@@ -103,4 +103,24 @@ class ProductController extends Controller
             'image'    => $p->image ? Storage::url($p->image) : null,
         ]));
     }
+
+    public function addReview(Request $request, Product $product)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $currCount = $product->review_count ?: 0;
+        $currRating = $product->rating ?: 4.9;
+
+        $newCount = $currCount + 1;
+        $newRating = round((($currRating * $currCount) + $request->rating) / $newCount, 1);
+
+        $product->update([
+            'review_count' => $newCount,
+            'rating'       => $newRating,
+        ]);
+
+        return back()->with('success', "Ulasan bintang {$request->rating} berhasil dikirim! Terima kasih atas masukan Anda.");
+    }
 }

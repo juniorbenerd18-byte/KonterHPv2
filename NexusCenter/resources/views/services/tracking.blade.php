@@ -3,25 +3,25 @@
 
 @section('content')
 <div class="max-w-container mx-auto px-margin-mobile md:px-margin-desktop py-12 fade-in">
-    <div class="max-w-2xl mx-auto text-center mb-8">
-        <div class="w-16 h-16 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 border border-secondary/20">
+    <!-- Header Card -->
+    <div class="max-w-2xl mx-auto bg-white border border-outline-variant/30 rounded-3xl p-8 shadow-card text-center mb-10 space-y-4">
+        <div class="w-16 h-16 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center mx-auto border border-secondary/20 shadow-sm">
             <span class="material-symbols-outlined text-[36px]">travel_explore</span>
         </div>
-        <h1 class="font-display font-bold text-headline-lg text-on-surface">Lacak Status Servis HP</h1>
-        {{-- FIX #2: Format contoh diubah dari NEX- ke SRV- sesuai generateNotaNumber() --}}
-        <p class="text-on-surface-variant text-sm mt-2">Masukkan <strong>Nomor Nota</strong> (contoh: <code class="font-mono">SRV-20260831-0001</code>) atau <strong>Nomor HP Pelanggan</strong> untuk mengecek status perbaikan HP Anda.</p>
-    </div>
+        <h1 class="font-display font-extrabold text-2xl md:text-3xl text-on-surface">Lacak Status Servis HP</h1>
+        <p class="text-on-surface-variant text-sm max-w-lg mx-auto leading-relaxed">
+            Masukkan <strong>Nomor Nota</strong> (contoh: <code class="font-mono bg-slate-100 px-2 py-0.5 rounded border border-slate-200">SRV-20260831-0001</code>) atau <strong>Nomor HP Pelanggan</strong> untuk mengecek status perbaikan HP Anda.
+        </p>
 
-    {{-- Form Pencarian --}}
-    <div class="max-w-xl mx-auto mb-10">
-        <form method="GET" action="{{ route('services.track') }}" class="flex gap-2">
+        {{-- Form Pencarian --}}
+        <form method="GET" action="{{ route('services.track') }}" class="flex gap-2 pt-2 max-w-lg mx-auto">
             <div class="relative flex-1">
                 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[22px]">search</span>
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Masukkan Nomor Nota / No. HP..."
-                    class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 shadow-card transition-all font-mono" required>
+                    class="w-full bg-slate-50 border border-outline-variant/40 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all font-mono" required>
             </div>
             <button type="submit"
-                class="bg-secondary text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-secondary/90 transition-all hover:shadow-lg active:scale-[0.98] flex items-center gap-2 flex-shrink-0">
+                class="bg-secondary text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-secondary/90 transition-all shadow-md active:scale-[0.98] flex items-center gap-2 flex-shrink-0">
                 <span class="material-symbols-outlined text-[20px]">search</span>
                 Lacak
             </button>

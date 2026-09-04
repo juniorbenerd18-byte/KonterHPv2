@@ -115,10 +115,16 @@
                 </button>
             </form>
 
-            <!-- Hint -->
-            <div class="mt-6 pt-6 border-t border-white/10 text-center">
-                <p class="text-white/40 text-xs font-mono">
-                    Admin atau User masuk dengan password masing-masing
+            <!-- Register link & Hint -->
+            <div class="mt-6 pt-6 border-t border-white/10 text-center space-y-2">
+                <p class="text-white/70 text-xs">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}" class="text-secondary-fixed-dim font-bold hover:underline ml-1">
+                        Daftar Akun Baru (Gratis) &rarr;
+                    </a>
+                </p>
+                <p class="text-white/40 text-[11px] font-mono">
+                    Admin atau Staff masuk dengan akun masing-masing
                 </p>
             </div>
         </div>

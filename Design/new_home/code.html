@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="id" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NexusCenter - Pusat Gadget, Aksesoris &amp; Servis HP Bergaransi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: "#0f172a",
+              navyDark: "#090d16",
+              navyCard: "#1e293b",
+              teal: "#0d9488",
+              tealLight: "#14b8a6",
+              tealSurface: "#f0fdfa",
+              orange: "#f97316",
+              orangeHover: "#ea580c"
+            }
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            display: ["Hanken Grotesk", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-teal-600 selection:text-white">
+<!-- 1. TOP MINI BAR -->
+<div class="bg-brand-navy text-slate-300 text-xs py-2 border-b border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+<div class="flex items-center gap-4 flex-wrap justify-center sm:justify-start">
+<span class="flex items-center gap-1.5 text-slate-200">
+<span class="material-symbols-outlined text-brand-tealLight text-[16px]">call</span>
+<a class="hover:text-brand-tealLight font-mono transition-colors" href="tel:081234567890">0812-3456-7890</a>
+</span>
+<span class="text-slate-600 hidden sm:inline">•</span>
+<span class="flex items-center gap-1.5 text-slate-300">
+<span class="material-symbols-outlined text-brand-tealLight text-[16px]">storefront</span>
+          Jl. Perintis Kemerdekaan No. 45
+        </span>
+<span class="text-slate-600 hidden sm:inline">•</span>
+<span class="flex items-center gap-1.5 text-emerald-400 font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Buka Hari Ini: 09.00 - 21.00 WIB
+        </span>
+</div>
+<div class="flex items-center gap-4 text-[11px] tracking-wide">
+<span class="bg-brand-teal/20 text-brand-tealLight px-2 py-0.5 rounded border border-brand-teal/40 font-mono">Radius 4KM Gratis Ongkir</span>
+<a class="hover:text-white transition-colors" href="#outlet">Cari Toko Terdekat</a>
+</div>
+</div>
+</div>
+<!-- STICKY HEADER & NAVBAR -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-20 gap-4">
+<!-- Logo -->
+<a class="flex items-center gap-3 shrink-0 group" href="#">
+<div class="w-11 h-11 bg-brand-navy rounded-xl flex items-center justify-center text-brand-tealLight shadow-md group-hover:bg-brand-teal transition-colors">
+<span class="material-symbols-outlined text-[26px] group-hover:text-white transition-colors">memory</span>
+</div>
+<div class="flex flex-col leading-none"><span class="bg-gradient-to-r from-brand-teal to-teal-200 bg-clip-text text-transparent font-display text-2xl font-extrabold tracking-tight">NexusCenter</span><span class="font-mono text-[10px] font-semibold text-slate-500 tracking-wider uppercase">Gadget &amp; Service Hub</span></div>
+</a>
+<!-- Desktop Navigation Links -->
+<nav class="hidden xl:flex items-center gap-6 text-sm font-medium text-slate-700">
+<a class="text-brand-teal font-semibold hover:text-brand-teal transition-colors" href="#">Beranda</a>
+<a class="hover:text-brand-teal transition-colors" href="#tentang">Tentang</a>
+<a class="hover:text-brand-teal transition-colors" href="#produk">Produk</a>
+<a class="hover:text-brand-teal transition-colors" href="#brand">Brand</a>
+<a class="hover:text-brand-teal transition-colors" href="#servis">Service &amp; Sparepart</a>
+<a class="hover:text-brand-teal transition-colors" href="#outlet">Outlet</a>
+<a class="hover:text-brand-teal transition-colors" href="#faq">Kontak</a>
+</nav>
+<!-- Search Bar with Live Autocomplete Preview -->
+<div class="relative flex-1 max-w-xs md:max-w-sm hidden lg:block">
+<div class="relative">
+<input autocomplete="off" class="w-full bg-slate-100 border border-slate-200 rounded-lg pl-9 pr-8 py-2 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-teal/40 focus:border-brand-teal transition-all placeholder:text-slate-400" id="searchInput" placeholder="Cari iPhone, Charger GaN, LCD..." type="text"/>
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-[18px] text-slate-400 pointer-events-none">search</span>
+<button class="hidden absolute right-2.5 top-2 text-slate-400 hover:text-slate-600" id="clearSearchBtn">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Autocomplete Suggestion Dropdown -->
+<div class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50 overflow-hidden" id="searchDropdown">
+<div class="px-3 py-1 text-[11px] font-mono text-slate-400 uppercase tracking-wider">Rekomendasi Cepat</div>
+<a class="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 transition-colors" href="#produk">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-brand-teal text-[18px]">bolt</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-semibold text-slate-800 truncate">Fast Charger GaN 65W Multi-Port</p>
+<p class="text-[11px] text-brand-teal font-mono font-bold">Rp 299.000</p>
+</div>
+<span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium">Stok Terbatas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 transition-colors" href="#servis">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-brand-orange text-[18px]">build</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-semibold text-slate-800 truncate">Ganti LCD iPhone 13 &amp; 14 Presisi</p>
+<p class="text-[11px] text-slate-500">Servis 45 Menit Kilat Bergaransi</p>
+</div>
+<span class="text-[10px] bg-teal-100 text-teal-800 px-1.5 py-0.5 rounded font-medium">Ready</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 transition-colors" href="#produk">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-brand-teal text-[18px]">battery_charging_full</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-semibold text-slate-800 truncate">Powerbank Anker 20.000mAh 65W</p>
+<p class="text-[11px] text-brand-teal font-mono font-bold">Rp 549.000</p>
+</div>
+<span class="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-medium">Ready</span>
+</a>
+<div class="border-t border-slate-100 mt-1 pt-1.5 px-3">
+<a class="text-center block text-[11px] text-brand-teal hover:underline font-medium" href="#produk">Lihat semua hasil pencarian →</a>
+</div>
+</div>
+</div>
+<!-- Right Action Buttons -->
+<div class="flex items-center gap-3">
+<!-- Cart Icon -->
+<a aria-label="Keranjang Belanja" class="relative p-2 text-slate-700 hover:text-brand-teal hover:bg-slate-100 rounded-lg transition-colors" href="#produk">
+<span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+<span class="absolute top-1 right-1 bg-brand-orange text-white text-[10px] font-mono font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
+</a>
+<!-- User Account -->
+<a aria-label="Akun Pengguna" class="p-2 text-slate-700 hover:text-brand-teal hover:bg-slate-100 rounded-lg transition-colors hidden sm:inline-flex" href="#kontak">
+<span class="material-symbols-outlined text-[24px]">account_circle</span>
+</a>
+<!-- Primary Header WhatsApp CTA -->
+<a class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 active:scale-95" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20ingin%20konsultasi%20gadget%20atau%20servis" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span class="">Hubungi Kami</span>
+</a>
+</div>
+</div>
+</div>
+</header>
+<!-- 2. HERO SECTION -->
+<section class="relative bg-gradient-to-b from-brand-navy via-slate-900 to-brand-navy text-white overflow-hidden pt-12 pb-20 lg:pt-16 lg:pb-24">
+<!-- Ambient background glow & tech pattern -->
+<div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(circle at 50% 50%, #14b8a6 1px, transparent 1px); background-size: 32px 32px;"></div>
+<div class="absolute top-1/4 -left-32 w-96 h-96 bg-brand-teal/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-10 right-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Left Content -->
+<div class="lg:col-span-7 flex flex-col items-start gap-6">
+<!-- Trust Badge -->
+<div class="inline-flex items-center gap-2 bg-slate-800/80 border border-slate-700/80 px-3.5 py-1.5 rounded-full text-xs text-brand-tealLight backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">hotel_class</span>
+<span class="font-medium tracking-wide">⭐ Terpercaya Sejak 2015 • Solusi Gadget &amp; Servis #1</span>
+</div>
+<!-- Headline -->
+<h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.15] text-white">
+            Pusat Gadget, Aksesoris &amp; Servis HP <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-tealLight to-teal-200">Terlengkap &amp; Bergaransi</span>
+</h1>
+<!-- Subheadline -->
+<p class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+            Kunjungi konter fisik resmi kami di <strong class="text-white">Jl. Perintis Kemerdekaan</strong> atau pesan mudah dari rumah dengan <span class="text-brand-tealLight font-semibold">Gratis Ongkir &amp; Jemput Antar hingga 4 KM</span>. Pengerjaan servis kilat 1 jam, sparepart 100% original, dan garansi pasti.
+          </p>
+<!-- 3 Hero Action Buttons -->
+<div class="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+<a class="inline-flex items-center gap-2 bg-brand-teal hover:bg-teal-600 text-white px-6 py-3 rounded-lg font-semibold text-sm shadow-lg shadow-teal-900/40 transition-all hover:-translate-y-0.5" href="#produk">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+<span class="">Lihat Produk</span>
+</a>
+<a class="inline-flex items-center gap-2 bg-transparent hover:bg-slate-800 border border-slate-600 hover:border-brand-teal text-slate-200 px-6 py-3 rounded-lg font-semibold text-sm transition-all hover:-translate-y-0.5" href="#servis">
+<span class="material-symbols-outlined text-[20px]">build_circle</span>
+<span class="">Lihat Layanan Servis</span>
+</a>
+<a class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-3 rounded-lg font-semibold text-sm transition-all shadow-md hover:-translate-y-0.5" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20ingin%20tanya%20produk%20dan%20servis" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span class="">Hubungi Kami</span>
+</a>
+</div>
+<!-- 3 Counter Statistics with Instant Fallback -->
+<div class="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-slate-800/80 w-full">
+<div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-3 sm:p-4">
+<div class="font-mono text-xl sm:text-2xl lg:text-3xl font-bold text-brand-tealLight flex items-baseline">
+<span class="counter-num" data-target="9">9</span><span class="">+</span>
+</div>
+<p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium">Tahun Pengalaman</p>
+</div>
+<div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-3 sm:p-4">
+<div class="font-mono text-xl sm:text-2xl lg:text-3xl font-bold text-white flex items-baseline">
+<span class="counter-num" data-target="12">12</span><span class="">+</span>
+</div>
+<p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium">Outlet &amp; Mitra Toko</p>
+</div>
+<div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-3 sm:p-4">
+<div class="font-mono text-xl sm:text-2xl lg:text-3xl font-bold text-brand-orange flex items-baseline">
+<span class="counter-num" data-target="50000">50000</span><span class="">+</span>
+</div>
+<p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium">Pelanggan Puas</p>
+</div>
+</div>
+</div>
+<!-- Right Futuristic Showcase Visual -->
+<div class="lg:col-span-5 relative flex justify-center">
+<div class="relative w-full max-w-md lg:max-w-none">
+<div class="absolute -inset-1.5 bg-gradient-to-r from-brand-teal to-brand-orange rounded-3xl blur-xl opacity-30 animate-pulse"></div>
+<div class="relative rounded-2xl overflow-hidden border border-slate-700/70 bg-slate-800 shadow-2xl">
+<img alt="Galaxy S24 Ultra Flagship Smartphone" class="w-full h-80 sm:h-96 object-contain bg-slate-900/90 p-4 transform hover:scale-105 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKnKoc6nPNPiKEM-NfGdHoPJ3vQ8cxHyyIBDAAjYI-A9ETRgSFNpfuCV_PewTOVKR9vzdfuP5pIZRUxZAkOqAaOIjubnvqKApUdmCMmP-t62KMVED-uzD-EZ9hxBEFtFLLrPmUc6MPvgiLtaiGtypAoJNNaSuZ6IQzpQPUuvx44BJE8I_JSK2A48lgyjSkyaBPRmrl7eyxykfKibQDYIHVtZN-fdrAUoze9XUxeuhHYj3-Ix16dS_h"/>
+<!-- Floating Micro-Badge -->
+<div class="absolute bottom-4 left-4 right-4 bg-slate-900/90 backdrop-blur-md border border-slate-700 rounded-xl p-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-teal-500/20 text-brand-tealLight flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+</div>
+<div>
+<h4 class="text-xs font-bold text-white leading-tight">Garansi Resmi SEIN &amp; iBox</h4>
+<p class="text-[10px] text-slate-400">Siap trade-in dengan harga tertinggi</p>
+</div>
+</div>
+<span class="text-xs font-mono font-bold text-brand-tealLight bg-slate-800 px-2.5 py-1 rounded border border-slate-700">100% Ori</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. SECTION 4 KEUNGGULAN UTAMA -->
+<section class="py-16 bg-white border-b border-slate-200" id="tentang">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center max-w-2xl mx-auto mb-12">
+<span class="font-mono text-xs font-bold text-brand-teal uppercase tracking-wider bg-teal-50 px-3 py-1 rounded-full border border-teal-200 inline-block mb-3">Kualitas Terbukti</span>
+<h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">4 Keunggulan Utama NexusCenter</h2>
+<p class="text-slate-600 text-sm sm:text-base mt-2">Komitmen kami memberikan standar layanan tertinggi untuk setiap kebutuhan digital Anda.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 hover:border-brand-teal hover:shadow-lg transition-all duration-300 group">
+<div class="w-12 h-12 rounded-xl bg-teal-100/80 text-brand-teal flex items-center justify-center mb-5 group-hover:bg-brand-teal group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[28px]">workspace_premium</span>
+</div>
+<h3 class="font-display text-lg font-bold text-slate-900 mb-2">9+ Tahun Pengalaman</h3>
+<p class="text-slate-600 text-xs sm:text-sm leading-relaxed">Beroperasi aktif di industri gadget &amp; telekomunikasi sejak 2015 dengan rekam jejak puluhan ribu transaksi amanah.</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 hover:border-brand-teal hover:shadow-lg transition-all duration-300 group">
+<div class="w-12 h-12 rounded-xl bg-teal-100/80 text-brand-teal flex items-center justify-center mb-5 group-hover:bg-brand-teal group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[28px]">engineering</span>
+</div>
+<h3 class="font-display text-lg font-bold text-slate-900 mb-2">Teknisi Bersertifikat Resmi</h3>
+<p class="text-slate-600 text-xs sm:text-sm leading-relaxed">Tim ahli tersertifikasi dengan peralatan mikrosolder dan diagnosa presisi untuk menangani kerusakan ringan hingga berat.</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 hover:border-brand-teal hover:shadow-lg transition-all duration-300 group">
+<div class="w-12 h-12 rounded-xl bg-teal-100/80 text-brand-teal flex items-center justify-center mb-5 group-hover:bg-brand-teal group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[28px]">verified</span>
+</div>
+<h3 class="font-display text-lg font-bold text-slate-900 mb-2">Sparepart 100% Original</h3>
+<p class="text-slate-600 text-xs sm:text-sm leading-relaxed">Pasokan suku cadang asli OEM &amp; Original Equipment Manufacturer teruji presisi agar performa gadget tetap optimal.</p>
+</div>
+<!-- Card 4 -->
+<div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 hover:border-brand-teal hover:shadow-lg transition-all duration-300 group">
+<div class="w-12 h-12 rounded-xl bg-teal-100/80 text-brand-teal flex items-center justify-center mb-5 group-hover:bg-brand-teal group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[28px]">security</span>
+</div>
+<h3 class="font-display text-lg font-bold text-slate-900 mb-2">Garansi Resmi Hingga 90 Hari</h3>
+<p class="text-slate-600 text-xs sm:text-sm leading-relaxed">Jaminan servis dan perlindungan aksesoris hingga 3 bulan penuh. Penggantian unit baru bila kendala tidak tuntas.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. GRID KATEGORI & PRODUK UNGGULAN (MINIMAL 8 LENGKAP) -->
+<section class="py-20 bg-slate-100/70 border-b border-slate-200" id="produk">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<!-- Thin Breadcrumb -->
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs font-mono text-slate-500 mb-4">
+<a class="hover:text-brand-teal transition-colors" href="#">Beranda</a>
+<span class="material-symbols-outlined text-[14px] text-slate-400">chevron_right</span>
+<span class="text-brand-teal font-semibold">Katalog Produk &amp; Aksesoris</span>
+</nav>
+<!-- Section Header with Filters & Sort -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div>
+<span class="font-mono text-xs font-bold text-brand-teal uppercase tracking-wider bg-teal-50 px-3 py-1 rounded-full border border-teal-200 inline-block mb-2">Pilihan Terbaik</span>
+<h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">Katalog Produk &amp; Aksesoris Unggulan</h2>
+<p class="text-slate-600 text-sm mt-1">Stok terjamin dengan garansi toko &amp; pasang langsung di konter Jl. Perintis Kemerdekaan.</p>
+</div>
+<!-- Filter & Sort Quick Bar -->
+<div class="flex flex-wrap items-center gap-2 text-xs">
+<div class="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 shadow-sm">
+<button class="filter-btn active px-3 py-1.5 rounded-md bg-brand-teal text-white font-medium shadow-sm transition-all" data-category="all">Semua</button>
+<button class="filter-btn px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium transition-all" data-category="charger">Charger &amp; Daya</button>
+<button class="filter-btn px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium transition-all" data-category="audio">Audio</button>
+<button class="filter-btn px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium transition-all" data-category="gadget">Gadget &amp; Case</button>
+</div>
+<a class="inline-flex items-center gap-1 px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-lg border border-slate-200 shadow-sm transition-colors" href="#produk">
+<span class="">Lihat Semua Produk</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- 8 Produk Grid Card -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- 1. Powerbank -->
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-teal hover:shadow-xl transition-all duration-300 flex flex-col group">
+<div class="relative bg-slate-50 p-6 flex items-center justify-center h-56">
+<span class="absolute top-3 left-3 bg-emerald-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">Ready</span>
+<span class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</span>
+<img alt="Anker 20.000mAh Powerbank" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1XLexUAY4MkF9kQOKbSW8f1pVJA3JkFCVTwmrkDJHUfG1wn6UHIjHxck9UCJZ4cFVVX7npXTeCo987-IDEtf54H3Y-kTeFtnHXSlr5kNR_ZbLkneJ91bN1aiyS5G9lW8m5Iv4ly2R-LYFOxo-qJuUAD-aMv8SWgb5rHd1b8SxPE85m3OI-FHyxDOQjTeLAAWaaTVU5xkuW2XBN94O2w-QqlSQfX4SZe5dO70lElPK9zZ7-Qraop-FIPBiTg"/>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<span class="text-[11px] font-mono font-semibold text-brand-teal uppercase">Powerbank</span>
+<h3 class="font-display font-bold text-slate-900 text-base mt-1 line-clamp-1">Anker 20.000mAh 65W Fast Charge</h3>
+<div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">star</span>
+<span class="font-bold text-slate-700">4.9</span>
+<span class="">(142 ulasan)</span>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+<div>
+<p class="text-xs text-slate-400 line-through">Rp 699.000</p>
+<p class="font-mono text-base font-bold text-brand-teal">Rp 549.000</p>
+</div>
+<a class="p-2 bg-slate-100 hover:bg-brand-teal hover:text-white rounded-lg text-slate-700 transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20order%20Powerbank%20Anker%2020000mAh" target="_blank" title="Beli Sekarang">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- 2. Fast Charger -->
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-teal hover:shadow-xl transition-all duration-300 flex flex-col group">
+<div class="relative bg-slate-50 p-6 flex items-center justify-center h-56">
+<span class="absolute top-3 left-3 bg-amber-500 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">Stok Terbatas</span>
+<span class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</span>
+<img alt="GaN 65W Multi-Port Fast Charger" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzSAM5VNe5WxkD8QVGtLSIvkuaNVGfOJHJkE0vE0XIXglPtmiCoPrKQZ1Ye6Z_TysqaHDI6y5hmGdb9w86bnHijeBMbzgerHcm05NSH-1H_22dRyQ1wQAXnLhczBh0p8vnF0AR1bWxWB95HBipkoXOo2uw64vSjWRV-TqjfIlbfw4Z8-gglnoj0KBwQeguDwhta3BnILx6lXEujeyqa267m0c0d3AsXHYW0SoXWen8xtrF0JkDtv-4"/>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<span class="text-[11px] font-mono font-semibold text-brand-teal uppercase">Fast Charger</span>
+<h3 class="font-display font-bold text-slate-900 text-base mt-1 line-clamp-1">GaN 65W Multi-Port Quick Charge</h3>
+<div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">star</span>
+<span class="font-bold text-slate-700">5.0</span>
+<span class="">(98 ulasan)</span>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+<div>
+<p class="text-xs text-slate-400 line-through">Rp 399.000</p>
+<p class="font-mono text-base font-bold text-brand-teal">Rp 299.000</p>
+</div>
+<a class="p-2 bg-slate-100 hover:bg-brand-teal hover:text-white rounded-lg text-slate-700 transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20order%20Fast%20Charger%20GaN%2065W" target="_blank" title="Beli Sekarang">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- 3. Headset & TWS -->
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-teal hover:shadow-xl transition-all duration-300 flex flex-col group">
+<div class="relative bg-slate-50 p-6 flex items-center justify-center h-56">
+<span class="absolute top-3 left-3 bg-emerald-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">Ready</span>
+<span class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</span>
+<img alt="Sony WF-1000XM5 ANC Earbuds" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa9Uc4bid0Bq3dcF9FfEPuVQYX0zW4zGrMUs4q_qJrXTo_Ngc3gcLgSCTYvvg35fVzDQRdPGWbl1z9iHchWy781KFfQ4YQ4azY6g_EfpG9YAnMGuw6PSknaWPfu7TaVXOd_0RXgmM186HkDAS9vjkONQ8Bii-wj_08Ksr-6PHWpVK4vxy1fNgP87EGGPltfF8rwJxQZxsQ68HReXQAAMhskca7ob2gurnMgiyJCFR5P9HTcnMYgtrn"/>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<span class="text-[11px] font-mono font-semibold text-brand-teal uppercase">Headset &amp; TWS</span>
+<h3 class="font-display font-bold text-slate-900 text-base mt-1 line-clamp-1">Sony WF-1000XM5 Noise Canceling</h3>
+<div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">star</span>
+<span class="font-bold text-slate-700">4.8</span>
+<span class="">(67 ulasan)</span>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+<div>
+<p class="text-xs text-slate-400 line-through">Rp 3.699.000</p>
+<p class="font-mono text-base font-bold text-brand-teal">Rp 3.299.000</p>
+</div>
+<a class="p-2 bg-slate-100 hover:bg-brand-teal hover:text-white rounded-lg text-slate-700 transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20order%20Sony%20WF-1000XM5" target="_blank" title="Beli Sekarang">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- 4. Speaker Bluetooth -->
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-teal hover:shadow-xl transition-all duration-300 flex flex-col group">
+<div class="relative bg-slate-50 p-6 flex items-center justify-center h-56">
+<span class="absolute top-3 left-3 bg-emerald-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">Ready</span>
+<span class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</span>
+<img alt="JBL Flip 6 Waterproof Speaker" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw-Bnj-jJRsZlOLaQr9oHuwGmYv3MDNEXyXVyv_aso76_kDtf87ZsDvTihsb7MPprthv2jNAe2hf4Cnklj0ci-NhnFNoBxnwtT1qM4pETHDXKQzixp8KageEar9Sub8CZpqVRC241Qk0CzbcIawtVEP1kNY4PGS1WFo_D39WoLZs4Ivu_CtRnJGQmyul_c5ZyJRmNKP-IJcQhQHtAYgTse6l1EC1h88oUK0gOd4IhYxIrKDgClHtow"/>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<span class="text-[11px] font-mono font-semibold text-brand-teal uppercase">Speaker Bluetooth</span>
+<h3 class="font-display font-bold text-slate-900 text-base mt-1 line-clamp-1">JBL Flip 6 Waterproof Portable</h3>
+<div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">star</span>
+<span class="font-bold text-slate-700">4.9</span>
+<span class="">(89 ulasan)</span>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+<div>
+<p class="text-xs text-slate-400 line-through">Rp 1.899.000</p>
+<p class="font-mono text-base font-bold text-brand-teal">Rp 1.599.000</p>
+</div>
+<a class="p-2 bg-slate-100 hover:bg-brand-teal hover:text-white rounded-lg text-slate-700 transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20order%20JBL%20Flip%206" target="_blank" title="Beli Sekarang">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- 5. Kabel Data -->
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-teal hover:shadow-xl transition-all duration-300 flex flex-col group">
+<div class="relative bg-slate-50 p-6 flex items-center justify-center h-56">
+<span class="absolute top-3 left-3 bg-emerald-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">Ready</span>
+<span class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</span>
+<img alt="Kabel Braided 100W" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1XLexUAY4MkF9kQOKbSW8f1pVJA3JkFCVTwmrkDJHUfG1wn6UHIjHxck9UCJZ4cFVVX7npXTeCo987-IDEtf54H3Y-kTeFtnHXSlr5kNR_ZbLkneJ91bN1aiyS5G9lW8m5Iv4ly2R-LYFOxo-qJuUAD-aMv8SWgb5rHd1b8SxPE85m3OI-FHyxDOQjTeLAAWaaTVU5xkuW2XBN94O2w-QqlSQfX4SZe5dO70lElPK9zZ7-Qraop-FIPBiTg"/>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<span class="text-[11px] font-mono font-semibold text-brand-teal uppercase">Kabel Data</span>
+<h3 class="font-display font-bold text-slate-900 text-base mt-1 line-clamp-1">Braided 100W Durable Cable C-to-C</h3>
+<div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">star</span>
+<span class="font-bold text-slate-700">4.9</span>
+<span class="">(210 ulasan)</span>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+<div>
+<p class="text-xs text-slate-400 line-through">Rp 129.000</p>
+<p class="font-mono text-base font-bold text-brand-teal">Rp 89.000</p>
+</div>
+<a class="p-2 bg-slate-100 hover:bg-brand-teal hover:text-white rounded-lg text-slate-700 transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20order%20Kabel%20100W%20Braided" target="_blank" title="Beli Sekarang">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- 6. Case & Pelindung HP -->
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-teal hover:shadow-xl transition-all duration-300 flex flex-col group">
+<div class="relative bg-slate-50 p-6 flex items-center justify-center h-56">
+<span class="absolute top-3 left-3 bg-emerald-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">Ready</span>
+<span class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</span>
+<img alt="MagSafe Clear Armor Case" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1XLexUAY4MkF9kQOKbSW8f1pVJA3JkFCVTwmrkDJHUfG1wn6UHIjHxck9UCJZ4cFVVX7npXTeCo987-IDEtf54H3Y-kTeFtnHXSlr5kNR_ZbLkneJ91bN1aiyS5G9lW8m5Iv4ly2R-LYFOxo-qJuUAD-aMv8SWgb5rHd1b8SxPE85m3OI-FHyxDOQjTeLAAWaaTVU5xkuW2XBN94O2w-QqlSQfX4SZe5dO70lElPK9zZ7-Qraop-FIPBiTg"/>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<span class="text-[11px] font-mono font-semibold text-brand-teal uppercase">Case &amp; Cover</span>
+<h3 class="font-display font-bold text-slate-900 text-base mt-1 line-clamp-1">MagSafe Clear Armor Shockproof Case</h3>
+<div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">star</span>
+<span class="font-bold text-slate-700">4.7</span>
+<span class="">(115 ulasan)</span>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+<div>
+<p class="text-xs text-slate-400 line-through">Rp 199.000</p>
+<p class="font-mono text-base font-bold text-brand-teal">Rp 149.000</p>
+</div>
+<a class="p-2 bg-slate-100 hover:bg-brand-teal hover:text-white rounded-lg text-slate-700 transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20order%20MagSafe%20Clear%20Case" target="_blank" title="Beli Sekarang">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- 7. Screen Protector / Tempered Glass -->
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-teal hover:shadow-xl transition-all duration-300 flex flex-col group">
+<div class="relative bg-slate-50 p-6 flex items-center justify-center h-56">
+<span class="absolute top-3 left-3 bg-emerald-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">Ready</span>
+<span class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</span>
+<img alt="Tempered Glass 9H Anti Spy" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsYoCWDWQRfMD7ZAbeZFApSXTELaseramhLDPPhbvFTGlcEXL2o7HAhu3u-Eh_ho7luqPXnLKzd_seJbkXMJcB1qvEDiLuZK0EVUYW_Ze5O5Ool_tlsMQmYAi54kdT55gFYl2dnq39_iz04RxywJ_0g5SFVaVzCBftdqBglM1t2B9hbgtP_Geoj54sqq9qISi9A7at8xrKijKFyqzdv0TJoQo91RYer-JkPMaDGxrVwbkf_N_qNoIj"/>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<span class="text-[11px] font-mono font-semibold text-brand-teal uppercase">Screen Protector</span>
+<h3 class="font-display font-bold text-slate-900 text-base mt-1 line-clamp-1">9H Ceramic Anti-Spy + Pasang Gratis</h3>
+<div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">star</span>
+<span class="font-bold text-slate-700">4.9</span>
+<span class="">(320 ulasan)</span>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+<div>
+<p class="text-xs text-slate-400 line-through">Rp 99.000</p>
+<p class="font-mono text-base font-bold text-brand-teal">Rp 65.000</p>
+</div>
+<a class="p-2 bg-slate-100 hover:bg-brand-teal hover:text-white rounded-lg text-slate-700 transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20pasang%20Tempered%20Glass%20Anti-Spy" target="_blank" title="Beli Sekarang">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- 8. Smartphone Flagship -->
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-teal hover:shadow-xl transition-all duration-300 flex flex-col group">
+<div class="relative bg-slate-50 p-6 flex items-center justify-center h-56">
+<span class="absolute top-3 left-3 bg-amber-500 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">Stok Terbatas</span>
+<span class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</span>
+<img alt="Samsung Galaxy S24 Ultra" class="h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1VN9X5hdTqxraITIp8edvH5R2ZRX30nnLwPAsrL6EIvrRfu7lb2NWe7abhVA8j6wOAFl9902KLjHfnbCOqj4jT4PElfuZJKJwCNISW-hhqatf7x6BD4-dv8-MrdTi58YoJ9RPHh7qspqfqYJhE7AVV-Jp-PliIntcfyQ_rQVxLDApjdH02LKB0_e4igcYsAgR2MmIEfbeijEBGHOcGpqswZ1WSrDoeW6JSGHbi7XB0bsxukjstRAO03oMkT"/>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<span class="text-[11px] font-mono font-semibold text-brand-teal uppercase">Smartphone Flagship</span>
+<h3 class="font-display font-bold text-slate-900 text-base mt-1 line-clamp-1">Galaxy S24 Ultra 256GB Titanium</h3>
+<div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] text-amber-400 fill">star</span>
+<span class="font-bold text-slate-700">5.0</span>
+<span class="">(84 ulasan)</span>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+<div>
+<p class="text-xs text-slate-400 line-through">Rp 21.999.000</p>
+<p class="font-mono text-base font-bold text-brand-teal">Rp 19.999.000</p>
+</div>
+<a class="p-2 bg-slate-100 hover:bg-brand-teal hover:text-white rounded-lg text-slate-700 transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20konsultasi%20Galaxy%20S24%20Ultra" target="_blank" title="Beli Sekarang">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Trade-In Callout Strip -->
+<div class="mt-12 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-2xl bg-brand-orange/10 text-brand-orange flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[32px]">sync_alt</span>
+</div>
+<div>
+<h4 class="font-display text-lg font-bold text-slate-900">Program Tukar Tambah (Trade-In) Resmi</h4>
+<p class="text-slate-600 text-sm mt-0.5">Bawa HP lama merk apapun ke konter Jl. Perintis Kemerdekaan, kami taksir dengan harga tertinggi dan transparan.</p>
+</div>
+</div>
+<a class="inline-flex items-center gap-2 bg-slate-900 hover:bg-brand-teal text-white px-6 py-3 rounded-xl font-semibold text-xs whitespace-nowrap transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20taksir%20harga%20trade-in%20HP" target="_blank">
+<span class="">Taksir HP Lama Anda</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 5. SECTION LAYANAN SERVIS HP & SPAREPART TERPISAH -->
+<section class="py-20 bg-white border-b border-slate-200" id="servis">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Left: Image & Visual Representation -->
+<div class="lg:col-span-6 relative">
+<div class="relative rounded-2xl overflow-hidden border border-slate-200 shadow-xl group">
+<img alt="Teknisi Servis Presisi NexusCenter" class="w-full h-[420px] object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AEtjO1WtGKcIrc3WDeZr_qhCb3iUoaeyLuOIVjKYZnL2-RUWBkVPFpBoQqqBIpGVYM-xDNMR1Nnq7gcGIwtwc4mL2Y5nLcjzOOnwpsgPTQ2AsZ6OS0q4QlOw7khEGbcxfNQBBU4Vp0mYw9bZhtiSqFBQPdhxmKlgANpeYmqZQBFaiQvMDfGV_P8tf-TsCL2iO6c7ZmypVI5A2rWJeOTszvjwZ4DUki8aGK1gHMHRMLqTXPcS1LNmjpSQA8KCP73D"/>
+<div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6 text-white">
+<span class="bg-brand-teal text-white text-[11px] font-mono font-bold px-2.5 py-1 rounded">Lab Servis Steril &amp; Modern</span>
+<h3 class="font-display text-xl font-bold mt-2">Dikerjakan di Hadapan Anda</h3>
+<p class="text-slate-300 text-xs mt-1">Konsep open-kitchen lab di Jl. Perintis Kemerdekaan. Data pribadi aman, pengerjaan transparan.</p>
+</div>
+</div>
+</div>
+<!-- Right: 4 Service Features & Action -->
+<div class="lg:col-span-6 flex flex-col justify-center">
+<span class="font-mono text-xs font-bold text-brand-teal uppercase tracking-wider bg-teal-50 px-3 py-1 rounded-full border border-teal-200 inline-block w-fit mb-3">Service &amp; Repair Center</span>
+<h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">
+            Layanan Servis Kilat &amp; Ganti Sparepart Original
+          </h2>
+<p class="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
+            Solusi perbaikan handphone profesional untuk iPhone, Samsung, Xiaomi, Oppo, Vivo, dan merk lainnya dengan jaminan kepuasan.
+          </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+<div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+<div class="w-8 h-8 rounded-lg bg-teal-100 text-brand-teal flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+</div>
+<div>
+<h4 class="font-bold text-xs sm:text-sm text-slate-900">Servis Kilat 1 Jam</h4>
+<p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Ganti LCD &amp; baterai bisa ditunggu di tempat.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+<div class="w-8 h-8 rounded-lg bg-teal-100 text-brand-teal flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">screen_rotation_alt</span>
+</div>
+<div>
+<h4 class="font-bold text-xs sm:text-sm text-slate-900">OLED / LCD Presisi</h4>
+<p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">TrueTone aktif, touch responsif tanpa ghost touch.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+<div class="w-8 h-8 rounded-lg bg-teal-100 text-brand-teal flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</div>
+<div>
+<h4 class="font-bold text-xs sm:text-sm text-slate-900">Teknisi Tersertifikasi</h4>
+<p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Spesialis micro-soldering IC &amp; bypass mesin.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+<div class="w-8 h-8 rounded-lg bg-teal-100 text-brand-teal flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<div>
+<h4 class="font-bold text-xs sm:text-sm text-slate-900">Garansi Nyata 90 Hari</h4>
+<p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Garansi ganti part baru tanpa berbelit-belit.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-4 mt-8">
+<a class="inline-flex items-center gap-2 bg-brand-teal hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-semibold text-xs sm:text-sm shadow-md transition-all" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20booking%20servis%20HP" target="_blank">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span class="">Booking Servis Sekarang</span>
+</a>
+<a class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 px-6 py-3 rounded-xl font-semibold text-xs sm:text-sm transition-colors border border-slate-200" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20konsultasi%20kerusakan%20gadget" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span class="">Konsultasi Kerusakan Gratis</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Callout Antar Jemput Gratis Radius 4 KM -->
+<div class="mt-16 bg-gradient-to-r from-brand-navy to-slate-900 text-white rounded-3xl p-6 sm:p-10 border border-slate-800 overflow-hidden relative shadow-xl">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
+<div class="md:col-span-4 rounded-2xl overflow-hidden shadow-md">
+<img alt="Teknisi Servis Presisi NexusCenter" class="w-full h-52 object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UDdrJtitumFXzG-u-Xw4-Rwi-zStdUpDy8Sn_m53jT_A-DaJYCZhvKDkjgNwuXG6b9vuOOFwdadYKhu7gEoBlaV62lLxJzprWwYpJX2ikSt-sl_ns8PgCrJcGLxTS6x1jJ7gwKAPb6yYi4_d-FV0uSLvzpz7WblR1zUDmDy4Iarqqq8wyKLnWPRM-2Ty8JOHN8RRK7OVSBF9-q5TBbFGtMDu5nHf3Hrqd33pKgRBY8_yjxe4Wsv6Wp4fEz"/>
+</div>
+<div class="md:col-span-8 flex flex-col items-start gap-4">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="bg-brand-orange text-white text-xs font-mono font-bold px-3 py-1 rounded-full">Layanan Jemput-Antar Bebas Ribet</span>
+<span class="text-xs text-slate-300 font-mono">Radius 4KM dari Konter</span>
+</div>
+<h3 class="font-display text-2xl sm:text-3xl font-bold">Ingin Beli HP Tapi Malas Keluar<span class="" style="font-size: 1.875rem;">? Kami Antar Ke Rumah Gratis Gratis!</span></h3>
+<p class="text-slate-300 text-sm leading-relaxed">Khusus area dalam jangkauan 4 kilometer dari konter kami di <strong>Jl. Perintis Kemerdekaan</strong>, kurir resmi NexusCenter siap menjemput unit HP rusak Anda dan mengantarkannya kembali setelah selesai diperbaiki.</p>
+<a class="inline-flex items-center gap-2 bg-brand-teal hover:bg-teal-500 text-white px-5 py-2.5 rounded-xl font-semibold text-xs transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20request%20penjemputan%20servis%20HP" target="_blank">
+<span class="material-symbols-outlined text-[18px]">two_wheeler</span>
+<span class="">Pesan Layanan Antar-Jemput Sekarang</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. SECTION TESTIMONI PELANGGAN (REVIEW ASLI) -->
+<section class="py-20 bg-slate-50 border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center max-w-2xl mx-auto mb-14">
+<span class="font-mono text-xs font-bold text-brand-teal uppercase tracking-wider bg-teal-50 px-3 py-1 rounded-full border border-teal-200 inline-block mb-3">Google Reviews 4.9/5.0</span>
+<h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">Apa Kata Pelanggan TECHCELL?</h2>
+<p class="text-slate-600 text-sm sm:text-base mt-2">Ulasan transparan dari pelanggan yang telah berbelanja dan servis di konter kami.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Testimoni 1 -->
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center gap-1 text-amber-400 mb-3">
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+</div>
+<p class="text-slate-700 text-xs sm:text-sm italic leading-relaxed">
+              "Ganti LCD iPhone 13 Pro cuma 45 menit kelar ditunggu di konter Perintis. Dikasih bonus pasang tempered glass pula. Stafnya super ramah &amp; pengerjaan rapi banget!"
+            </p>
+</div>
+<div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-100">
+<div class="w-10 h-10 rounded-full bg-brand-navy text-white flex items-center justify-center font-bold text-sm">BP</div>
+<div>
+<h4 class="text-xs font-bold text-slate-900">Budi Pratama</h4>
+<p class="text-[11px] text-slate-400">Servis iPhone 13 Pro</p>
+</div>
+</div>
+</div>
+<!-- Testimoni 2 -->
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center gap-1 text-amber-400 mb-3">
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+</div>
+<p class="text-slate-700 text-xs sm:text-sm italic leading-relaxed">
+              "Beli GaN Charger 65W &amp; kabel Type-C original. Karena lagi repot kerja, coba layanan antar konter. 30 menit pesanan langsung sampai ke rumah tanpa ongkir!"
+            </p>
+</div>
+<div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-100">
+<div class="w-10 h-10 rounded-full bg-brand-teal text-white flex items-center justify-center font-bold text-sm">SA</div>
+<div>
+<h4 class="text-xs font-bold text-slate-900">Sarah Amanda</h4>
+<p class="text-[11px] text-slate-400">Aksesoris &amp; Delivery</p>
+</div>
+</div>
+</div>
+<!-- Testimoni 3 -->
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center gap-1 text-amber-400 mb-3">
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+</div>
+<p class="text-slate-700 text-xs sm:text-sm italic leading-relaxed">
+              "Trade-in HP lama dapat harga paling fair dibanding toko lain. Proses cek fisik cuma 10 menit dan langsung bisa upgrade ke Samsung S-series baru. Recommended!"
+            </p>
+</div>
+<div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-100">
+<div class="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm">HW</div>
+<div>
+<h4 class="text-xs font-bold text-slate-900">Hendra Wijaya</h4>
+<p class="text-[11px] text-slate-400">Trade-In Smartphone</p>
+</div>
+</div>
+</div>
+<!-- Testimoni 4 -->
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center gap-1 text-amber-400 mb-3">
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+<span class="material-symbols-outlined text-[18px] fill">star</span>
+</div>
+<p class="text-slate-700 text-xs sm:text-sm italic leading-relaxed">
+              "Servis HP mati total kena air berhasil diselamatkan datanya sama teknisi TECHCELL. Biaya dijelaskan di awal sebelum dikerjakan, sangat jujur dan transparan!"
+            </p>
+</div>
+<div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-100">
+<div class="w-10 h-10 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-sm">RK</div>
+<div>
+<h4 class="text-xs font-bold text-slate-900">Rian Kusuma</h4>
+<p class="text-[11px] text-slate-400">Servis IC &amp; Recovery Data</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. SECTION JARINGAN OUTLET & PETA INTERAKTIF -->
+<section class="py-20 bg-white border-b border-slate-200" id="outlet">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center max-w-2xl mx-auto mb-12">
+<span class="font-mono text-xs font-bold text-brand-teal uppercase tracking-wider bg-teal-50 px-3 py-1 rounded-full border border-teal-200 inline-block mb-3">Jangkauan Luas</span>
+<h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">Jaringan Outlet &amp; Mitra Resmi</h2>
+<p class="text-slate-600 text-sm sm:text-base mt-2">Temukan titik layanan servis dan konter pengambilan gadget terdekat dari lokasi Anda.</p>
+</div>
+<!-- Network Stats Bar -->
+<div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-10 text-center">
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+<p class="font-mono text-2xl font-bold text-brand-navy">1</p>
+<p class="text-xs text-slate-500 font-medium mt-0.5">Pusat Service Center</p>
+</div>
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+<p class="font-mono text-2xl font-bold text-brand-teal">12</p>
+<p class="text-xs text-slate-500 font-medium mt-0.5">Mitra Toko &amp; Drop Point</p>
+</div>
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+<p class="font-mono text-2xl font-bold text-brand-orange">5</p>
+<p class="text-xs text-slate-500 font-medium mt-0.5">Kota Layanan Wilayah</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Outlet Cards List -->
+<div class="lg:col-span-5 flex flex-col gap-4">
+<!-- Outlet 1: Pusat -->
+<div class="p-5 rounded-2xl border-2 border-brand-teal bg-teal-50/30 relative">
+<span class="absolute top-4 right-4 bg-brand-teal text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded">Pusat &amp; Lab Utama</span>
+<h3 class="font-display font-bold text-slate-900 text-base">Outlet Pusat Jl. Perintis Kemerdekaan</h3>
+<p class="text-xs text-slate-600 mt-1">Jl. Perintis Kemerdekaan No. 45, Ruko Sentra Gadget Blok A</p>
+<div class="flex items-center gap-4 mt-3 text-xs text-slate-500 font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-brand-teal">schedule</span> 09.00 - 21.00 WIB</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-brand-teal">call</span> 0812-3456-7890</span>
+</div>
+</div>
+<!-- Outlet 2 -->
+<div class="p-5 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition-colors">
+<h3 class="font-display font-bold text-slate-900 text-base">Outlet Cabang Panakkukang</h3>
+<p class="text-xs text-slate-600 mt-1">Komp. Ruko Panakkukang Mas, Jl. Boulevard Blok C2</p>
+<div class="flex items-center gap-4 mt-3 text-xs text-slate-500 font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span> 10.00 - 21.30 WIB</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">store</span> Drop &amp; Pickup</span>
+</div>
+</div>
+<!-- Outlet 3 -->
+<div class="p-5 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition-colors">
+<h3 class="font-display font-bold text-slate-900 text-base">Outlet Cabang Pettarani</h3>
+<p class="text-xs text-slate-600 mt-1">Jl. A. P. Pettarani Business Arcade Kav. 12</p>
+<div class="flex items-center gap-4 mt-3 text-xs text-slate-500 font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span> 09.30 - 20.30 WIB</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">store</span> Servis Ringan &amp; Aksesoris</span>
+</div>
+</div>
+</div>
+<!-- Google Maps Embed Responsive -->
+<div class="lg:col-span-7 h-[360px] lg:h-[400px] rounded-2xl overflow-hidden border border-slate-200 shadow-md relative">
+<iframe allowfullscreen="" class="w-full h-full" height="100%" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3973.805128038938!2d119.49755!3d-5.13506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dbefd03fb98dc6b%3A0x6b864a7c1b827e8a!2sJl.%20Perintis%20Kemerdekaan!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" style="border:0;" title="Peta Lokasi Konter NexusCenter Jl Perintis Kemerdekaan" width="100%">
+</iframe>
+<!-- Maps overlay pill -->
+<div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-medium shadow-md flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-brand-teal animate-ping"></span>
+<span class="">Pusat Konter: Jl. Perintis Kemerdekaan No. 45</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 8. SECTION FAQ SINGKAT (ACCORDION INTERAKTIF) -->
+<section class="py-20 bg-slate-50 border-b border-slate-200" id="faq">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center max-w-xl mx-auto mb-12">
+<span class="font-mono text-xs font-bold text-brand-teal uppercase tracking-wider bg-teal-50 px-3 py-1 rounded-full border border-teal-200 inline-block mb-3">Pusat Informasi</span>
+<h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">Pertanyaan yang Sering Diajukan</h2>
+<p class="text-slate-600 text-sm mt-1">Jawaban cepat seputar layanan, klaim garansi, dan antar jemput.</p>
+</div>
+<div class="space-y-3">
+<!-- FAQ Item 1 -->
+<div class="faq-card bg-white border border-slate-200 rounded-xl overflow-hidden transition-all">
+<button class="faq-toggle w-full p-4 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-slate-800 hover:text-brand-teal">
+<span class="">Bagaimana cara melakukan booking servis HP di NexusCenter?</span>
+<span class="material-symbols-outlined faq-icon text-slate-400 transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">Anda dapat langsung menekan tombol "Booking Servis" di website ini atau mengirim pesan WhatsApp ke 0812-3456-7890. Sebutkan merk, tipe, dan gejala kerusakan HP Anda. Tim CS NexusCenter akan memberikan estimasi biaya dan waktu antrean prioritas.</div>
+</div>
+<!-- FAQ Item 2 -->
+<div class="faq-card bg-white border border-slate-200 rounded-xl overflow-hidden transition-all">
+<button class="faq-toggle w-full p-4 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-slate-800 hover:text-brand-teal">
+<span class="">Apa saja metode pembayaran yang diterima di konter?</span>
+<span class="material-symbols-outlined faq-icon text-slate-400 transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            Kami menerima Tunai, QRIS (BCA, Mandiri, BRI, BNI), e-wallet (GoPay, OVO, ShopeePay, DANA), Kartu Debit/Kredit Visa &amp; Mastercard, serta program Cicilan 0% hingga 12 bulan melalui kartu kredit rekanan.
+          </div>
+</div>
+<!-- FAQ Item 3 -->
+<div class="faq-card bg-white border border-slate-200 rounded-xl overflow-hidden transition-all">
+<button class="faq-toggle w-full p-4 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-slate-800 hover:text-brand-teal">
+<span class="">Berapa lama masa garansi untuk perbaikan dan sparepart?</span>
+<span class="material-symbols-outlined faq-icon text-slate-400 transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            Untuk penggantian LCD dan baterai original, kami memberikan garansi resmi hingga 90 hari (3 bulan). Untuk perbaikan mesin / IC, garansi berlaku 30 hari. Nota dan barcode servis tersimpan otomatis di sistem kami.
+          </div>
+</div>
+<!-- FAQ Item 4 -->
+<div class="faq-card bg-white border border-slate-200 rounded-xl overflow-hidden transition-all">
+<button class="faq-toggle w-full p-4 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-slate-800 hover:text-brand-teal">
+<span class="">Berapa estimasi pengerjaan servis, apakah bisa ditunggu?</span>
+<span class="material-symbols-outlined faq-icon text-slate-400 transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            Bisa banget! Untuk pergantian LCD, baterai, speaker, atau konektor charger estimasi waktu hanya 30 hingga 60 menit dan Anda bisa menunggu di ruang tunggu ber-AC kami di Jl. Perintis Kemerdekaan.
+          </div>
+</div>
+<!-- FAQ Item 5 -->
+<div class="faq-card bg-white border border-slate-200 rounded-xl overflow-hidden transition-all">
+<button class="faq-toggle w-full p-4 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-slate-800 hover:text-brand-teal">
+<span class="">Bagaimana syarat klaim garansi untuk aksesoris?</span>
+<span class="material-symbols-outlined faq-icon text-slate-400 transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            Cukup bawa unit aksesoris beserta box kemasannya dan nota pembelian (atau tunjukkan nomor HP yang terdaftar). Klaim ganti baru langsung diproses jika terjadi kerusakan fungsi pabrik bukan akibat kelalaian fisik pengguna.
+          </div>
+</div>
+<!-- FAQ Item 6 -->
+<div class="faq-card bg-white border border-slate-200 rounded-xl overflow-hidden transition-all">
+<button class="faq-toggle w-full p-4 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-slate-800 hover:text-brand-teal">
+<span class="">Apakah layanan antar-jemput benar-benar gratis untuk radius 4 km?</span>
+<span class="material-symbols-outlined faq-icon text-slate-400 transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            Benar, 100% Gratis Ongkir tanpa minimum belanja untuk jarak maksimal 4 km dari konter pusat Jl. Perintis Kemerdekaan. Untuk jarak di atas 4 km dikenakan tarif flat kurir lokal yang sangat terjangkau.
+          </div>
+</div>
+</div>
+</div>
+</section>
+<!-- 9. SECTION CTA AKHIR SEBELUM FOOTER -->
+<section class="py-16 bg-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="bg-gradient-to-br from-brand-navy via-slate-900 to-slate-800 text-white rounded-3xl p-8 sm:p-12 border border-slate-800 shadow-2xl relative overflow-hidden text-center max-w-4xl mx-auto">
+<div class="absolute -top-20 -right-20 w-64 h-64 bg-brand-teal/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-20 -left-20 w-64 h-64 bg-brand-orange/20 rounded-full blur-3xl pointer-events-none"></div>
+<span class="bg-brand-teal/20 text-brand-tealLight text-xs font-mono font-bold px-3 py-1 rounded-full border border-brand-teal/40 inline-block mb-4">Konsultasi Respon Cepat</span>
+<h2 class="font-display text-2xl sm:text-4xl font-extrabold mb-4">Butuh Bantuan Cepat atau Konsultasi Gadget Anda Sekarang?</h2>
+<p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto mb-8">
+          Tim teknisi dan staf ramah kami siap menjawab pertanyaan teknis, cek ketersediaan stok sparepart, dan rekomendasi gadget terbaik.
+        </p>
+<div class="flex flex-wrap items-center justify-center gap-4">
+<a class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-lg transition-transform hover:-translate-y-0.5" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20butuh%20bantuan%20cepat" target="_blank">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span class="">Chat WhatsApp Konter</span>
+</a>
+<a class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 px-6 py-3.5 rounded-xl font-bold text-sm transition-transform hover:-translate-y-0.5" href="tel:081234567890">
+<span class="material-symbols-outlined text-[20px]">call</span>
+<span class="">Hubungi Telepon Langsung</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- 10. FOOTER LENGKAP & ELEGAN -->
+<footer class="bg-brand-navyDark text-slate-300 pt-16 pb-8 border-t border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+<!-- Kolom 1: Profil Brand & Lokasi -->
+<div class="lg:col-span-4 flex flex-col items-start gap-4">
+<a class="flex items-center gap-3" href="#">
+<div class="w-10 h-10 bg-brand-teal rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[24px]">memory</span>
+</div>
+<div class="flex flex-col leading-none"><span class="font-display text-xl font-extrabold bg-gradient-to-r from-brand-teal to-teal-200 bg-clip-text text-transparent">NexusCenter</span><span class="font-mono text-[10px] text-slate-400">Official Store &amp; Service</span></div>
+</a>
+<p class="text-xs text-slate-400 leading-relaxed">
+            Solusi gadget terpadu, penyedia suku cadang terpercaya, dan pusat perbaikan handphone profesional bergaransi terlama di kelasnya.
+          </p>
+<div class="space-y-2 text-xs text-slate-300 mt-2">
+<p class="flex items-start gap-2">
+<span class="material-symbols-outlined text-brand-tealLight text-[16px] shrink-0 mt-0.5">location_on</span>
+<span class="">Jl. Perintis Kemerdekaan No. 45, Ruko Sentra Gadget Blok A</span>
+</p>
+<p class="flex items-center gap-2">
+<span class="material-symbols-outlined text-brand-tealLight text-[16px] shrink-0">call</span>
+<span class="">0812-3456-7890 / (0411) 890-1234</span>
+</p>
+<p class="flex items-center gap-2"><span class="material-symbols-outlined text-brand-tealLight text-[16px] shrink-0">mail</span><span>support@nexuscenter.id</span></p>
+<p class="flex items-center gap-2">
+<span class="material-symbols-outlined text-brand-tealLight text-[16px] shrink-0">schedule</span>
+<span class="">Buka Setiap Hari: 09.00 - 21.00 WIB</span>
+</p>
+</div>
+</div>
+<!-- Kolom 2: Navigasi Cepat -->
+<div class="lg:col-span-2 sm:col-span-1">
+<h4 class="font-mono text-xs font-bold text-white uppercase tracking-wider mb-4">Navigasi Cepat</h4>
+<ul class="space-y-2 text-xs text-slate-400">
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#">Beranda</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#tentang">Tentang Kami</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#produk">Katalog Produk</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#servis">Service Center</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20mau%20booking%20servis" target="_blank">Booking Servis</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#outlet">Promo &amp; Outlet</a></li>
+</ul>
+</div>
+<!-- Kolom 3: Kategori Produk -->
+<div class="lg:col-span-3 sm:col-span-1">
+<h4 class="font-mono text-xs font-bold text-white uppercase tracking-wider mb-4">Kategori Produk</h4>
+<ul class="space-y-2 text-xs text-slate-400">
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#produk">Powerbank Fast Charging</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#produk">Adapter GaN &amp; Multi-Port</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#produk">TWS &amp; Headphone Bluetooth</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#produk">Audio &amp; Speaker Portable</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#produk">Tempered Glass &amp; Case Armor</a></li>
+<li class=""><a class="hover:text-brand-tealLight transition-colors" href="#servis">Sparepart LCD &amp; Baterai Original</a></li>
+</ul>
+</div>
+<!-- Kolom 4: Sertifikasi & Sosial Media -->
+<div class="lg:col-span-3 flex flex-col gap-4">
+<h4 class="font-mono text-xs font-bold text-white uppercase tracking-wider mb-1">Sosial &amp; Sertifikasi</h4>
+<p class="text-xs text-slate-400 leading-relaxed">Ikuti update promo mingguan dan tips perawatan gadget kami.</p>
+<div class="flex items-center gap-2">
+<a class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-brand-teal text-slate-300 hover:text-white flex items-center justify-center transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">share</span>
+</a>
+<a class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-brand-teal text-slate-300 hover:text-white flex items-center justify-center transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">alternate_email</span>
+</a>
+<a class="w-9 h-9 rounded-lg bg-emerald-700/80 hover:bg-emerald-600 text-white flex items-center justify-center transition-colors" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20ingin%20konsultasi" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</a>
+</div>
+<div class="mt-2 bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
+<span class="text-[10px] font-mono text-brand-tealLight block font-bold">TERDAFTAR RESMI</span>
+<span class="text-xs text-white font-semibold">Authorized Independent Service Provider</span>
+</div>
+</div>
+</div>
+<!-- Baris Logo Pembayaran Terlengkap -->
+<div class="py-8 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-800">
+<span class="text-xs text-slate-400 font-mono">Metode Pembayaran Aman &amp; Terverifikasi:</span>
+<div class="flex flex-wrap items-center justify-center gap-2">
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">QRIS</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">BCA</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">Mandiri</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">BNI</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">BRI</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">GoPay</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">OVO</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">ShopeePay</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">VISA</span>
+<span class="px-2.5 py-1 bg-slate-800 text-slate-200 rounded text-[11px] font-mono font-bold border border-slate-700">Mastercard</span>
+<span class="px-2.5 py-1 bg-brand-teal/20 text-brand-tealLight rounded text-[11px] font-mono font-bold border border-brand-teal/40">Cicilan 0%</span>
+</div>
+</div>
+<!-- Copyright & WCAG AA Notice -->
+<div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+<p class="">© 2024 NexusCenter Expert Connectivity. All rights reserved.</p>
+<p class="font-mono text-[11px]">Designed with Modern Navy-Teal Aesthetic • Jl. Perintis Kemerdekaan</p>
+</div>
+</div>
+</footer>
+<!-- 11. FLOATING UX ELEMENTS (WhatsApp & Back to Top) -->
+<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+<!-- Back to Top Button -->
+<button aria-label="Kembali ke Atas" class="w-11 h-11 rounded-full bg-white text-slate-700 hover:text-brand-teal border border-slate-200 shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95" id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+<span class="material-symbols-outlined text-[20px]">arrow_upward</span>
+</button>
+<!-- Floating WhatsApp CTA with Tooltip -->
+<a aria-label="Chat WhatsApp Konter" class="group flex items-center gap-2 px-4 py-3 rounded-full text-white font-semibold shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95" href="https://wa.me/6281234567890?text=Halo%20NexusCenter,%20saya%20ingin%20konsultasi%20layanan" rel="noopener noreferrer" style="background-color: rgb(37, 211, 102);" target="_blank">
+<span class="material-symbols-outlined text-[22px]">chat</span>
+<span class="text-xs tracking-wide font-mono pr-1">Chat Kami</span>
+</a>
+</div>
+<!-- Interactive JavaScript: Counter, Autocomplete & FAQ Accordion -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Interactive Search Bar with Autocomplete Dropdown
+      const searchInput = document.getElementById('searchInput');
+      const searchDropdown = document.getElementById('searchDropdown');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+      if (searchInput && searchDropdown) {
+        searchInput.addEventListener('focus', () => {
+          searchDropdown.classList.remove('hidden');
+        });
+
+        searchInput.addEventListener('input', (e) => {
+          if (e.target.value.trim().length > 0) {
+            clearSearchBtn.classList.remove('hidden');
+            searchDropdown.classList.remove('hidden');
+          } else {
+            clearSearchBtn.classList.add('hidden');
+          }
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          clearSearchBtn.classList.add('hidden');
+          searchInput.focus();
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+            searchDropdown.classList.add('hidden');
+          }
+        });
+      }
+
+      // 2. FAQ Accordion Logic
+      const faqToggles = document.querySelectorAll('.faq-toggle');
+      faqToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const card = toggle.closest('.faq-card');
+          const content = card.querySelector('.faq-content');
+          const icon = toggle.querySelector('.faq-icon');
+          const isHidden = content.classList.contains('hidden');
+
+          // Close all open FAQs
+          document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+          document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+
+          if (isHidden) {
+            content.classList.remove('hidden');
+            icon.style.transform = 'rotate(180deg)';
+          }
+        });
+      });
+
+      // 3. Smooth Counter Animation with Reliable Fallback
+      const counters = document.querySelectorAll('.counter-num');
+      const speed = 1200; // ms
+
+      const startCounters = () => {
+        counters.forEach(counter => {
+          const target = +counter.getAttribute('data-target');
+          if (isNaN(target)) return;
+
+          let start = 0;
+          const increment = Math.ceil(target / 40);
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= target) {
+              counter.innerText = target.toLocaleString('id-ID');
+              clearInterval(timer);
+            } else {
+              counter.innerText = start.toLocaleString('id-ID');
+            }
+          }, 30);
+        });
+      };
+
+      // Trigger counter when visible or directly after load
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            startCounters();
+            observer.disconnect();
+          }
+        }, { threshold: 0.2 });
+
+        const firstCounter = document.querySelector('.counter-num');
+        if (firstCounter) observer.observe(firstCounter);
+      } else {
+        startCounters();
+      }
+
+      // 4. Filter Button Toggle Styling
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => {
+            b.classList.remove('bg-brand-teal', 'text-white', 'shadow-sm');
+            b.classList.add('text-slate-600');
+          });
+          btn.classList.add('bg-brand-teal', 'text-white', 'shadow-sm');
+          btn.classList.remove('text-slate-600');
+        });
+      });
+    });
+  </script>
+</body></html>

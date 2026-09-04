@@ -42,8 +42,11 @@
     @if(!auth()->check() || auth()->user()->isPengguna())
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         @forelse($products as $product)
-        <div class="bg-surface-container-lowest border border-outline-variant/25 rounded-2xl overflow-hidden hover:border-secondary transition-all duration-300 hover:shadow-lg flex flex-col justify-between group">
-            <div class="bg-surface-container-low flex justify-center items-center h-48 relative cursor-pointer overflow-hidden" onclick="openDetailModal({{ $product->toJson() }}, '{{ $product->image ? Storage::url($product->image) : '' }}')">
+        <div class="product-card bg-surface-container-lowest border border-outline-variant/25 rounded-2xl overflow-hidden hover:border-secondary transition-all duration-300 hover:shadow-lg flex flex-col justify-between group cursor-pointer"
+             data-product="{{ json_encode($product) }}"
+             data-image="{{ $product->image ? Storage::url($product->image) : '' }}"
+             onclick="triggerCardModal(this, event)">
+            <div class="bg-surface-container-low flex justify-center items-center h-48 relative overflow-hidden">
                 @if($product->image)
                     <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
@@ -53,14 +56,19 @@
                 <span class="absolute top-3 left-3 bg-secondary/15 text-secondary text-xs font-mono font-bold px-2.5 py-1 rounded-full uppercase border border-secondary/20 backdrop-blur">
                     {{ $product->category }}
                 </span>
-                <span class="absolute top-3 right-3 bg-surface-container-lowest/80 text-on-surface-variant hover:text-secondary text-[11px] font-mono font-bold px-2 py-1 rounded-lg backdrop-blur flex items-center gap-1 shadow-sm">
+                <button type="button" onclick="triggerCardModal(this, event)" class="absolute top-3 right-3 bg-surface-container-lowest/90 text-on-surface-variant hover:text-secondary text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg backdrop-blur flex items-center gap-1 shadow-sm border border-outline-variant/30 active:scale-95 z-10">
                     <span class="material-symbols-outlined text-[14px]">info</span> Detail
-                </span>
+                </button>
             </div>
             <div class="p-5 flex flex-col flex-grow">
-                <span class="text-xs font-mono text-on-surface-variant mb-1">{{ $product->brand ?? 'TECHCELL' }}</span>
-                <h3 class="font-display font-bold text-base text-on-surface mb-2 line-clamp-2 cursor-pointer hover:text-secondary transition-colors" onclick="openDetailModal({{ $product->toJson() }})">{{ $product->name }}</h3>
-                <p class="text-xs text-on-surface-variant mb-4 line-clamp-2 cursor-pointer" onclick="openDetailModal({{ $product->toJson() }})">{{ $product->description }}</p>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                    <span class="text-xs font-mono text-on-surface-variant">{{ $product->brand ?? 'TECHCELL' }}</span>
+                    <span class="flex items-center gap-1 text-amber-500 font-mono text-xs font-bold">
+                        <span class="material-symbols-outlined text-xs">star</span> {{ number_format($product->rating ?: 4.9, 1) }} ({{ $product->review_count ?: 128 }})
+                    </span>
+                </div>
+                <h3 class="font-display font-bold text-base text-on-surface mb-2 line-clamp-2 hover:text-secondary transition-colors">{{ $product->name }}</h3>
+                <p class="text-xs text-on-surface-variant mb-4 line-clamp-2">{{ $product->description }}</p>
                 <div class="mt-auto pt-3 border-t border-outline-variant/15 flex items-center justify-between">
                     <div>
                         <p class="font-mono font-bold text-lg text-secondary">{{ $product->formatted_price }}</p>
@@ -69,8 +77,8 @@
                         </p>
                     </div>
 
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" onclick="openDetailModal({{ $product->toJson() }})" class="p-2.5 rounded-xl border border-outline-variant/30 text-on-surface-variant hover:text-secondary hover:border-secondary transition-all" title="Lihat Deskripsi & Spesifikasi">
+                    <div class="flex items-center gap-1.5" onclick="event.stopPropagation()">
+                        <button type="button" onclick="triggerCardModal(this, event)" class="p-2.5 rounded-xl border border-outline-variant/30 text-on-surface-variant hover:text-secondary hover:border-secondary transition-all cursor-pointer" title="Lihat Deskripsi & Spesifikasi">
                             <span class="material-symbols-outlined text-[20px]">visibility</span>
                         </button>
                         @if($product->stock > 0)
@@ -337,6 +345,29 @@
                 </div>
             </div>
 
+            {{-- Rating & Review Submission Form --}}
+            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/20 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="font-mono text-xs font-bold text-amber-600 uppercase flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">star_rate</span> Rating & Ulasan Pelanggan
+                    </span>
+                    <span id="detail-rating-text" class="font-mono text-xs font-bold text-on-surface">4.9 ★ (128 ulasan)</span>
+                </div>
+                <form id="detail-review-form" method="POST" action="" class="flex items-center gap-2 pt-1">
+                    @csrf
+                    <select name="rating" class="bg-surface-container-lowest border border-outline-variant/30 text-xs font-mono rounded-xl px-3 py-2 focus:outline-none focus:border-secondary flex-1">
+                        <option value="5">⭐⭐⭐⭐⭐ (5/5) Sangat Puas</option>
+                        <option value="4">⭐⭐⭐⭐ (4/5) Bagus</option>
+                        <option value="3">⭐⭐⭐ (3/5) Cukup</option>
+                        <option value="2">⭐⭐ (2/5) Kurang</option>
+                        <option value="1">⭐ (1/5) Buruk</option>
+                    </select>
+                    <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white font-mono text-xs font-bold py-2 px-4 rounded-xl shadow-sm transition-all active:scale-95 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">send</span> Ulas
+                    </button>
+                </form>
+            </div>
+
             {{-- Action Form --}}
             <div id="detail-action-container" class="pt-4 border-t border-outline-variant/20 flex justify-end gap-3">
                 <button type="button" onclick="closeDetailModal()" class="px-5 py-2.5 rounded-xl border border-outline-variant/30 text-on-surface-variant font-mono text-xs font-bold">Tutup</button>
@@ -353,13 +384,34 @@
 </div>
 
 <script>
-function openDetailModal(product, imageUrl) {
+function triggerCardModal(el, event) {
+    if (event) event.stopPropagation();
+    const card = el.closest('.product-card');
+    if (!card) return;
+    try {
+        const product = typeof card.dataset.product === 'string' ? JSON.parse(card.dataset.product) : card.dataset.product;
+        const imageUrl = card.dataset.image || '';
+        openDetailModal(product, imageUrl);
+    } catch(e) {
+        console.error('Error opening detail modal:', e);
+    }
+}
+
+function openDetailModal(product, imageUrl = '') {
     document.getElementById('detail-icon').innerText = product.icon || '📱';
     document.getElementById('detail-name').innerText = product.name;
     document.getElementById('detail-category-badge').innerText = (product.category || 'smartphone').toUpperCase();
     document.getElementById('detail-price').innerText = 'Rp ' + Number(product.price).toLocaleString('id-ID');
     document.getElementById('detail-stock').innerText = product.stock > 0 ? product.stock + ' Unit Tersedia' : 'Stok Habis';
     document.getElementById('detail-description').innerText = product.description || 'Tidak ada deskripsi rinci.';
+
+    const rating = product.rating ? Number(product.rating).toFixed(1) : '4.9';
+    const reviews = product.review_count || 128;
+    const ratingEl = document.getElementById('detail-rating-text');
+    if (ratingEl) ratingEl.innerText = `${rating} ★ (${reviews} ulasan)`;
+
+    const reviewForm = document.getElementById('detail-review-form');
+    if (reviewForm) reviewForm.action = `/produk/${product.id}/ulasan`;
 
     // Foto produk
     const imgContainer = document.getElementById('detail-image-container');
