@@ -70,7 +70,7 @@ class Service extends Model
     public static function generateNotaNumber(): string
     {
         $prefix = 'SRV-' . date('Ymd');
-        $last = static::where('nota_number', 'like', $prefix . '%')->max('nota_number');
+        $last = static::where('nota_number', 'like', $prefix . '%')->latest('id')->first()?->nota_number;
         $seq = $last ? (int)substr($last, -4) + 1 : 1;
         return $prefix . '-' . str_pad($seq, 4, '0', STR_PAD_LEFT);
     }

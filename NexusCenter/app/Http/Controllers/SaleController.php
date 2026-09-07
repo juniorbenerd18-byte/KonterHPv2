@@ -93,6 +93,11 @@ class SaleController extends Controller
 
     public function confirmPayment(Sale $sale, Request $request)
     {
+        $user = auth()->user();
+        if (!$user || (!$user->isStaff() && $sale->user_id !== $user->id)) {
+            abort(403, 'Anda tidak memiliki akses untuk mengonfirmasi pembayaran transaksi ini.');
+        }
+
         $sale->load(['items', 'delivery']);
 
         // Auto create delivery task if delivery option was chosen

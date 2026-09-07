@@ -35,7 +35,7 @@ class ProductController extends Controller
             'stock'       => 'required|integer|min:0',
             'icon'        => 'nullable|string|max:10',
             'description' => 'nullable|string',
-            'image'       => 'nullable|image|max:2048',
+            'image'       => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -57,7 +57,7 @@ class ProductController extends Controller
             'stock'       => 'required|integer|min:0',
             'icon'        => 'nullable|string|max:10',
             'description' => 'nullable|string',
-            'image'       => 'nullable|image|max:2048',
+            'image'       => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -110,11 +110,16 @@ class ProductController extends Controller
             'rating' => 'required|integer|min:1|max:5',
         ]);
 
-        $currCount = $product->review_count ?: 0;
-        $currRating = $product->rating ?: 4.9;
+        $currCount = (int) ($product->review_count ?: 0);
+        $currRating = (float) ($product->rating ?: 0);
 
-        $newCount = $currCount + 1;
-        $newRating = round((($currRating * $currCount) + $request->rating) / $newCount, 1);
+        if ($currCount === 0 || $currRating === 0.0) {
+            $newCount = 1;
+            $newRating = (float) $request->rating;
+        } else {
+            $newCount = $currCount + 1;
+            $newRating = round((($currRating * $currCount) + $request->rating) / $newCount, 1);
+        }
 
         $product->update([
             'review_count' => $newCount,

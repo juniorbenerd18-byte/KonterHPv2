@@ -48,7 +48,7 @@ class Delivery extends Model
     public static function generateTrackingCode(): string
     {
         $prefix = 'TRK-' . date('Ymd');
-        $last = static::where('tracking_code', 'like', $prefix . '%')->max('tracking_code');
+        $last = static::where('tracking_code', 'like', $prefix . '%')->latest('id')->first()?->tracking_code;
         $seq = $last ? (int)substr($last, -4) + 1 : 1;
         return $prefix . '-' . str_pad($seq, 4, '0', STR_PAD_LEFT);
     }

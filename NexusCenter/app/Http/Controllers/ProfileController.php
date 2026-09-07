@@ -15,8 +15,10 @@ class ProfileController extends Controller
 
         $orders = Sale::with('items')
             ->where(function ($query) use ($user) {
-                $query->where('user_id', $user->id)
-                      ->orWhere('customer_name', $user->name);
+                $query->where('user_id', $user->id);
+                if ($user->phone) {
+                    $query->orWhere('customer_phone', $user->phone);
+                }
             })
             ->latest()
             ->get();

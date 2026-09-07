@@ -24,8 +24,12 @@ class CartController extends Controller
             return back()->with('error', 'Produk ini sedang tidak tersedia atau stok habis.');
         }
 
+        $request->validate([
+            'qty' => 'nullable|integer|min:1',
+        ]);
+
         $cart = session()->get('cart', []);
-        $qty = (int) $request->get('qty', 1);
+        $qty = max(1, (int) $request->get('qty', 1));
         $currentInCart = isset($cart[$product->id]) ? $cart[$product->id]['qty'] : 0;
 
         if ($currentInCart + $qty > $product->stock) {

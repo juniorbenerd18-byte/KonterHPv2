@@ -41,7 +41,7 @@ class Sale extends Model
     public static function generateInvoiceNumber(): string
     {
         $prefix = 'INV-' . date('Ymd');
-        $last = static::where('invoice_number', 'like', $prefix . '%')->max('invoice_number');
+        $last = static::where('invoice_number', 'like', $prefix . '%')->latest('id')->first()?->invoice_number;
         $seq = $last ? (int)substr($last, -4) + 1 : 1;
         return $prefix . '-' . str_pad($seq, 4, '0', STR_PAD_LEFT);
     }

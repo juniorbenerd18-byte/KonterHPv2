@@ -196,11 +196,13 @@ class ServiceController extends Controller
         $user = auth()->user();
         $query = Service::query();
 
-        // Cari berdasarkan ID user atau nama pelanggan yang cocok
+        // Cari berdasarkan ID user atau nomor telepon HP yang cocok
         $query->where(function ($q) use ($user) {
             if ($user) {
-                $q->where('user_id', $user->id)
-                  ->orWhere('customer_name', $user->name);
+                $q->where('user_id', $user->id);
+                if ($user->phone) {
+                    $q->orWhere('customer_phone', $user->phone);
+                }
             }
         });
 

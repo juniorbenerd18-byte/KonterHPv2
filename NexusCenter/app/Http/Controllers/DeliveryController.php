@@ -58,14 +58,14 @@ class DeliveryController extends Controller
 
         $trackingCode = Delivery::generateTrackingCode();
         $pin          = Delivery::generatePin();
-        $lat          = $request->customer_lat;
-        $lng          = $request->customer_lng;
+        $lat          = is_numeric($request->customer_lat) ? (float) $request->customer_lat : null;
+        $lng          = is_numeric($request->customer_lng) ? (float) $request->customer_lng : null;
 
         if ($request->sale_id) {
             $sale = Sale::find($request->sale_id);
             if ($sale && $sale->customer_lat && $sale->customer_lng) {
-                $lat = $lat ?? $sale->customer_lat;
-                $lng = $lng ?? $sale->customer_lng;
+                $lat = $lat ?? (float) $sale->customer_lat;
+                $lng = $lng ?? (float) $sale->customer_lng;
             }
         }
 
@@ -95,8 +95,8 @@ class DeliveryController extends Controller
             'customer_name'    => $request->customer_name,
             'customer_phone'   => $request->customer_phone,
             'customer_address' => $request->customer_address,
-            'customer_lat'     => $lat ?? null,
-            'customer_lng'     => $lng ?? null,
+            'customer_lat'     => !empty($lat) ? (float) $lat : null,
+            'customer_lng'     => !empty($lng) ? (float) $lng : null,
             'delivery_pin'     => $pin,
             'status'           => 'pending',
             'notes'            => $request->notes,
@@ -209,13 +209,15 @@ class DeliveryController extends Controller
         } elseif ($user) {
             // Jika user login, tampilkan pengantaran milik user
             $query->where(function($q) use ($user) {
-                $q->where('customer_name', 'like', '%' . $user->name . '%')
-                  ->orWhereHas('sale', function($sq) use ($user) {
+                $q->whereHas('sale', function($sq) use ($user) {
                       $sq->where('user_id', $user->id);
                   })
                   ->orWhereHas('service', function($sq) use ($user) {
                       $sq->where('user_id', $user->id);
                   });
+                if ($user->phone) {
+                    $q->orWhere('customer_phone', $user->phone);
+                }
             });
         }
 

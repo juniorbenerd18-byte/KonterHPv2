@@ -484,11 +484,18 @@ function openModal(mode, product = null) {
         document.getElementById('input-stock').value = product.stock;
         document.getElementById('input-icon').value = product.icon || '';
         document.getElementById('input-description').value = product.description || '';
+        if (product.image) {
+            document.getElementById('image-preview').src = `/storage/${product.image}`;
+            document.getElementById('image-preview-wrap').classList.remove('hidden');
+        } else {
+            document.getElementById('image-preview-wrap').classList.add('hidden');
+        }
     } else {
         title.innerText = 'Tambah Produk Baru';
         form.action = "{{ route('products.store') }}";
         method.value = 'POST';
         form.reset();
+        document.getElementById('image-preview-wrap').classList.add('hidden');
     }
 }
 function closeModal() {

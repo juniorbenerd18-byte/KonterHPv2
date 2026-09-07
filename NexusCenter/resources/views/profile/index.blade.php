@@ -25,8 +25,9 @@
                 <nav class="flex flex-col gap-1.5 pt-2">
                     <a href="#account-section" onclick="switchProfileTab('account')" id="sidebar-tab-account" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-secondary/10 text-secondary font-mono text-xs font-bold border-l-4 border-secondary transition-all">
                         <span class="material-symbols-outlined icon-filled">person</span>
-                        Akun Saya
+                        {{ $user->isStaff() ? 'Profil Staf' : 'Akun Saya' }}
                     </a>
+                    @if(!$user->isStaff())
                     <a href="#orders-section" onclick="switchProfileTab('orders')" id="sidebar-tab-orders" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all font-mono text-xs font-bold">
                         <span class="material-symbols-outlined">receipt_long</span>
                         Riwayat Pesanan
@@ -39,6 +40,24 @@
                         <span class="material-symbols-outlined">shopping_cart</span>
                         Keranjang Belanja
                     </a>
+                    @else
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all font-mono text-xs font-bold">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard Utama
+                    </a>
+                    <a href="{{ route('sales.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all font-mono text-xs font-bold">
+                        <span class="material-symbols-outlined">point_of_sale</span>
+                        Penjualan POS
+                    </a>
+                    <a href="{{ route('services.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all font-mono text-xs font-bold">
+                        <span class="material-symbols-outlined">build</span>
+                        Manajemen Servis
+                    </a>
+                    <a href="{{ route('delivery.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all font-mono text-xs font-bold">
+                        <span class="material-symbols-outlined">two_wheeler</span>
+                        Manajemen Pengantaran
+                    </a>
+                    @endif
                 </nav>
             </div>
         </aside>
@@ -81,7 +100,6 @@
                         <span class="material-symbols-outlined icon-filled text-secondary text-[36px] mb-1">workspace_premium</span>
                         <span class="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider">Status Akun</span>
                         <span class="font-display font-bold text-lg text-primary mt-0.5">{{ ucfirst($user->role) }} Member</span>
-                        <span class="text-secondary font-mono text-xs font-bold mt-1">12.450 Points</span>
                     </div>
                 </section>
 
@@ -114,7 +132,8 @@
                             </div>
                         </div>
 
-                        {{-- Section Alamat Pengiriman Utama --}}
+                        @if(!$user->isStaff())
+                        {{-- Section Alamat Pengiriman Utama Khusus Pelanggan --}}
                         <div class="mt-8 pt-6 border-t border-outline-variant/20 space-y-4">
                             <div class="flex items-center justify-between">
                                 <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
@@ -143,17 +162,45 @@
                                 <div id="profile-map" class="w-full h-[220px] bg-surface-container"></div>
                             </div>
                         </div>
+                        @else
+                        {{-- Panel Kontrol Staf --}}
+                        <div class="mt-8 pt-6 border-t border-outline-variant/20">
+                            <h3 class="font-display font-bold text-base text-primary mb-3 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-secondary">admin_panel_settings</span>
+                                Panel Pintas Pengelolaan Toko TECHCELL
+                            </h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <a href="{{ route('dashboard') }}" class="p-3.5 bg-surface-container-low border border-outline-variant/30 rounded-xl flex flex-col items-center justify-center text-center hover:border-secondary hover:bg-secondary/5 transition-all group">
+                                    <span class="material-symbols-outlined text-secondary text-2xl group-hover:scale-110 transition-transform">dashboard</span>
+                                    <span class="font-mono text-xs font-bold text-primary mt-1">Dashboard</span>
+                                </a>
+                                <a href="{{ route('sales.index') }}" class="p-3.5 bg-surface-container-low border border-outline-variant/30 rounded-xl flex flex-col items-center justify-center text-center hover:border-secondary hover:bg-secondary/5 transition-all group">
+                                    <span class="material-symbols-outlined text-secondary text-2xl group-hover:scale-110 transition-transform">point_of_sale</span>
+                                    <span class="font-mono text-xs font-bold text-primary mt-1">Kasir POS</span>
+                                </a>
+                                <a href="{{ route('services.index') }}" class="p-3.5 bg-surface-container-low border border-outline-variant/30 rounded-xl flex flex-col items-center justify-center text-center hover:border-secondary hover:bg-secondary/5 transition-all group">
+                                    <span class="material-symbols-outlined text-secondary text-2xl group-hover:scale-110 transition-transform">build</span>
+                                    <span class="font-mono text-xs font-bold text-primary mt-1">Data Servis</span>
+                                </a>
+                                <a href="{{ route('delivery.index') }}" class="p-3.5 bg-surface-container-low border border-outline-variant/30 rounded-xl flex flex-col items-center justify-center text-center hover:border-secondary hover:bg-secondary/5 transition-all group">
+                                    <span class="material-symbols-outlined text-secondary text-2xl group-hover:scale-110 transition-transform">two_wheeler</span>
+                                    <span class="font-mono text-xs font-bold text-primary mt-1">Pengantaran</span>
+                                </a>
+                            </div>
+                        </div>
+                        @endif
 
                         <div class="mt-8 pt-6 border-t border-outline-variant/20 flex justify-end">
                             <button type="submit" class="bg-secondary text-white font-mono text-xs font-bold px-6 py-3 rounded-xl hover:bg-secondary/90 transition-all shadow-md flex items-center gap-2 active:scale-95">
                                 <span class="material-symbols-outlined text-[18px]">save</span>
-                                Simpan Perubahan Profil & Alamat
+                                {{ $user->isStaff() ? 'Simpan Perubahan Profil Staf' : 'Simpan Perubahan Profil & Alamat' }}
                             </button>
                         </div>
                     </section>
                 </div>
             </form>
 
+            @if(!$user->isStaff())
             <!-- Orders Tab Content -->
             <div id="content-orders" class="space-y-8">
                 <section id="orders-section" class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 md:p-8 shadow-card">
@@ -223,14 +270,18 @@
                     </div>
                 </section>
             </div>
+            @endif
         </div>
     </div>
 </div>
 
+@if(!$user->isStaff())
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 @endpush
+@endif
 
+@if(!$user->isStaff())
 @push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -403,4 +454,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+@endif
 @endsection
