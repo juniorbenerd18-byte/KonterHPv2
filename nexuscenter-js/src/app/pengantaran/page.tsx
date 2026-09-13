@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
 import { DeliveryOrder, Sale, ServiceOrder } from '@/types/database';
 
 export default function DeliveryManagementPage() {
+    const router = useRouter();
     const [deliveries, setDeliveries] = useState<DeliveryOrder[]>([]);
     const [readySales, setReadySales] = useState<Sale[]>([]);
     const [readyServices, setReadyServices] = useState<ServiceOrder[]>([]);
@@ -23,8 +25,17 @@ export default function DeliveryManagementPage() {
     const [editingDelivery, setEditingDelivery] = useState<DeliveryOrder | null>(null);
 
     useEffect(() => {
+        if (!DataService.isLoggedIn()) {
+            router.push('/login?redirect=/pengantaran');
+            return;
+        }
+        const r = DataService.getCurrentRole();
+        if (r === 'pengguna') {
+            router.push('/lacak-driver');
+            return;
+        }
         loadData();
-    }, []);
+    }, [router]);
 
     const loadData = async () => {
         const [delivData, salesData, srvData] = await Promise.all([

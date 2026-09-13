@@ -9,6 +9,7 @@ import { DeliveryOrder } from '@/types/database';
 export default function DeliveryTrackPage() {
     const params = useParams();
     const code = params.code as string;
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [delivery, setDelivery] = useState<DeliveryOrder | null>(null);
     const [loading, setLoading] = useState(true);
     const [distanceMeters, setDistanceMeters] = useState<number | null>(null);
@@ -19,6 +20,7 @@ export default function DeliveryTrackPage() {
     const routeLineRef = useRef<any>(null);
 
     useEffect(() => {
+        setIsLoggedIn(DataService.isLoggedIn());
         loadDelivery();
         const interval = setInterval(loadDelivery, 4000);
         return () => clearInterval(interval);
@@ -133,6 +135,29 @@ export default function DeliveryTrackPage() {
         return (
             <div className="max-w-md mx-auto py-20 text-center font-mono text-sm text-on-surface-variant">
                 Memuat data pelacakan kurir...
+            </div>
+        );
+    }
+
+    if (!isLoggedIn) {
+        return (
+            <div className="max-w-md mx-auto my-16 p-8 bg-white border border-outline-variant/30 rounded-3xl text-center space-y-4 shadow-card">
+                <div className="w-16 h-16 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center mx-auto border border-amber-500/20">
+                    <span className="material-symbols-outlined text-[36px]">lock</span>
+                </div>
+                <h2 className="font-display font-bold text-2xl text-on-surface">Login Diperlukan</h2>
+                <p className="text-sm text-on-surface-variant leading-relaxed">
+                    Silakan login ke akun TECHCELL Anda terlebih dahulu untuk mengecek dan melacak lokasi kurir secara live.
+                </p>
+                <div className="pt-2">
+                    <Link
+                        href="/login?redirect=/lacak-driver"
+                        className="inline-flex items-center gap-2 bg-primary text-white font-mono text-xs font-bold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all shadow-md"
+                    >
+                        <span className="material-symbols-outlined text-base">login</span>
+                        <span>Masuk ke Akun Saya &rarr;</span>
+                    </Link>
+                </div>
             </div>
         );
     }

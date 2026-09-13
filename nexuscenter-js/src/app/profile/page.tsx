@@ -30,6 +30,10 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   const loadData = useCallback(async () => {
+    if (!DataService.isLoggedIn()) {
+      router.push('/login?redirect=/profile');
+      return;
+    }
     setLoading(true);
     const [allSales, allServices] = await Promise.all([
       DataService.getSales(),

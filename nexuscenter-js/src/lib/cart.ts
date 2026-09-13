@@ -1,6 +1,7 @@
 'use client';
 
 import { Product } from '@/types/database';
+import { DataService } from '@/lib/store';
 
 export interface CartItem {
     id: number;
@@ -81,6 +82,10 @@ export function saveCart(items: CartItem[]): void {
 }
 
 export function addToCart(product: Product, qty: number = 1): CartItem[] {
+    if (typeof window !== 'undefined' && !DataService.isLoggedIn()) {
+        throw new Error('LOGIN_REQUIRED');
+    }
+
     const cart = getCart();
     const existingIndex = cart.findIndex(it => it.id === product.id);
     const price = parsePrice(product.price);

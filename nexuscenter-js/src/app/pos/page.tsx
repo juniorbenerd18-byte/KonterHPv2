@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { DataService } from '@/lib/store';
 import { Product, PaymentMethod, Sale } from '@/types/database';
@@ -11,6 +12,7 @@ interface CartItem {
 }
 
 export default function POSPage() {
+    const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [cart, setCart] = useState<CartItem[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -32,8 +34,17 @@ export default function POSPage() {
     const [toastMessage, setToastMessage] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!DataService.isLoggedIn()) {
+            router.push('/login?redirect=/pos');
+            return;
+        }
+        const r = DataService.getCurrentRole();
+        if (r === 'pengguna') {
+            router.push('/');
+            return;
+        }
         DataService.getProducts().then((data) => setProducts(data.filter(p => p.is_active)));
-    }, []);
+    }, [router]);
 
     const showToast = (msg: string) => {
         setToastMessage(msg);

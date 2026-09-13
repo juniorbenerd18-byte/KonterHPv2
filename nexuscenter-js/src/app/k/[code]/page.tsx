@@ -1,10 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { DataService } from '@/lib/store';
 import { DeliveryOrder } from '@/types/database';
 
 export default function CourierTaskPage() {
+    const params = useParams();
+    const codeParam = params?.code as string | undefined;
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [deliveries, setDeliveries] = useState<DeliveryOrder[]>([]);
     const [selectedDelivery, setSelectedDelivery] = useState<DeliveryOrder | null>(null);
     const [isTracking, setIsTracking] = useState(false);
@@ -18,14 +23,22 @@ export default function CourierTaskPage() {
     const watchIdRef = useRef<number | null>(null);
 
     useEffect(() => {
+        setIsLoggedIn(DataService.isLoggedIn());
         loadDeliveries();
-    }, []);
+    }, [codeParam]);
 
     const loadDeliveries = async () => {
         const data = await DataService.getDeliveries();
         setDeliveries(data);
-        if (data.length > 0 && !selectedDelivery) {
-            setSelectedDelivery(data[0]);
+        if (data.length > 0) {
+            if (codeParam) {
+                const match = data.find(
+                    d => d.tracking_code.toLowerCase() === codeParam.toLowerCase() || String(d.id) === codeParam
+                );
+                setSelectedDelivery(match || data[0]);
+            } else if (!selectedDelivery) {
+                setSelectedDelivery(data[0]);
+            }
         }
     };
 
@@ -111,6 +124,29 @@ export default function CourierTaskPage() {
             setPinError('Kode PIN salah! Minta 4 digit PIN yang tampil pada layar HP pelanggan.');
         }
     };
+
+    if (!isLoggedIn) {
+        return (
+            <div className="max-w-md mx-auto my-16 p-8 bg-white border border-outline-variant/30 rounded-3xl text-center space-y-4 shadow-card">
+                <div className="w-16 h-16 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center mx-auto border border-amber-500/20">
+                    <span className="material-symbols-outlined text-[36px]">lock</span>
+                </div>
+                <h2 className="font-display font-bold text-2xl text-on-surface">Akses Terbatas Kurir</h2>
+                <p className="text-sm text-on-surface-variant leading-relaxed">
+                    Silakan login ke akun Kurir / Petugas TECHCELL untuk mengaktifkan GPS dan memproses pengantaran barang.
+                </p>
+                <div className="pt-2">
+                    <Link
+                        href={`/login?redirect=/k/${codeParam || ''}`}
+                        className="inline-flex items-center gap-2 bg-primary text-white font-mono text-xs font-bold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all shadow-md"
+                    >
+                        <span className="material-symbols-outlined text-base">login</span>
+                        <span>Masuk ke Akun Kurir &rarr;</span>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col justify-between font-sans">

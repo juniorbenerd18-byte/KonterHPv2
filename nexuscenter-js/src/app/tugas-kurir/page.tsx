@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
 import { DeliveryOrder } from '@/types/database';
 
 export default function CourierTaskPage() {
+    const router = useRouter();
     const [deliveries, setDeliveries] = useState<DeliveryOrder[]>([]);
     const [selectedDelivery, setSelectedDelivery] = useState<DeliveryOrder | null>(null);
     const [isTracking, setIsTracking] = useState(false);
@@ -18,8 +20,17 @@ export default function CourierTaskPage() {
     const watchIdRef = useRef<number | null>(null);
 
     useEffect(() => {
+        if (!DataService.isLoggedIn()) {
+            router.push('/login?redirect=/tugas-kurir');
+            return;
+        }
+        const r = DataService.getCurrentRole();
+        if (r === 'pengguna') {
+            router.push('/');
+            return;
+        }
         loadDeliveries();
-    }, []);
+    }, [router]);
 
     const loadDeliveries = async () => {
         const data = await DataService.getDeliveries();

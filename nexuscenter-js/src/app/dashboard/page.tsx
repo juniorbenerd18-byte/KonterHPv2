@@ -2,17 +2,28 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
 import { Sale, ServiceOrder, Product } from '@/types/database';
 
 export default function DashboardPage() {
+    const router = useRouter();
     const [sales, setSales] = useState<Sale[]>([]);
     const [services, setServices] = useState<ServiceOrder[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [currentRole, setCurrentRole] = useState('admin');
 
     useEffect(() => {
-        setCurrentRole(DataService.getCurrentRole());
+        if (!DataService.isLoggedIn()) {
+            router.push('/login?redirect=/dashboard');
+            return;
+        }
+        const r = DataService.getCurrentRole();
+        if (r === 'pengguna') {
+            router.push('/');
+            return;
+        }
+        setCurrentRole(r);
         Promise.all([
             DataService.getSales(),
             DataService.getServices(),
@@ -22,7 +33,7 @@ export default function DashboardPage() {
             setServices(servicesData);
             setProducts(productsData);
         });
-    }, []);
+    }, [router]);
 
     const todayStr = new Date().toISOString().slice(0, 10);
     const todaySales = sales.filter(s => s.created_at.startsWith(todayStr));
@@ -93,7 +104,7 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-8 fade-in font-sans">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 pt-2 pb-8 fade-in font-sans">
             {/* Hero Welcome Banner */}
             <section className="mb-8 rounded-2xl overflow-hidden relative bg-primary-container circuit-pattern shadow-lg border border-white/5">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-container via-primary-container/95 to-transparent"></div>
@@ -124,6 +135,12 @@ export default function DashboardPage() {
                         >
                             <span className="material-symbols-outlined text-[18px]">build</span> Servis HP
                         </Link>
+                        <Link
+                            href="/laporan"
+                            className="flex items-center gap-2 bg-white/10 text-white px-5 py-3 rounded-xl font-semibold text-sm border border-white/20 hover:bg-white/20 transition-all"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">bar_chart</span> Laporan
+                        </Link>
                     </div>
                 </div>
             </section>
@@ -148,6 +165,23 @@ export default function DashboardPage() {
                     </div>
                 ))}
             </div>
+
+            {/* Laporan Shortcut Banner */}
+            <Link
+                href="/laporan"
+                className="group mb-6 flex items-center justify-between gap-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border border-secondary/20 rounded-2xl px-6 py-4 hover:border-secondary/50 hover:from-secondary/15 transition-all shadow-card"
+            >
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-secondary/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <span className="material-symbols-outlined text-secondary text-[22px] icon-filled">bar_chart</span>
+                    </div>
+                    <div>
+                        <p className="font-display font-bold text-sm text-on-surface">Lihat Laporan &amp; Statistik Lengkap</p>
+                        <p className="text-xs text-on-surface-variant mt-0.5">Analisis penjualan, servis, produk terlaris, dan cetak PDF</p>
+                    </div>
+                </div>
+                <span className="material-symbols-outlined text-secondary text-[22px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </Link>
 
             {/* Tables Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

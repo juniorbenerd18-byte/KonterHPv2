@@ -1,5 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { DataService } from '@/lib/store';
 
 const PROVIDERS = [
   { id: 'Telkomsel', label: 'Telkomsel', abbr: 'TS', color: 'red', bg: 'bg-red-600' },
@@ -34,6 +36,7 @@ const DATA_PACKAGES = [
 ];
 
 export default function PulsaPage() {
+  const router = useRouter();
   const [provider, setProvider] = useState('Telkomsel');
   const [phone, setPhone] = useState('0812 3456 7890');
   const [tab, setTab] = useState<'pulsa' | 'data'>('pulsa');
@@ -47,6 +50,11 @@ export default function PulsaPage() {
   }
 
   function handleTopup() {
+    if (!DataService.isLoggedIn()) {
+      alert('⚠️ Anda belum login! Silakan masuk ke akun TECHCELL Anda terlebih dahulu untuk melakukan transaksi Pulsa & Data.');
+      router.push('/login?redirect=/pulsa');
+      return;
+    }
     if (!phone.trim()) { alert('Masukkan nomor HP target!'); return; }
     if (!selectedPkg) { alert('Pilih paket terlebih dahulu!'); return; }
     setProcessing(true);

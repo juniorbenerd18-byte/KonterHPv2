@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
 import { Sale, ServiceOrder } from '@/types/database';
 
 export default function HistoryPage() {
+    const router = useRouter();
     const [sales, setSales] = useState<Sale[]>([]);
     const [services, setServices] = useState<ServiceOrder[]>([]);
 
@@ -15,6 +17,10 @@ export default function HistoryPage() {
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
+        if (!DataService.isLoggedIn()) {
+            router.push('/login?redirect=/riwayat');
+            return;
+        }
         Promise.all([
             DataService.getSales(),
             DataService.getServices()
@@ -22,7 +28,7 @@ export default function HistoryPage() {
             setSales(salesData);
             setServices(servicesData);
         });
-    }, []);
+    }, [router]);
 
     const resetFilters = () => {
         setDateFrom('');

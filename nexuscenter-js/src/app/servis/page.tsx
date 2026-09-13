@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
 import { ServiceOrder } from '@/types/database';
 
 export default function ServiceManagementPage() {
+    const router = useRouter();
     const [services, setServices] = useState<ServiceOrder[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -28,8 +30,17 @@ export default function ServiceManagementPage() {
     const [payingService, setPayingService] = useState<ServiceOrder | null>(null);
 
     useEffect(() => {
+        if (!DataService.isLoggedIn()) {
+            router.push('/login?redirect=/servis');
+            return;
+        }
+        const r = DataService.getCurrentRole();
+        if (r === 'pengguna') {
+            router.push('/booking-servis');
+            return;
+        }
         loadServices();
-    }, []);
+    }, [router]);
 
     const loadServices = async () => {
         const data = await DataService.getServices();
@@ -405,6 +416,15 @@ export default function ServiceManagementPage() {
                                             className="flex items-center gap-1 px-3 py-1.5 bg-surface-container border border-outline-variant/30 rounded-xl text-xs text-on-surface-variant hover:border-secondary/50 hover:text-secondary transition-all"
                                         >
                                             <span className="material-symbols-outlined text-[14px]">print</span> Nota
+                                        </Link>
+
+                                        {/* Antar Kurir */}
+                                        <Link
+                                            href="/pengantaran"
+                                            className="flex items-center gap-1 px-3 py-1.5 bg-sky-50 border border-sky-200 rounded-xl text-xs text-sky-700 hover:bg-sky-100 transition-all font-semibold"
+                                            title="Kirim HP via Kurir GPS"
+                                        >
+                                            <span className="material-symbols-outlined text-[14px]">two_wheeler</span> Antar Kurir
                                         </Link>
 
                                         {/* Delete */}

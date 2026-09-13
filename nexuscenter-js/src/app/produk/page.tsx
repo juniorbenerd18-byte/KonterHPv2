@@ -2,11 +2,13 @@
 
 import { addToCart } from '@/lib/cart';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { DataService } from '@/lib/store';
 import { Product, ProductCategory, Role } from '@/types/database';
 
 export default function ProductsPage() {
+    const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [currentRole, setCurrentRole] = useState<Role>('pengguna');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -24,6 +26,8 @@ export default function ProductsPage() {
     const [stock, setStock] = useState<number>(0);
     const [icon, setIcon] = useState('📱');
     const [image, setImage] = useState('');
+    const [imageMode, setImageMode] = useState<'file' | 'url'>('file');
+    const [imagePreview, setImagePreview] = useState('');
     const [description, setDescription] = useState('');
 
     const loadData = () => {
@@ -53,11 +57,23 @@ export default function ProductsPage() {
 
     const handleAddToCart = (product: Product, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
+        if (!DataService.isLoggedIn()) {
+            showToast('⚠️ Silakan login terlebih dahulu untuk menambah produk ke keranjang!');
+            setTimeout(() => {
+                router.push('/login?redirect=/produk');
+            }, 1000);
+            return;
+        }
         try {
             addToCart(product, 1);
             showToast(`"${product.name}" berhasil ditambahkan ke keranjang!`);
-        } catch {
-            showToast('Gagal menambahkan ke keranjang');
+        } catch (err: any) {
+            if (err?.message === 'LOGIN_REQUIRED') {
+                showToast('⚠️ Silakan login terlebih dahulu!');
+                router.push('/login?redirect=/produk');
+            } else {
+                showToast('Gagal menambahkan ke keranjang');
+            }
         }
     };
 
@@ -70,6 +86,8 @@ export default function ProductsPage() {
         setStock(10);
         setIcon('📱');
         setImage('');
+        setImageMode('file');
+        setImagePreview('');
         setDescription('');
         setModalOpen(true);
     };
@@ -83,8 +101,40 @@ export default function ProductsPage() {
         setStock(p.stock);
         setIcon(p.icon);
         setImage(p.image || '');
+        setImageMode(p.image?.startsWith('data:') ? 'file' : 'url');
+        setImagePreview(p.image || '');
         setDescription(p.description || '');
         setModalOpen(true);
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const dataUrl = ev.target?.result as string;
+            // Resize via canvas — max 800x800, JPEG quality 0.8
+            const img = new window.Image();
+            img.onload = () => {
+                const MAX = 800;
+                let { width, height } = img;
+                if (width > MAX || height > MAX) {
+                    const ratio = Math.min(MAX / width, MAX / height);
+                    width = Math.round(width * ratio);
+                    height = Math.round(height * ratio);
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d')!;
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressed = canvas.toDataURL('image/jpeg', 0.8);
+                setImage(compressed);
+                setImagePreview(compressed);
+            };
+            img.src = dataUrl;
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleSaveProduct = async (e: React.FormEvent) => {
@@ -455,15 +505,91 @@ export default function ProductsPage() {
                                     />
                                 </div>
                             </div>
+                            {/* Image Picker — Dual Mode */}
                             <div>
-                                <label className="block text-slate-700 mb-1 font-bold">URL / Path Gambar (Opsional)</label>
-                                <input
-                                    type="text"
-                                    value={image}
-                                    onChange={(e) => setImage(e.target.value)}
-                                    placeholder="/storage/products/... atau https://..."
-                                    className="w-full border rounded-lg px-3 py-2"
-                                />
+                                <label className="block text-slate-700 mb-1 font-bold">Foto Produk (Opsional)</label>
+                                {/* Mode Tabs */}
+                                <div className="flex gap-1 mb-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setImageMode('file'); }}
+                                        className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                            imageMode === 'file'
+                                                ? 'bg-secondary text-white'
+                                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                        }`}
+                                    >
+                                        <span className="material-symbols-outlined text-[13px]">upload_file</span> Upload File
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setImageMode('url')}
+                                        className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                            imageMode === 'url'
+                                                ? 'bg-secondary text-white'
+                                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                        }`}
+                                    >
+                                        <span className="material-symbols-outlined text-[13px]">link</span> URL
+                                    </button>
+                                </div>
+
+                                {imageMode === 'file' ? (
+                                    <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-slate-200 rounded-xl cursor-pointer hover:border-secondary/50 hover:bg-secondary/5 transition-all relative overflow-hidden">
+                                        {imagePreview ? (
+                                            <>
+                                                <img src={imagePreview} alt="Preview" className="absolute inset-0 w-full h-full object-contain p-2" />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex items-center justify-center transition-opacity">
+                                                    <span className="text-white text-[11px] font-bold flex items-center gap-1">
+                                                        <span className="material-symbols-outlined text-[16px]">edit</span> Ganti Foto
+                                                    </span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="flex flex-col items-center gap-1 text-slate-400">
+                                                <span className="material-symbols-outlined text-3xl">add_photo_alternate</span>
+                                                <span className="text-[11px]">Klik untuk pilih foto dari komputer</span>
+                                                <span className="text-[10px] opacity-60">JPG, PNG, WEBP — maks. 10MB</span>
+                                            </div>
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            className="sr-only"
+                                        />
+                                    </label>
+                                ) : (
+                                    <div className="space-y-2">
+                                        <input
+                                            type="text"
+                                            value={image.startsWith('data:') ? '' : image}
+                                            onChange={(e) => {
+                                                setImage(e.target.value);
+                                                setImagePreview(e.target.value);
+                                            }}
+                                            placeholder="https://... atau /storage/products/..."
+                                            className="w-full border rounded-lg px-3 py-2"
+                                        />
+                                        {imagePreview && !imagePreview.startsWith('data:') && (
+                                            <div className="flex items-center gap-2 bg-slate-50 border rounded-lg p-2">
+                                                <img src={imagePreview} alt="Preview" className="w-12 h-12 object-contain rounded" onError={() => setImagePreview('')} />
+                                                <span className="text-[10px] text-slate-500 font-mono">Preview URL</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Clear button */}
+                                {(image || imagePreview) && (
+                                    <button
+                                        type="button"
+                                        onClick={() => { setImage(''); setImagePreview(''); }}
+                                        className="mt-1.5 text-[10px] font-mono text-slate-400 hover:text-red-500 transition-colors flex items-center gap-1"
+                                    >
+                                        <span className="material-symbols-outlined text-[12px]">delete</span> Hapus foto
+                                    </button>
+                                )}
                             </div>
                             <div>
                                 <label className="block text-slate-700 mb-1 font-bold">Deskripsi</label>

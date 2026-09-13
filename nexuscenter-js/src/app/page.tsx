@@ -2,31 +2,22 @@
 
 import { addToCart } from '@/lib/cart';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { DataService } from '@/lib/store';
 import { Product } from '@/types/database';
 
-// Trade In lookup database matching Laravel
-const TRADE_IN_DATABASE = [
-    { keywords: ['samsung s24 ultra', 'galaxy s24 ultra', 's24 ultra'], name: 'Samsung Galaxy S24 Ultra', min: 9500000, max: 11000000 },
-    { keywords: ['samsung s24+', 'galaxy s24+', 's24+'], name: 'Samsung Galaxy S24+', min: 8000000, max: 9500000 },
-    { keywords: ['samsung s24', 'galaxy s24', 's24'], name: 'Samsung Galaxy S24', min: 7000000, max: 8500000 },
-    { keywords: ['iphone 15 pro max', '15 pro max'], name: 'iPhone 15 Pro Max', min: 14000000, max: 17000000 },
-    { keywords: ['iphone 15 pro', '15 pro'], name: 'iPhone 15 Pro', min: 12000000, max: 15000000 },
-    { keywords: ['iphone 14 pro max', '14 pro max'], name: 'iPhone 14 Pro Max', min: 11000000, max: 13500000 },
-    { keywords: ['iphone 11'], name: 'iPhone 11', min: 2500000, max: 3500000 },
-    { keywords: ['xiaomi 14'], name: 'Xiaomi 14', min: 5500000, max: 7000000 },
-    { keywords: ['oppo reno 11 pro', 'reno 11 pro'], name: 'OPPO Reno 11 Pro', min: 3500000, max: 4500000 },
-    { keywords: ['vivo v30 pro', 'v30 pro'], name: 'vivo V30 Pro', min: 3200000, max: 4200000 },
-];
+import { TRADE_IN_DB, scoreMatch, detectStorageFromQuery, TradeInEntry, TradeInVariant } from '@/lib/tradeInDb';
 
 export default function HomePage() {
+    const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [toastMessage, setToastMessage] = useState<string | null>(null);
 
     // Trade-in calculator state
     const [tradeInInput, setTradeInInput] = useState('');
-    const [tradeInResult, setTradeInResult] = useState<{ name: string; min: number; max: number } | null>(null);
+    const [selectedEntry, setSelectedEntry] = useState<TradeInEntry | null>(null);
+    const [selectedVariant, setSelectedVariant] = useState<TradeInVariant | null>(null);
     const [tradeInNotFound, setTradeInNotFound] = useState(false);
 
     // FAQ Accordion State
@@ -47,32 +38,63 @@ export default function HomePage() {
 
     const handleAddToCart = (product: Product, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
+        if (!DataService.isLoggedIn()) {
+            showToast('⚠️ Silakan login terlebih dahulu untuk menambah produk ke keranjang!');
+            setTimeout(() => {
+                router.push('/login?redirect=/produk');
+            }, 1000);
+            return;
+        }
         try {
             addToCart(product, 1);
             showToast(`"${product.name}" berhasil ditambahkan ke keranjang!`);
-        } catch {
-            showToast('Gagal menambahkan ke keranjang');
+        } catch (err: any) {
+            if (err?.message === 'LOGIN_REQUIRED') {
+                showToast('⚠️ Silakan login terlebih dahulu!');
+                router.push('/login?redirect=/produk');
+            } else {
+                showToast('Gagal menambahkan ke keranjang');
+            }
         }
     };
 
     const handleTradeInSearch = (val: string) => {
         setTradeInInput(val);
-        const query = val.trim().toLowerCase();
-        if (query.length < 3) {
-            setTradeInResult(null);
+        const query = val.trim();
+        if (query.length < 2) {
+            setSelectedEntry(null);
+            setSelectedVariant(null);
             setTradeInNotFound(false);
             return;
         }
 
-        const found = TRADE_IN_DATABASE.find(item =>
-            item.keywords.some(kw => query.includes(kw) || kw.includes(query))
-        );
+        const autoStorage = detectStorageFromQuery(query);
 
-        if (found) {
-            setTradeInResult(found);
+        let bestMatch: TradeInEntry | null = null;
+        let maxScore = 0;
+
+        for (const entry of TRADE_IN_DB) {
+            const score = scoreMatch(query, entry);
+            if (score > maxScore) {
+                maxScore = score;
+                bestMatch = entry;
+            }
+        }
+
+        if (bestMatch && maxScore >= 0.5) {
+            setSelectedEntry(bestMatch);
             setTradeInNotFound(false);
+            if (autoStorage) {
+                const foundVar = bestMatch.variants.find(
+                    v => v.storage.toLowerCase() === autoStorage.toLowerCase()
+                );
+                setSelectedVariant(foundVar || bestMatch.variants[0]);
+            } else {
+                setSelectedVariant(bestMatch.variants[0]);
+            }
         } else {
-            setTradeInResult(null);
+            setSelectedEntry(null);
+            setSelectedVariant(null);
             setTradeInNotFound(true);
         }
     };
@@ -509,28 +531,84 @@ export default function HomePage() {
                                     </button>
                                 </div>
 
-                                {/* Result Box */}
-                                {tradeInResult && (
-                                    <div className="bg-white/10 backdrop-blur-md border border-white/25 rounded-2xl p-5 space-y-3 animate-float-card-1">
-                                        <div className="flex items-center justify-between">
-                                            <p className="font-mono text-xs text-cyan-300 font-bold">ESTIMASI HARGA TUKAR TAMBAH:</p>
-                                            <span className="text-[10px] font-mono bg-secondary/30 text-cyan-300 px-2.5 py-0.5 rounded-full border border-secondary/30">Perkiraan Resmi</span>
+                                {/* Result Box with Storage Selection */}
+                                {selectedEntry && (
+                                    <div className="bg-white/10 backdrop-blur-md border border-white/25 rounded-2xl p-5 space-y-4 animate-float-card-1">
+                                        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                                            <div>
+                                                <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-300 font-bold bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-400/30">
+                                                    {selectedEntry.brand}
+                                                </span>
+                                                <h4 className="font-display font-extrabold text-white text-lg sm:text-xl mt-1">{selectedEntry.name}</h4>
+                                            </div>
+                                            <span className="text-[10px] font-mono bg-secondary/30 text-cyan-300 px-2.5 py-1 rounded-full border border-secondary/30">
+                                                Estimasi Resmi
+                                            </span>
                                         </div>
-                                        <p className="font-display font-bold text-white text-base">{tradeInResult.name}</p>
-                                        <p className="font-mono font-extrabold text-cyan-300 text-2xl md:text-3xl tracking-tight">
-                                            {formatRp(tradeInResult.min)} — {formatRp(tradeInResult.max)}
+
+                                        {/* Step 2: Storage Variant Selector */}
+                                        <div>
+                                            <label className="block text-xs font-mono text-slate-300 mb-2 font-medium">
+                                                Step 2: Pilih Kapasitas Storage ({selectedEntry.variants.length} Varian Ditemukan):
+                                            </label>
+                                            <div className="flex flex-wrap gap-2">
+                                                {selectedEntry.variants.map((v) => {
+                                                    const isSelected = selectedVariant?.storage === v.storage;
+                                                    return (
+                                                        <button
+                                                            key={v.storage}
+                                                            type="button"
+                                                            onClick={() => setSelectedVariant(v)}
+                                                            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 active:scale-95 ${
+                                                                isSelected
+                                                                    ? 'bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/20 ring-2 ring-cyan-200'
+                                                                    : 'bg-white/10 text-white/90 hover:bg-white/20 border border-white/10'
+                                                            }`}
+                                                        >
+                                                            {isSelected && <span className="material-symbols-outlined text-[14px]">check_circle</span>}
+                                                            <span>{v.storage}</span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        {/* Price display for active variant */}
+                                        {selectedVariant && (
+                                            <div className="bg-slate-950/60 border border-cyan-400/20 rounded-xl p-4 space-y-1">
+                                                <p className="font-mono text-xs text-slate-400">
+                                                    Estimasi Harga Pasar Bekas ({selectedEntry.name} — <span className="text-cyan-300 font-bold">{selectedVariant.storage}</span>):
+                                                </p>
+                                                <p className="font-mono font-extrabold text-cyan-300 text-2xl sm:text-3xl tracking-tight drop-shadow-[0_0_12px_rgba(76,215,246,0.3)]">
+                                                    {formatRp(selectedVariant.min)} — {formatRp(selectedVariant.max)}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        <p className="font-mono text-[11px] text-white/70 leading-relaxed">
+                                            *Harga bersifat estimasi pasar bekas miring/normal di Indonesia. Nilai pasti ditentukan dari kondisi layar, bodi, &amp; fungsi fisik HP di konter.
                                         </p>
-                                        <p className="font-mono text-[11px] text-white/70 leading-relaxed">*Harga final ditentukan setelah pengecekan fisik di toko TECHCELL NexusCenter.</p>
-                                        <Link href="/booking-servis" className="inline-flex items-center gap-2 bg-secondary text-white px-5 py-2.5 rounded-xl font-mono text-xs font-bold hover:bg-secondary/90 transition-all shadow-md mt-1">
-                                            <span className="material-symbols-outlined text-sm">autorenew</span> Booking Tukar Tambah &rarr;
-                                        </Link>
+                                        <div className="pt-1 flex flex-wrap gap-3">
+                                            <Link href="/booking-servis" className="inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-white px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all shadow-md active:scale-95">
+                                                <span className="material-symbols-outlined text-sm">autorenew</span> Booking Tukar Tambah &rarr;
+                                            </Link>
+                                            <a
+                                                href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo TECHCELL, saya mau tanya tukar tambah HP ${selectedEntry.name} variant ${selectedVariant?.storage || ''}`)}`}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all shadow-md active:scale-95"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">chat</span> Tanya via WhatsApp
+                                            </a>
+                                        </div>
                                     </div>
                                 )}
 
                                 {/* Not Found Box */}
                                 {tradeInNotFound && (
-                                    <div className="bg-white/10 border border-white/20 rounded-xl p-4 text-xs font-mono text-white/80">
-                                        HP tidak ditemukan di daftar kami. Silakan datang langsung ke konter untuk penilaian gratis!
+                                    <div className="bg-white/10 border border-white/20 rounded-xl p-4 text-xs font-mono text-white/80 space-y-1">
+                                        <p className="font-bold text-amber-300">HP tidak ditemukan di database 70+ model kami.</p>
+                                        <p className="text-slate-300">Silakan masukkan nama HP secara lebih spesifik (misal: "iPhone 13" atau "Galaxy S23") atau datang langsung ke konter TECHCELL NexusCenter untuk penilaian gratis!</p>
                                     </div>
                                 )}
                             </div>

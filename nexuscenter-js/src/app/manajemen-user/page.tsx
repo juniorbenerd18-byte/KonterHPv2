@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
 import { UserProfile } from '@/types/database';
 
@@ -18,6 +19,7 @@ function initials(name: string) {
 }
 
 export default function ManajemenUserPage() {
+  const router = useRouter();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
@@ -30,19 +32,25 @@ export default function ManajemenUserPage() {
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
+    if (!DataService.isLoggedIn()) {
+      router.push('/login?redirect=/manajemen-user');
+      return;
+    }
+    const role = DataService.getCurrentRole();
+    if (role !== 'admin') {
+      router.push('/dashboard');
+      return;
+    }
     setLoading(true);
     try {
-      const [allUsers, role] = await Promise.all([
-        DataService.getUsers?.() ?? Promise.resolve([]),
-        Promise.resolve(DataService.getCurrentRole()),
-      ]);
+      const allUsers = await DataService.getUsers();
       setUsers(allUsers);
       setCurrentUserRole(role);
     } catch {
       setUsers([]);
     }
     setLoading(false);
-  }, []);
+  }, [router]);
 
   useEffect(() => { load(); }, [load]);
 
