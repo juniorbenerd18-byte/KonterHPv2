@@ -589,7 +589,10 @@ export default function HomePage() {
                                             *Harga bersifat estimasi pasar bekas miring/normal di Indonesia. Nilai pasti ditentukan dari kondisi layar, bodi, &amp; fungsi fisik HP di konter.
                                         </p>
                                         <div className="pt-1 flex flex-wrap gap-3">
-                                            <Link href="/booking-servis" className="inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-white px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all shadow-md active:scale-95">
+                                            <Link 
+                                                href={`/tukar-tambah?device=${encodeURIComponent(selectedEntry.name)}&storage=${encodeURIComponent(selectedVariant?.storage || '')}&min=${selectedVariant?.min || 0}&max=${selectedVariant?.max || 0}`}
+                                                className="inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-white px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all shadow-md active:scale-95"
+                                            >
                                                 <span className="material-symbols-outlined text-sm">autorenew</span> Booking Tukar Tambah &rarr;
                                             </Link>
                                             <a

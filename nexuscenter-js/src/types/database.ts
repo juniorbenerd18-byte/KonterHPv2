@@ -131,3 +131,27 @@ export interface UserProfile {
     avatar?: string | null;
     created_at: string;
 }
+
+export type TradeInStatus = 'Pending Taksir' | 'Dalam Taksir' | 'Menunggu Persetujuan' | 'Deal' | 'Selesai' | 'Batal';
+
+export interface TradeIn {
+    id: number;
+    user_id?: string | null;
+    booking_number: string;
+    customer_name: string;
+    customer_phone: string;
+    old_device_brand: string;
+    old_device_model: string;
+    old_device_storage?: string | null;
+    old_device_condition: 'Sangat Baik' | 'Baik' | 'Cukup' | 'Rusak';
+    estimated_price_min: number;
+    estimated_price_max: number;
+    final_trade_in_price?: number | null;
+    new_device_desired?: string | null;
+    additional_payment?: number | null;
+    status: TradeInStatus;
+    notes?: string | null;
+    appointment_date?: string | null;
+    created_at: string;
+    updated_at?: string;
+}

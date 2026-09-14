@@ -1,6 +1,6 @@
 'use client';
 
-import { Product, Sale, Service, Delivery, Notification, Role, UserProfile } from '@/types/database';
+import { Product, Sale, Service, Delivery, Notification, Role, UserProfile, TradeIn } from '@/types/database';
 import { supabase, isSupabaseConfigured, INITIAL_PRODUCTS, INITIAL_SERVICES, INITIAL_DELIVERIES, INITIAL_SALES, INITIAL_NOTIFICATIONS } from './supabase';
 
 const STORAGE_KEYS = {
@@ -9,6 +9,7 @@ const STORAGE_KEYS = {
     SERVICES: 'nexus_services',
     DELIVERIES: 'nexus_deliveries',
     NOTIFICATIONS: 'nexus_notifications',
+    TRADE_INS: 'nexus_trade_ins',
     ROLE: 'nexus_active_role',
     USERS: 'nexus_users',
     LOGIN_STATE: 'nexus_is_logged_in',
@@ -557,5 +558,122 @@ export const DataService = {
             n.is_read = true;
             setLocal(STORAGE_KEYS.NOTIFICATIONS, notifs);
         }
+    },
+
+    // ════════════════════════════════════════════════════════════════════════════
+    // TRADE-IN METHODS
+    // ════════════════════════════════════════════════════════════════════════════
+
+    async getTradeIns(): Promise<TradeIn[]> {
+        if (isSupabaseConfigured() && supabase) {
+            const { data, error } = await supabase.from('trade_ins').select('*').order('created_at', { ascending: false });
+            if (!error && data) return data as TradeIn[];
+        }
+        return getLocal<TradeIn[]>(STORAGE_KEYS.TRADE_INS, []);
+    },
+
+    async getTradeInByBookingNumber(bookingNumber: string): Promise<TradeIn | null> {
+        const tradeIns = await this.getTradeIns();
+        return tradeIns.find(t => t.booking_number.toLowerCase() === bookingNumber.toLowerCase()) || null;
+    },
+
+    async createTradeIn(data: {
+        customer_name: string;
+        customer_phone: string;
+        old_device_brand: string;
+        old_device_model: string;
+        old_device_storage?: string;
+        old_device_condition: 'Sangat Baik' | 'Baik' | 'Cukup' | 'Rusak';
+        estimated_price_min: number;
+        estimated_price_max: number;
+        new_device_desired?: string;
+        appointment_date?: string;
+        notes?: string;
+    }): Promise<TradeIn> {
+        const booking_number = 'TI-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
+        
+        const newTradeIn: TradeIn = {
+            id: Date.now(),
+            booking_number,
+            customer_name: data.customer_name,
+            customer_phone: data.customer_phone,
+            old_device_brand: data.old_device_brand,
+            old_device_model: data.old_device_model,
+            old_device_storage: data.old_device_storage || null,
+            old_device_condition: data.old_device_condition,
+            estimated_price_min: data.estimated_price_min,
+            estimated_price_max: data.estimated_price_max,
+            new_device_desired: data.new_device_desired || null,
+            status: 'Pending Taksir',
+            appointment_date: data.appointment_date || null,
+            notes: data.notes || null,
+            created_at: new Date().toISOString()
+        };
+
+        if (isSupabaseConfigured() && supabase) {
+            const { data: tradeInRow } = await supabase.from('trade_ins').insert([newTradeIn]).select().single();
+            if (tradeInRow) return tradeInRow as TradeIn;
+        }
+
+        const tradeIns = getLocal<TradeIn[]>(STORAGE_KEYS.TRADE_INS, []);
+        tradeIns.unshift(newTradeIn);
+        setLocal(STORAGE_KEYS.TRADE_INS, tradeIns);
+        return newTradeIn;
+    },
+
+    async updateTradeIn(id: number, updates: Partial<TradeIn>): Promise<TradeIn | null> {
+        if (isSupabaseConfigured() && supabase) {
+            const { data } = await supabase.from('trade_ins').update(updates).eq('id', id).select().single();
+            if (data) return data as TradeIn;
+        }
+        
+        const tradeIns = getLocal<TradeIn[]>(STORAGE_KEYS.TRADE_INS, []);
+        const idx = tradeIns.findIndex(t => t.id === id);
+        if (idx >= 0) {
+            const oldStatus = tradeIns[idx].status;
+            const newStatus = updates.status;
+            
+            tradeIns[idx] = { ...tradeIns[idx], ...updates, updated_at: new Date().toISOString() };
+            setLocal(STORAGE_KEYS.TRADE_INS, tradeIns);
+            
+            // Tambah notifikasi untuk customer jika status berubah
+            if (newStatus && newStatus !== oldStatus) {
+                const tradeIn = tradeIns[idx];
+                const notifMessages: Record<string, string> = {
+                    'Dalam Taksir': `Booking trade-in ${tradeIn.booking_number} sedang ditaksir oleh teknisi kami`,
+                    'Menunggu Persetujuan': `Harga trade-in ${tradeIn.booking_number} sudah ditentukan. Silakan cek detail`,
+                    'Deal': `Trade-in ${tradeIn.booking_number} berhasil! Silakan datang ke toko untuk proses transaksi`,
+                    'Selesai': `Trade-in ${tradeIn.booking_number} telah selesai. Terima kasih!`,
+                    'Batal': `Trade-in ${tradeIn.booking_number} dibatalkan`
+                };
+                
+                if (notifMessages[newStatus]) {
+                    const notifs = getLocal<Notification[]>(STORAGE_KEYS.NOTIFICATIONS, INITIAL_NOTIFICATIONS);
+                    notifs.unshift({
+                        id: Date.now(),
+                        type: 'system',
+                        title: 'Update Status Trade-In',
+                        message: notifMessages[newStatus],
+                        link: `/tukar-tambah/${id}/konfirmasi`,
+                        is_read: false,
+                        created_at: new Date().toISOString()
+                    });
+                    setLocal(STORAGE_KEYS.NOTIFICATIONS, notifs);
+                }
+            }
+            
+            return tradeIns[idx];
+        }
+        return null;
+    },
+
+    async deleteTradeIn(id: number): Promise<boolean> {
+        if (isSupabaseConfigured() && supabase) {
+            await supabase.from('trade_ins').delete().eq('id', id);
+        }
+        const tradeIns = getLocal<TradeIn[]>(STORAGE_KEYS.TRADE_INS, []);
+        const filtered = tradeIns.filter(t => t.id !== id);
+        setLocal(STORAGE_KEYS.TRADE_INS, filtered);
+        return true;
     }
 };

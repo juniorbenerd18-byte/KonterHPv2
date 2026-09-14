@@ -4,7 +4,154 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { DataService } from '@/lib/store';
-import { Role, UserProfile } from '@/types/database';
+import { Role, UserProfile, Notification } from '@/types/database';
+
+// Notification Dropdown Component
+function NotificationDropdown({ isStaff, newTradeInCount, onClose }: { isStaff: boolean; newTradeInCount: number; onClose: () => void }) {
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+
+    useEffect(() => {
+        loadNotifications();
+    }, []);
+
+    const loadNotifications = async () => {
+        try {
+            const notifs = await DataService.getNotifications();
+            setNotifications(notifs);
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+        }
+    };
+
+    const handleMarkAsRead = async (id: number) => {
+        try {
+            await DataService.markNotificationRead(id);
+            await loadNotifications();
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+        }
+    };
+
+    const getNotifIcon = (type: string) => {
+        const icons: Record<string, string> = {
+            'service': 'build',
+            'sale': 'shopping_cart',
+            'system': 'notifications'
+        };
+        return icons[type] || 'notifications';
+    };
+
+    const getNotifColor = (type: string, isRead: boolean) => {
+        if (isRead) return 'bg-gray-100 text-gray-600';
+        const colors: Record<string, string> = {
+            'service': 'bg-purple-100 text-purple-700',
+            'sale': 'bg-blue-100 text-blue-700',
+            'system': 'bg-amber-100 text-amber-700'
+        };
+        return colors[type] || 'bg-gray-100 text-gray-600';
+    };
+
+    const formatTime = (dateStr: string) => {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diffMs = now.getTime() - date.getTime();
+        const diffMins = Math.floor(diffMs / 60000);
+        
+        if (diffMins < 1) return 'Baru saja';
+        if (diffMins < 60) return `${diffMins} menit yang lalu`;
+        const diffHours = Math.floor(diffMins / 60);
+        if (diffHours < 24) return `${diffHours} jam yang lalu`;
+        const diffDays = Math.floor(diffHours / 24);
+        return `${diffDays} hari yang lalu`;
+    };
+
+    const unreadCustomerNotifs = notifications.filter(n => !n.is_read);
+
+    return (
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl shadow-2xl z-50 overflow-hidden fade-in">
+            <div className="p-3.5 bg-surface-container-low border-b border-outline-variant/20 flex items-center justify-between">
+                <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-primary">
+                    <span className="material-symbols-outlined text-[18px] text-secondary icon-filled">notifications</span>
+                    Notifikasi {isStaff && newTradeInCount > 0 ? `(${newTradeInCount})` : !isStaff && unreadCustomerNotifs.length > 0 ? `(${unreadCustomerNotifs.length})` : ''}
+                </div>
+                <button onClick={onClose} className="text-[11px] font-mono text-secondary hover:underline cursor-pointer">Tutup</button>
+            </div>
+            <div className="divide-y divide-outline-variant/10 max-h-80 overflow-y-auto">
+                {/* Staff Trade-In Notification */}
+                {isStaff && newTradeInCount > 0 && (
+                    <Link href="/trade-in-admin" onClick={onClose} className="block p-3.5 hover:bg-secondary/5 transition-colors flex items-start gap-3 bg-amber-50/50">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-amber-100 text-amber-700 animate-pulse">
+                            <span className="material-symbols-outlined text-[18px]">autorenew</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="font-display font-bold text-xs text-primary truncate">{newTradeInCount} Booking Tukar Tambah Baru</p>
+                            <p className="text-xs text-on-surface-variant line-clamp-2 mt-0.5">Ada booking trade-in yang menunggu taksir dan konfirmasi.</p>
+                            <span className="font-mono text-[10px] text-amber-700 font-bold block mt-1">⚠️ Perlu ditindaklanjuti</span>
+                        </div>
+                    </Link>
+                )}
+
+                {/* Customer Notifications */}
+                {!isStaff && unreadCustomerNotifs.map(notif => (
+                    <Link 
+                        key={notif.id} 
+                        href={notif.link || '#'} 
+                        onClick={() => { handleMarkAsRead(notif.id); onClose(); }}
+                        className={`block p-3.5 hover:bg-secondary/5 transition-colors flex items-start gap-3 ${!notif.is_read ? 'bg-cyan-50/30' : ''}`}
+                    >
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${getNotifColor(notif.type, notif.is_read)}`}>
+                            <span className="material-symbols-outlined text-[18px]">{getNotifIcon(notif.type)}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="font-display font-bold text-xs text-primary truncate">{notif.title}</p>
+                            <p className="text-xs text-on-surface-variant line-clamp-2 mt-0.5">{notif.message}</p>
+                            <span className="font-mono text-[10px] text-on-surface-variant opacity-70 block mt-1">{formatTime(notif.created_at)}</span>
+                        </div>
+                        {!notif.is_read && (
+                            <span className="w-2 h-2 rounded-full bg-secondary animate-pulse shrink-0 mt-1"></span>
+                        )}
+                    </Link>
+                ))}
+
+                {/* Fallback Demo Notifications */}
+                {!isStaff && unreadCustomerNotifs.length === 0 && (
+                    <>
+                        <Link href="/pengantaran" onClick={onClose} className="block p-3.5 hover:bg-secondary/5 transition-colors flex items-start gap-3">
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-blue-100 text-blue-700">
+                                <span className="material-symbols-outlined text-[18px]">two_wheeler</span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="font-display font-bold text-xs text-primary truncate">Kurir Bergerak</p>
+                                <p className="text-xs text-on-surface-variant line-clamp-2 mt-0.5">Kurir Budi sedang mengantar pesanan INV-202609-0012.</p>
+                                <span className="font-mono text-[10px] text-on-surface-variant opacity-70 block mt-1">5 menit yang lalu</span>
+                            </div>
+                        </Link>
+                        <div className="p-3.5 text-center text-xs text-on-surface-variant">
+                            <span className="material-symbols-outlined text-3xl text-outline-variant block mb-2">notifications_off</span>
+                            Tidak ada notifikasi baru
+                        </div>
+                    </>
+                )}
+
+                {/* Staff Demo Notifications */}
+                {isStaff && (
+                    <>
+                        <Link href="/pengantaran" onClick={onClose} className="block p-3.5 hover:bg-secondary/5 transition-colors flex items-start gap-3">
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-blue-100 text-blue-700">
+                                <span className="material-symbols-outlined text-[18px]">two_wheeler</span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="font-display font-bold text-xs text-primary truncate">Kurir Bergerak</p>
+                                <p className="text-xs text-on-surface-variant line-clamp-2 mt-0.5">Kurir Budi sedang mengantar pesanan INV-202609-0012.</p>
+                                <span className="font-mono text-[10px] text-on-surface-variant opacity-70 block mt-1">5 menit yang lalu</span>
+                            </div>
+                        </Link>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
 
 export default function Navbar() {
     const pathname = usePathname();
@@ -16,11 +163,15 @@ export default function Navbar() {
     const [notificationOpen, setNotificationOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
     const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
+    const [tradeInDropdownOpen, setTradeInDropdownOpen] = useState(false);
     const [cartCount, setCartCount] = useState(0);
+    const [newTradeInCount, setNewTradeInCount] = useState(0);
+    const [customerNotifCount, setCustomerNotifCount] = useState(0);
 
     const profileRef = useRef<HTMLDivElement>(null);
     const notificationRef = useRef<HTMLDivElement>(null);
     const adminDropdownRef = useRef<HTMLDivElement>(null);
+    const tradeInDropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const syncAuth = () => {
@@ -48,10 +199,40 @@ export default function Navbar() {
             }
         };
 
+        const updateTradeInCount = async () => {
+            const user = DataService.getCurrentUser();
+            const userRole = user?.role || 'pengguna';
+            if (userRole === 'admin' || userRole === 'kasir') {
+                try {
+                    const tradeIns = await DataService.getTradeIns();
+                    const pendingCount = tradeIns.filter(t => t.status === 'Pending Taksir').length;
+                    setNewTradeInCount(pendingCount);
+                } catch {
+                    setNewTradeInCount(0);
+                }
+            }
+        };
+
+        const updateCustomerNotifCount = async () => {
+            const user = DataService.getCurrentUser();
+            const userRole = user?.role || 'pengguna';
+            if (userRole === 'pengguna') {
+                try {
+                    const notifs = await DataService.getNotifications();
+                    const unreadCount = notifs.filter(n => !n.is_read).length;
+                    setCustomerNotifCount(unreadCount);
+                } catch {
+                    setCustomerNotifCount(0);
+                }
+            }
+        };
+
         updateCartCount();
-        const handleStorage = () => { syncAuth(); updateCartCount(); };
+        updateTradeInCount();
+        updateCustomerNotifCount();
+        const handleStorage = () => { syncAuth(); updateCartCount(); updateTradeInCount(); updateCustomerNotifCount(); };
         window.addEventListener('storage', handleStorage);
-        const interval = setInterval(() => { syncAuth(); updateCartCount(); }, 1500);
+        const interval = setInterval(() => { syncAuth(); updateCartCount(); updateTradeInCount(); updateCustomerNotifCount(); }, 1500);
         return () => {
             window.removeEventListener('storage', handleStorage);
             clearInterval(interval);
@@ -63,6 +244,7 @@ export default function Navbar() {
             if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false);
             if (notificationRef.current && !notificationRef.current.contains(e.target as Node)) setNotificationOpen(false);
             if (adminDropdownRef.current && !adminDropdownRef.current.contains(e.target as Node)) setAdminDropdownOpen(false);
+            if (tradeInDropdownRef.current && !tradeInDropdownRef.current.contains(e.target as Node)) setTradeInDropdownOpen(false);
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -86,7 +268,7 @@ export default function Navbar() {
     };
 
     const navLinkClass = (path: string) =>
-        `whitespace-nowrap flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+        `whitespace-nowrap flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-all ${
             isActive(path)
                 ? 'text-secondary font-bold bg-secondary/10 shadow-xs'
                 : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5'
@@ -113,7 +295,7 @@ export default function Navbar() {
                 </Link>
 
                 {/* Navigation Links — Clean single line with Admin Dropdown */}
-                <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 font-sans flex-1 min-w-0">
+                <nav className="hidden md:flex items-center gap-0.5 lg:gap-1 font-sans flex-1 min-w-0">
                     {!isStaff ? (
                         <>
                             <Link href="/" className={navLinkClass('/')}>
@@ -124,10 +306,6 @@ export default function Navbar() {
                                 <span className="material-symbols-outlined text-[15px]">storefront</span>
                                 <span>Produk</span>
                             </Link>
-                            <Link href="/lacak-servis" className={navLinkClass('/lacak-servis')}>
-                                <span className="material-symbols-outlined text-[15px]">build</span>
-                                <span>Lacak Servis</span>
-                            </Link>
                             <Link href="/pengantaran" className={navLinkClass('/pengantaran')}>
                                 <span className="material-symbols-outlined text-[15px]">two_wheeler</span>
                                 <span>Lacak Driver</span>
@@ -136,6 +314,48 @@ export default function Navbar() {
                                 <span className="material-symbols-outlined text-[15px]">calendar_month</span>
                                 <span>Booking Servis</span>
                             </Link>
+                            
+                            {/* Trade-In Dropdown */}
+                            <div className="relative" ref={tradeInDropdownRef}>
+                                <button
+                                    onClick={() => setTradeInDropdownOpen(!tradeInDropdownOpen)}
+                                    className={`whitespace-nowrap flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                                        isActive('/tukar-tambah')
+                                            ? 'text-secondary font-bold bg-secondary/10 shadow-xs'
+                                            : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5'
+                                    }`}
+                                >
+                                    <span className="material-symbols-outlined text-[15px]">autorenew</span>
+                                    <span>Tukar Tambah</span>
+                                    <span className="material-symbols-outlined text-[14px]">expand_more</span>
+                                </button>
+
+                                {tradeInDropdownOpen && (
+                                    <div className="absolute top-full left-0 mt-2 w-56 bg-surface border border-outline-variant/30 rounded-xl shadow-xl py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                                        <Link
+                                            href="/tukar-tambah"
+                                            onClick={() => setTradeInDropdownOpen(false)}
+                                            className={`flex items-center gap-2 px-3 py-2 text-xs font-medium hover:bg-secondary/10 transition-colors ${
+                                                pathname === '/tukar-tambah' ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface'
+                                            }`}
+                                        >
+                                            <span className="material-symbols-outlined text-[16px] text-secondary">add_circle</span>
+                                            <span>Booking Tukar Tambah</span>
+                                        </Link>
+                                        <Link
+                                            href="/tukar-tambah/lacak"
+                                            onClick={() => setTradeInDropdownOpen(false)}
+                                            className={`flex items-center gap-2 px-3 py-2 text-xs font-medium hover:bg-secondary/10 transition-colors ${
+                                                pathname === '/tukar-tambah/lacak' ? 'text-secondary font-bold bg-secondary/10' : 'text-on-surface'
+                                            }`}
+                                        >
+                                            <span className="material-symbols-outlined text-[16px] text-secondary">search</span>
+                                            <span>Lacak Status</span>
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                            
                             <Link href="/pulsa" className={navLinkClass('/pulsa')}>
                                 <span className="material-symbols-outlined text-[15px]">signal_cellular_alt</span>
                                 <span>Pulsa &amp; Data</span>
@@ -153,7 +373,7 @@ export default function Navbar() {
                             </Link>
                             <Link href="/pos" className={navLinkClass('/pos')}>
                                 <span className="material-symbols-outlined text-[15px]">point_of_sale</span>
-                                <span>POS Kasir</span>
+                                <span>POS</span>
                             </Link>
                             <Link href="/produk" className={navLinkClass('/produk')}>
                                 <span className="material-symbols-outlined text-[15px]">inventory_2</span>
@@ -161,7 +381,11 @@ export default function Navbar() {
                             </Link>
                             <Link href="/servis" className={navLinkClass('/servis')}>
                                 <span className="material-symbols-outlined text-[15px]">build</span>
-                                <span>Servis HP</span>
+                                <span>Servis</span>
+                            </Link>
+                            <Link href="/trade-in-admin" className={navLinkClass('/trade-in-admin')}>
+                                <span className="material-symbols-outlined text-[15px]">autorenew</span>
+                                <span>Tukar</span>
                             </Link>
                             <Link href="/pengantaran" className={navLinkClass('/pengantaran')}>
                                 <span className="material-symbols-outlined text-[15px]">two_wheeler</span>
@@ -175,14 +399,14 @@ export default function Navbar() {
                                 <div className="relative" ref={adminDropdownRef}>
                                     <button
                                         onClick={() => setAdminDropdownOpen(!adminDropdownOpen)}
-                                        className={`whitespace-nowrap flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                                        className={`whitespace-nowrap flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                                             isActive('/laporan') || isActive('/manajemen-user')
                                                 ? 'text-secondary font-bold bg-secondary/10 shadow-xs'
                                                 : 'text-on-surface-variant hover:text-primary hover:bg-secondary/5'
                                         }`}
                                     >
                                         <span className="material-symbols-outlined text-[15px]">admin_panel_settings</span>
-                                        <span>Manajemen</span>
+                                        <span>Admin</span>
                                         <span className="material-symbols-outlined text-[14px]">expand_more</span>
                                     </button>
 
@@ -212,14 +436,14 @@ export default function Navbar() {
                                     )}
                                 </div>
                             )}
-                            <span className="w-px h-4 bg-outline-variant/30 mx-1" />
+                            <span className="w-px h-4 bg-outline-variant/30 mx-0.5" />
                             <Link
                                 href="/"
-                                className="whitespace-nowrap flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-on-surface-variant hover:text-primary hover:bg-secondary/5 border border-outline-variant/30 hover:border-secondary/30"
+                                className="whitespace-nowrap flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-all text-on-surface-variant hover:text-primary hover:bg-secondary/5 border border-outline-variant/30 hover:border-secondary/30"
                                 title="Lihat tampilan toko seperti customer"
                             >
                                 <span className="material-symbols-outlined text-[15px]">storefront</span>
-                                <span>Lihat Toko</span>
+                                <span className="hidden xl:inline">Toko</span>
                             </Link>
                         </>
                     )}
@@ -263,43 +487,19 @@ export default function Navbar() {
                             title="Notifikasi"
                         >
                             <span className="material-symbols-outlined text-[20px]">notifications</span>
-                            <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-mono font-bold text-white shadow-md animate-pulse">
-                                2
-                            </span>
+                            {((isStaff && newTradeInCount > 0) || (!isStaff && customerNotifCount > 0)) && (
+                                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-mono font-bold text-white shadow-md animate-pulse">
+                                    {isStaff ? newTradeInCount : customerNotifCount}
+                                </span>
+                            )}
                         </button>
 
                         {notificationOpen && (
-                            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl shadow-2xl z-50 overflow-hidden fade-in">
-                                <div className="p-3.5 bg-surface-container-low border-b border-outline-variant/20 flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-primary">
-                                        <span className="material-symbols-outlined text-[18px] text-secondary icon-filled">notifications</span>
-                                        Notifikasi (2)
-                                    </div>
-                                    <button onClick={() => setNotificationOpen(false)} className="text-[11px] font-mono text-secondary hover:underline cursor-pointer">Tutup</button>
-                                </div>
-                                <div className="divide-y divide-outline-variant/10 max-h-80 overflow-y-auto">
-                                    <Link href="/pengantaran" onClick={() => setNotificationOpen(false)} className="block p-3.5 hover:bg-secondary/5 transition-colors flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-blue-100 text-blue-700">
-                                            <span className="material-symbols-outlined text-[18px]">two_wheeler</span>
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-display font-bold text-xs text-primary truncate">Kurir Bergerak</p>
-                                            <p className="text-xs text-on-surface-variant line-clamp-2 mt-0.5">Kurir Budi sedang mengantar pesanan INV-202609-0012.</p>
-                                            <span className="font-mono text-[10px] text-on-surface-variant opacity-70 block mt-1">5 menit yang lalu</span>
-                                        </div>
-                                    </Link>
-                                    <Link href="/lacak-servis" onClick={() => setNotificationOpen(false)} className="block p-3.5 hover:bg-secondary/5 transition-colors flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-purple-100 text-purple-700">
-                                            <span className="material-symbols-outlined text-[18px]">build</span>
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-display font-bold text-xs text-primary truncate">Servis Siap Diambil</p>
-                                            <p className="text-xs text-on-surface-variant line-clamp-2 mt-0.5">iPhone 13 Pro (SRV-001) ganti LCD sudah selesai.</p>
-                                            <span className="font-mono text-[10px] text-on-surface-variant opacity-70 block mt-1">20 menit yang lalu</span>
-                                        </div>
-                                    </Link>
-                                </div>
-                            </div>
+                            <NotificationDropdown 
+                                isStaff={isStaff} 
+                                newTradeInCount={newTradeInCount}
+                                onClose={() => setNotificationOpen(false)}
+                            />
                         )}
                     </div>
 
@@ -392,36 +592,24 @@ export default function Navbar() {
                             <Link href="/produk" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
                                 <span className="material-symbols-outlined text-base text-secondary">storefront</span> Katalog Produk
                             </Link>
-                            <Link href="/lacak-servis" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
-                                <span className="material-symbols-outlined text-base text-secondary">build</span> Lacak Servis HP
-                            </Link>
                             <Link href="/pengantaran" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
                                 <span className="material-symbols-outlined text-base text-secondary">two_wheeler</span> Lacak Driver
                             </Link>
                             <Link href="/booking-servis" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
                                 <span className="material-symbols-outlined text-base text-secondary">calendar_month</span> Booking Servis
                             </Link>
+                            <Link href="/tukar-tambah" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
+                                <span className="material-symbols-outlined text-base text-secondary">autorenew</span> Tukar Tambah HP
+                            </Link>
+                            <Link href="/tukar-tambah/lacak" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
+                                <span className="material-symbols-outlined text-base text-secondary">search</span> Lacak Tukar Tambah
+                            </Link>
                             <Link href="/pulsa" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
                                 <span className="material-symbols-outlined text-base text-secondary">signal_cellular_alt</span> Pulsa &amp; Data
                             </Link>
                             <Link href="/promo" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
-                                <span className="material-symbols-outlined text-base text-secondary">local_offer</span> Promo Spesial
+                                <span className="material-symbols-outlined text-base text-secondary">local_offer</span> Promo
                             </Link>
-                            <Link href="/keranjang" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-secondary">
-                                <span className="material-symbols-outlined text-base">shopping_cart</span> Keranjang ({cartCount})
-                            </Link>
-                            {isLoggedIn ? (
-                                <>
-                                    <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
-                                        <span className="material-symbols-outlined text-base text-secondary">person</span> Profil &amp; Pesanan
-                                    </Link>
-                                    <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-error hover:bg-red-50 cursor-pointer">
-                                        <span className="material-symbols-outlined text-base">logout</span> Keluar
-                                    </button>
-                                </>
-                            ) : (
-                                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-semibold text-secondary">Masuk / Login</Link>
-                            )}
                         </>
                     ) : (
                         <>
@@ -436,6 +624,9 @@ export default function Navbar() {
                             </Link>
                             <Link href="/servis" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
                                 <span className="material-symbols-outlined text-base text-secondary">build</span> Servis HP
+                            </Link>
+                            <Link href="/trade-in-admin" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
+                                <span className="material-symbols-outlined text-base text-secondary">autorenew</span> Tukar Tambah HP
                             </Link>
                             <Link href="/pengantaran" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-secondary/5">
                                 <span className="material-symbols-outlined text-base text-secondary">two_wheeler</span> Pengantaran

@@ -17,7 +17,7 @@ export default function Footer() {
                         <Link href="/produk?category=smartphone" className="text-on-primary-container text-sm opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all">Smartphone Baru</Link>
                         <Link href="/produk?category=aksesoris" className="text-on-primary-container text-sm opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all">Aksesoris Original</Link>
                         <Link href="/produk?category=pulsa" className="text-on-primary-container text-sm opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all">Pulsa & Paket Data</Link>
-                        <Link href="/lacak-servis" className="text-on-primary-container text-sm opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all">Lacak Servis HP</Link>
+                        <Link href="/tukar-tambah/lacak" className="text-on-primary-container text-sm opacity-80 hover:opacity-100 hover:text-secondary-fixed transition-all">Lacak Tukar Tambah</Link>
                     </div>
                     <div className="flex flex-col gap-2.5">
                         <h4 className="font-mono text-xs text-secondary-fixed font-bold uppercase tracking-wider mb-1">Bantuan</h4>

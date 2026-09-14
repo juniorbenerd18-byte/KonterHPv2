@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DataService } from '@/lib/store';
 import { Product, PaymentMethod, Sale } from '@/types/database';
 
@@ -21,7 +21,10 @@ export default function POSPage() {
     // Customer & payment state
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
-    const [customerAddress, setCustomerAddress] = useState('');
+    const [customerAddress, setCustomerAddress] = useState('Jl. Raya Gawok No. 12, Sukoharjo');
+    const [customerLat, setCustomerLat] = useState<number>(-7.588800);
+    const [customerLng, setCustomerLng] = useState<number>(110.748300);
+    const [distanceKm, setDistanceKm] = useState<number>(0);
     const [isDelivery, setIsDelivery] = useState(false);
     const [discount, setDiscount] = useState<number>(0);
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('Tunai');
@@ -32,6 +35,14 @@ export default function POSPage() {
     const [successModalOpen, setSuccessModalOpen] = useState(false);
     const [lastSale, setLastSale] = useState<Sale | null>(null);
     const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    // Map refs
+    const mapContainerRef = useRef<HTMLDivElement>(null);
+    const mapInstanceRef = useRef<any>(null);
+    const markerRef = useRef<any>(null);
+
+    const STORE_LAT = -7.588800;
+    const STORE_LNG = 110.748300;
 
     useEffect(() => {
         if (!DataService.isLoggedIn()) {
@@ -45,6 +56,167 @@ export default function POSPage() {
         }
         DataService.getProducts().then((data) => setProducts(data.filter(p => p.is_active)));
     }, [router]);
+
+    // Initialize Leaflet Map for delivery
+    useEffect(() => {
+        // Cleanup first if not delivery
+        if (!isDelivery) {
+            if (mapInstanceRef.current) {
+                try {
+                    mapInstanceRef.current.remove();
+                } catch (e) {
+                    console.warn('Map cleanup warning:', e);
+                }
+                mapInstanceRef.current = null;
+                markerRef.current = null;
+            }
+            return;
+        }
+
+        // Don't init if no container
+        if (typeof window === 'undefined' || !mapContainerRef.current) {
+            return;
+        }
+
+        // Don't re-init if already exists
+        if (mapInstanceRef.current) {
+            return;
+        }
+
+        let isMounted = true;
+        let initTimeout: NodeJS.Timeout;
+
+        // Delay to ensure DOM is fully ready and previous cleanup is done
+        initTimeout = setTimeout(() => {
+            if (!isMounted || !mapContainerRef.current) return;
+
+            import('leaflet').then(L => {
+                if (!isMounted || !mapContainerRef.current || mapInstanceRef.current) return;
+
+                try {
+                    // Clear any existing leaflet containers
+                    const container = mapContainerRef.current;
+                    container.innerHTML = '';
+                    container.className = 'w-full h-[180px] bg-surface-container';
+
+                    delete (L.Icon.Default.prototype as any)._getIconUrl;
+                    L.Icon.Default.mergeOptions({
+                        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                    });
+
+                    const map = L.map(container, {
+                        center: [customerLat, customerLng],
+                        zoom: 14,
+                        zoomControl: true,
+                        attributionControl: false
+                    });
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                    }).addTo(map);
+
+                    const marker = L.marker([customerLat, customerLng], { draggable: true }).addTo(map);
+
+                    marker.on('dragend', function (e: any) {
+                        const position = e.target.getLatLng();
+                        updateCoords(position.lat, position.lng, false, true, L);
+                    });
+
+                    map.on('click', function (e: any) {
+                        marker.setLatLng(e.latlng);
+                        updateCoords(e.latlng.lat, e.latlng.lng, false, true, L);
+                    });
+
+                    mapInstanceRef.current = map;
+                    markerRef.current = marker;
+
+                    // Force resize after slight delay
+                    setTimeout(() => {
+                        if (mapInstanceRef.current && isMounted) {
+                            mapInstanceRef.current.invalidateSize();
+                        }
+                    }, 150);
+                } catch (error) {
+                    console.error('Map initialization error:', error);
+                    mapInstanceRef.current = null;
+                    markerRef.current = null;
+                }
+            }).catch(err => {
+                console.error('Leaflet import error:', err);
+            });
+        }, 200);
+
+        return () => {
+            isMounted = false;
+            clearTimeout(initTimeout);
+        };
+    }, [isDelivery]);
+
+    const calcDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const dist = R * c;
+        setDistanceKm(dist);
+        return dist;
+    };
+
+    const updateCoords = (lat: number, lng: number, moveMap = true, updateAddr = false, L?: any) => {
+        setCustomerLat(lat);
+        setCustomerLng(lng);
+        calcDistance(STORE_LAT, STORE_LNG, lat, lng);
+
+        if (markerRef.current) {
+            markerRef.current.setLatLng([lat, lng]);
+        }
+        if (moveMap && mapInstanceRef.current) {
+            mapInstanceRef.current.setView([lat, lng], 15);
+        }
+
+        if (updateAddr) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data && data.display_name) {
+                        setCustomerAddress(data.display_name);
+                    }
+                })
+                .catch(() => {});
+        }
+    };
+
+    const detectGPS = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                pos => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    updateCoords(lat, lng, true, true);
+                },
+                () => {
+                    alert('Gagal membaca lokasi GPS. Pastikan izin lokasi aktif.');
+                }
+            );
+        } else {
+            alert('Browser tidak mendukung GPS.');
+        }
+    };
+
+    const handleAddressInput = (text: string) => {
+        setCustomerAddress(text);
+        const coordMatch = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) || text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+        if (coordMatch) {
+            const lat = parseFloat(coordMatch[1]);
+            const lng = parseFloat(coordMatch[2]);
+            updateCoords(lat, lng, true, false);
+        }
+    };
 
     const showToast = (msg: string) => {
         setToastMessage(msg);
@@ -131,6 +303,8 @@ export default function POSPage() {
                 customer_name: customerName.trim() || 'Pelanggan POS',
                 customer_phone: customerPhone.trim() || null,
                 customer_address: isDelivery ? customerAddress.trim() || null : null,
+                customer_lat: isDelivery ? customerLat : null,
+                customer_lng: isDelivery ? customerLng : null,
                 items: cart.map((item) => ({
                     id: item.product.id,
                     qty: item.qty,
@@ -152,7 +326,10 @@ export default function POSPage() {
             setCart([]);
             setCustomerName('');
             setCustomerPhone('');
-            setCustomerAddress('');
+            setCustomerAddress('Jl. Raya Gawok No. 12, Sukoharjo');
+            setCustomerLat(-7.588800);
+            setCustomerLng(110.748300);
+            setDistanceKm(0);
             setIsDelivery(false);
             setDiscount(0);
         } catch (err: any) {
@@ -406,13 +583,59 @@ export default function POSPage() {
                                         </span>
                                     </label>
                                     {isDelivery && (
-                                        <textarea
-                                            value={customerAddress}
-                                            onChange={(e) => setCustomerAddress(e.target.value)}
-                                            placeholder="Alamat lengkap penerima pengantaran..."
-                                            rows={2}
-                                            className="w-full mt-2 border border-outline-variant/30 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-secondary font-mono"
-                                        />
+                                        <div className="mt-3 space-y-3">
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-xs font-mono font-bold text-on-surface-variant">Alamat Lengkap / Google Maps</label>
+                                                <button
+                                                    type="button"
+                                                    onClick={detectGPS}
+                                                    className="text-xs font-mono text-secondary hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                                                >
+                                                    <span className="material-symbols-outlined text-[14px]">my_location</span> GPS
+                                                </button>
+                                            </div>
+                                            <textarea
+                                                value={customerAddress}
+                                                onChange={(e) => handleAddressInput(e.target.value)}
+                                                placeholder="Alamat lengkap atau paste link Google Maps..."
+                                                rows={2}
+                                                className="w-full border border-outline-variant/30 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 font-mono"
+                                            />
+                                            <p className="text-[10px] font-mono text-on-surface-variant">💡 Alamat ini otomatis update saat Anda geser pin di peta di bawah</p>
+                                            
+                                            {/* Map Picker */}
+                                            <div className="border border-outline-variant/30 rounded-lg overflow-hidden shadow-sm">
+                                                <div className="bg-surface-container-low px-2.5 py-1.5 border-b border-outline-variant/20 flex items-center justify-between text-[10px] font-mono">
+                                                    <span className="font-bold text-primary flex items-center gap-1">
+                                                        <span className="material-symbols-outlined text-[14px] text-secondary">location_on</span>
+                                                        Pin Lokasi (Geser/Klik Map)
+                                                    </span>
+                                                    <span className="text-[10px] text-secondary font-bold">
+                                                        {customerLat.toFixed(4)}, {customerLng.toFixed(4)}
+                                                    </span>
+                                                </div>
+                                                <div ref={mapContainerRef} className="w-full h-[180px] bg-surface-container"></div>
+                                            </div>
+
+                                            {/* Distance Info */}
+                                            <div className={`p-2 rounded-lg text-[10px] font-mono flex items-center gap-1.5 ${
+                                                distanceKm <= 4.0
+                                                    ? 'bg-green-50 border border-green-200 text-green-800'
+                                                    : 'bg-amber-50 border border-amber-200 text-amber-800'
+                                            }`}>
+                                                <span className={`material-symbols-outlined text-[14px] ${distanceKm <= 4.0 ? 'text-green-600' : 'text-amber-600'}`}>
+                                                    {distanceKm <= 4.0 ? 'verified' : 'warning'}
+                                                </span>
+                                                <div>
+                                                    <strong>Jarak: {distanceKm.toFixed(1)} km</strong> 
+                                                    {distanceKm <= 4.0 ? (
+                                                        <span className="font-bold text-green-700"> — GRATIS ONGKIR!</span>
+                                                    ) : (
+                                                        <span> (&gt;4km) Tambah ongkir +{(distanceKm - 4.0).toFixed(1)}km</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
