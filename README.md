@@ -1,189 +1,228 @@
-# ConterHP v2 — NexusCenter
+# 📱 Nexus Center — Mobile Phone Store & Service Management System
 
-Versi kedua dari proyek **ConterHP**, sebuah aplikasi manajemen toko ponsel berbasis web yang dibangun ulang dari awal dengan arsitektur yang lebih matang, fitur yang lebih lengkap, dan tampilan yang lebih modern.
+**Nexus Center** adalah aplikasi berbasis web untuk membantu mengelola operasional **konter HP**, mulai dari penjualan produk, transaksi pembayaran, layanan servis, trade-in, hingga delivery.
 
-Proyek ini bernama **NexusCenter** — sistem all-in-one untuk toko HP yang mencakup penjualan, servis, pengantaran, hingga manajemen pelanggan.
+Aplikasi ini menggabungkan fitur **Point of Sale (POS)** dan **Service Management** dalam satu platform.
 
----
+## 🚀 Live Demo
 
-## Tentang Versi Ini
-
-ConterHP v2 adalah pengembangan lanjutan yang signifikan dari versi pertama. Perbedaan utama dibandingkan v1:
-
-- Dibangun ulang menggunakan **Laravel 12** (dari yang sebelumnya versi lebih lama)
-- Penambahan sistem **pengantaran GPS real-time** dengan lacak kurir
-- Sistem **multi-role** yang lebih terstruktur (Admin, Kasir, Pengguna)
-- Halaman publik untuk pelanggan: booking servis, lacak servis, belanja online
-- Desain UI baru menggunakan **Tailwind CSS v4** dengan tema futuristik
-- Fitur **checkout & keranjang belanja** untuk pelanggan
+🌐 **Website:** https://nexuscenter-js.juniorbenerd18.workers.dev/
 
 ---
 
-## Tech Stack
+## ✨ Fitur Utama
 
-| Layer | Teknologi |
-|---|---|
-| Backend | PHP 8.2+, Laravel 12 |
-| Frontend | Blade, Tailwind CSS v4, Vite 7 |
-| Database | SQLite (default), bisa MySQL |
-| Build Tool | Vite + Laravel Vite Plugin |
-| Queue/Cache | Database driver |
+### 🛒 Penjualan & POS
 
----
+* Katalog HP dan produk
+* Keranjang belanja
+* Checkout
+* Pemilihan metode pembayaran
+* Perhitungan total transaksi
+* Format nominal dengan pemisah ribuan
 
-## Fitur Utama
+### 🔧 Layanan Servis HP
 
-### 🛒 Toko Online (Pelanggan)
-- Halaman utama dengan produk terbaru
-- Katalog produk: smartphone, aksesoris, pulsa & data
-- Keranjang belanja & checkout
-- Struk pembelian digital
-- Halaman promo spesial
+* Pengajuan servis
+* Pencatatan data perangkat
+* Pengelolaan status servis
+* Pengelolaan layanan servis oleh petugas
+* Pelacakan status servis oleh pelanggan
 
-### 🔧 Servis HP
-- Booking servis online tanpa perlu login
-- Lacak status servis via nomor nota
-- Manajemen servis untuk staff (terima, proses, selesai)
-- Struk servis dengan detail biaya & DP
-- Riwayat servis per akun pengguna
+### 🔄 Trade-In
 
-### 🚴 Pengantaran GPS
-- Buat & kelola order pengantaran (Admin/Kasir)
-- Kurir update lokasi real-time via HP
-- Pelanggan lacak posisi kurir di peta
-- PIN konfirmasi penerimaan paket
-- Notifikasi WhatsApp ke pelanggan & kurir
-- Perhitungan jarak menggunakan formula Haversine
+* Pengajuan tukar tambah HP
+* Pencatatan informasi perangkat lama
+* Estimasi nilai perangkat
+* Pengelolaan proses trade-in
 
-### 📊 Manajemen (Staff)
-- Dashboard dengan ringkasan penjualan & servis
-- POS (Point of Sale) kasir
-- Manajemen produk (CRUD) — Admin only
-- Laporan penjualan & servis — Admin only
-- Riwayat transaksi lengkap
-- Notifikasi in-app untuk pesanan & servis baru
+### 🚚 Delivery
 
-### 👤 Akun & Profil
-- Login multi-role
-- Edit profil & foto avatar
-- Riwayat pembelian & servis per pengguna
+* Pengajuan antar/jemput perangkat
+* Pengelolaan permintaan delivery
+* Informasi status pengiriman atau penjemputan
+
+### 👤 Manajemen Pengguna
+
+| Role        | Fungsi                                                                |
+| ----------- | --------------------------------------------------------------------- |
+| 👤 Pengguna | Membeli produk, checkout, mengajukan servis, trade-in, dan delivery   |
+| 💰 Kasir    | Mengelola transaksi penjualan dan layanan servis                      |
+| 🛠️ Admin   | Mengelola produk, pengguna, transaksi, servis, dan operasional sistem |
 
 ---
 
-## Role Pengguna
+## 🏗️ Kategori Aplikasi
 
-| Role | Akses |
-|---|---|
-| **Admin** | Semua fitur, manajemen produk, laporan |
-| **Kasir** | Dashboard, POS, servis, pengantaran, riwayat |
-| **Pengguna** | Belanja, booking servis, lacak, profil |
+**Mobile Phone Store & Service Management System**
+
+Aplikasi ini mencakup beberapa konsep:
+
+* **Point of Sale (POS)**
+* **E-Commerce**
+* **Service Management**
+* **Product Management**
+* **Customer Management**
+* **Trade-In Management**
 
 ---
 
-## Instalasi
+## 💻 Teknologi
 
-### Prasyarat
-- PHP >= 8.2
-- Composer
-- Node.js >= 18 & npm
+### Frontend
 
-### Langkah Setup
+* JavaScript
+* HTML5
+* CSS3
 
-```bash
-# 1. Clone repositori
-git clone <repo-url>
-cd ConterHPv2/NexusCenter
+### Backend & Database
 
-# 2. Install dependensi (satu perintah setup lengkap)
-composer run setup
+* Supabase
+
+### Deployment
+
+* Cloudflare Workers
+
+---
+
+## 📂 Struktur Aplikasi
+
+```text
+Nexus Center
+├── Authentication
+├── Dashboard
+├── Products
+├── Cart
+├── Checkout
+├── Payment
+├── Service
+├── Trade-In
+├── Delivery
+├── Transaction History
+└── User Management
 ```
 
-Perintah `composer run setup` otomatis menjalankan:
-- `composer install`
-- Copy `.env.example` → `.env`
-- Generate app key
-- Jalankan migrasi database
-- `npm install` & `npm run build`
+---
 
-### Atau setup manual:
+## 🔐 Authentication & Authorization
+
+Sistem menggunakan autentikasi dan pembagian akses berdasarkan role.
+
+### User
+
+Mengakses fitur pembelian dan layanan.
+
+### Kasir
+
+Mengelola transaksi pelanggan dan layanan servis.
+
+### Admin
+
+Mengelola data produk, pengguna, transaksi, servis, dan operasional sistem.
+
+---
+
+## 💳 Alur Transaksi
+
+```text
+Pilih Produk
+     ↓
+Tambah ke Keranjang
+     ↓
+Checkout
+     ↓
+Proses Pembayaran
+     ↓
+Pilih Metode Pembayaran
+     ↓
+Konfirmasi
+     ↓
+Transaksi Selesai
+```
+
+Metode pembayaran ditampilkan setelah pengguna menekan tombol **Proses Pembayaran** melalui pop-up.
+
+---
+
+## 🔧 Alur Servis
+
+```text
+Pelanggan
+    ↓
+Ajukan Servis
+    ↓
+Data Perangkat Dicatat
+    ↓
+Pengecekan
+    ↓
+Proses Perbaikan
+    ↓
+Selesai
+    ↓
+Pengambilan / Delivery
+```
+
+---
+
+## 🎯 Tujuan Project
+
+Nexus Center dibuat untuk membantu digitalisasi operasional konter HP agar proses:
+
+* Penjualan
+* Pembayaran
+* Servis HP
+* Trade-in
+* Delivery
+* Pengelolaan pelanggan
+* Pengelolaan produk
+* Pengelolaan transaksi
+
+dapat dilakukan dalam satu sistem.
+
+---
+
+## ⚙️ Installation
+
+Clone repository:
 
 ```bash
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan db:seed
+git clone https://github.com/USERNAME/nexus-center.git
+```
+
+Masuk ke folder project:
+
+```bash
+cd nexus-center
+```
+
+Install dependency:
+
+```bash
 npm install
+```
+
+Jalankan project:
+
+```bash
+npm run dev
+```
+
+---
+
+## 🌐 Deployment
+
+Project ini di-deploy menggunakan **Cloudflare Workers**.
+
+```bash
 npm run build
 ```
 
-### Jalankan Aplikasi
-
-```bash
-composer run dev
-```
-
-Perintah ini menjalankan sekaligus: Laravel server, queue worker, log watcher (Pail), dan Vite dev server.
-
-Atau jalankan satu per satu:
-```bash
-php artisan serve        # http://localhost:8000
-npm run dev              # Vite asset watcher
-php artisan queue:listen # Queue worker
-```
+Kemudian lakukan deployment menggunakan konfigurasi Cloudflare yang digunakan oleh project.
 
 ---
 
-## Akun Default (Seeder)
+## 📄 License
 
-| Role | Email | Password |
-|---|---|---|
-| Admin | admin@nexuscenter.id | admin123 |
-| Kasir | kasir@nexuscenter.id | kasir123 |
-| Pengguna | pengguna@nexuscenter.id | pengguna123 |
+Project ini dibuat untuk keperluan **pembelajaran, pengembangan aplikasi, dan portfolio**.
 
----
-
-## Struktur Folder Penting
-
-```
-NexusCenter/
-├── app/
-│   ├── Http/
-│   │   ├── Controllers/     # AuthController, SaleController, ServiceController, DeliveryController, dll
-│   │   └── Middleware/      # EnsureUserIsAdmin, EnsureUserIsStaff
-│   └── Models/              # User, Product, Sale, SaleItem, Service, Delivery, Notification
-├── database/
-│   ├── migrations/          # Skema tabel
-│   └── seeders/             # Data awal produk & user
-├── resources/views/         # Blade templates per fitur
-│   ├── delivery/            # Lacak, kurir, manajemen pengantaran
-│   ├── services/            # Booking, tracking, manajemen servis
-│   ├── sales/               # POS kasir & struk
-│   └── ...
-├── routes/web.php           # Semua routing aplikasi
-└── Design/                  # Desain HTML prototype tiap halaman
-```
-
----
-
-## Folder Design
-
-Folder `Design/` berisi prototipe HTML statis dari setiap halaman yang dibuat sebelum diimplementasikan ke dalam Laravel. Berguna sebagai referensi visual dan dokumentasi desain UI.
-
----
-
-## Konfigurasi Database
-
-Secara default menggunakan **SQLite**. Untuk beralih ke MySQL, ubah `.env`:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=nexuscenter
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Lalu jalankan ulang: `php artisan migrate --seed`
+© 2026 Nexus Center
