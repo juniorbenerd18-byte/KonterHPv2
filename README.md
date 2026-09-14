@@ -2,7 +2,16 @@
 
 **Nexus Center** adalah aplikasi berbasis web untuk membantu mengelola operasional **konter HP**, mulai dari penjualan produk, transaksi pembayaran, layanan servis, trade-in, hingga delivery.
 
-disini saya ada NexusCenter perbedaannya yang Folder NexusCenter itu pakai laravel dan yang NexusCenter-js itu pakai framework JS, live demonnya juga pakai yang JS
+## 📌 Project Versions
+
+Repository ini memiliki dua implementasi NexusCenter:
+
+| Folder | Teknologi | Keterangan |
+|---|---|---|
+| `NexusCenter/` | Laravel | Versi Laravel |
+| `nexuscenter-js/` | JavaScript Framework | Versi Web App yang digunakan pada Live Demo |
+
+> Live Demo menggunakan versi `nexuscenter-js`.
 
 Aplikasi ini menggabungkan fitur **Point of Sale (POS)** dan **Service Management** dalam satu platform.
 
@@ -71,11 +80,14 @@ Aplikasi ini mencakup beberapa konsep:
 
 ## 💻 Teknologi
 
-### Frontend
-
-* JavaScript
-* HTML5
-* CSS3
+| Bagian | Teknologi |
+|---|---|
+| Framework | Next.js |
+| Language | JavaScript |
+| Frontend | React |
+| Styling | Tailwind CSS |
+| Database | Supabase |
+| Deployment | Cloudflare Workers |
 
 ### Backend & Database
 
@@ -193,7 +205,7 @@ dapat dilakukan dalam satu sistem.
 Clone repository:
 
 ```bash
-git clone (https://github.com/juniorbenerd18-byte/KonterHPv2.git)
+git clone https://github.com/juniorbenerd18-byte/KonterHPv2.git
 ```
 
 Masuk ke folder project:
