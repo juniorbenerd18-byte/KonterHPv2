@@ -121,35 +121,6 @@ function LoginForm() {
                     </div>
                 </div>
 
-                {/* Demo Credentials Helper */}
-                <div className="bg-slate-900 rounded-2xl p-5 border border-slate-700 text-white">
-                    <p className="text-xs font-mono font-bold text-cyan-400 mb-3 flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-[16px]">info</span>
-                        AKUN DEMO — Klik untuk isi otomatis:
-                    </p>
-                    <div className="space-y-2">
-                        {[
-                            { label: '👑 Admin', email: 'admin@techcell.com', pass: 'admin123', color: 'hover:bg-cyan-900/60 border-cyan-700/40' },
-                            { label: '💳 Kasir', email: 'kasir@techcell.com', pass: 'kasir123', color: 'hover:bg-amber-900/40 border-amber-700/40' },
-                            { label: '👤 Pelanggan', email: 'budi@gmail.com', pass: 'user123', color: 'hover:bg-emerald-900/40 border-emerald-700/40' },
-                        ].map(cred => (
-                            <button
-                                key={cred.email}
-                                type="button"
-                                onClick={() => fillDemo(cred.email, cred.pass)}
-                                className={`w-full text-left px-3 py-2.5 rounded-xl border border-white/10 ${cred.color} transition-all cursor-pointer flex items-center justify-between gap-2 group`}
-                            >
-                                <div>
-                                    <span className="text-xs font-mono font-bold text-white">{cred.label}</span>
-                                    <span className="text-[10px] font-mono text-slate-400 ml-2">{cred.email}</span>
-                                </div>
-                                <span className="text-[10px] font-mono text-slate-500 group-hover:text-slate-300 transition-colors">
-                                    pw: {cred.pass}
-                                </span>
-                            </button>
-                        ))}
-                    </div>
-                </div>
             </div>
         </div>
     );
