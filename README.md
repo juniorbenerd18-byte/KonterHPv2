@@ -109,14 +109,19 @@ Nexus Center
 Sistem menggunakan autentikasi dan pembagian akses berdasarkan role.
 
 ### User
+Gmail : Budi@gmail.com
+Password : user123
 
-Mengakses fitur pembelian dan layanan.
 
 ### Kasir
+Gmail : Kasir@techcell.com
+Password : kasir123
 
 Mengelola transaksi pelanggan dan layanan servis.
 
 ### Admin
+Gmail : admin@techcell.com
+Password : admin123
 
 Mengelola data produk, pengguna, transaksi, servis, dan operasional sistem.
 
