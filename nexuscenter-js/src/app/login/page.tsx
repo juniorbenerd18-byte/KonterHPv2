@@ -119,6 +119,34 @@ function LoginForm() {
                             Daftar Akun Baru
                         </Link>
                     </div>
+
+                    {/* Quick Demo Login Buttons */}
+                    <div className="pt-3 border-t border-slate-100">
+                        <p className="text-slate-500 text-[11px] font-mono text-center mb-2">Ganti Akun Demo (Klik untuk isi cepat):</p>
+                        <div className="grid grid-cols-3 gap-2">
+                            <button
+                                type="button"
+                                onClick={() => fillDemo('admin@techcell.com', 'admin123')}
+                                className="px-2 py-1.5 rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-800 text-[10px] font-mono font-bold transition-all cursor-pointer"
+                            >
+                                👑 Admin
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => fillDemo('kasir@techcell.com', 'kasir123')}
+                                className="px-2 py-1.5 rounded-lg border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-mono font-bold transition-all cursor-pointer"
+                            >
+                                💳 Kasir
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => fillDemo('budi@gmail.com', 'user123')}
+                                className="px-2 py-1.5 rounded-lg border border-cyan-200 bg-cyan-50 hover:bg-cyan-100 text-cyan-800 text-[10px] font-mono font-bold transition-all cursor-pointer"
+                            >
+                                👤 Pelanggan
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
             </div>

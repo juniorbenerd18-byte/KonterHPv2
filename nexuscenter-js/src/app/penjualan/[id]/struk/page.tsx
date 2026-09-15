@@ -218,13 +218,31 @@ export default function StrukPage() {
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 mt-6 flex-wrap">
-        <button
-          onClick={() => router.push('/pengantaran')}
-          className="w-full flex items-center justify-center gap-2 bg-secondary text-white font-mono text-xs font-bold py-3.5 rounded-xl hover:bg-secondary/90 transition-all shadow-md"
-        >
-          <span className="material-symbols-outlined text-[18px]">two_wheeler</span>
-          🚚 Buat Tugas Pengantaran Kurir
-        </button>
+        {sale.delivery_type === 'delivery' && (
+          DataService.getCurrentRole() === 'pengguna' ? (
+            <button
+              onClick={() => router.push(`/lacak-driver?sale_id=${sale.id}`)}
+              className="w-full flex items-center justify-center gap-2 bg-secondary text-white font-mono text-xs font-bold py-3.5 rounded-xl hover:bg-secondary/90 transition-all shadow-md cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[18px]">two_wheeler</span>
+              🛵 Lacak Lokasi Pengantaran Kurir Realtime
+            </button>
+          ) : (
+            <button
+              onClick={() => router.push('/pengantaran')}
+              className="w-full flex items-center justify-center gap-2 bg-secondary text-white font-mono text-xs font-bold py-3.5 rounded-xl hover:bg-secondary/90 transition-all shadow-md cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[18px]">two_wheeler</span>
+              🚚 Kelola Tugas Pengantaran Kurir
+            </button>
+          )
+        )}
+        {sale.delivery_type === 'pickup' && (
+          <div className="w-full p-3 bg-secondary/10 border border-secondary/20 rounded-xl text-center font-mono text-xs text-secondary font-bold flex items-center justify-center gap-2">
+            <span className="material-symbols-outlined text-[18px]">storefront</span>
+            Pesanan ini disiapkan untuk diambil di Toko (Pickup)
+          </div>
+        )}
         <button onClick={() => router.push('/')} className="flex-1 flex items-center justify-center gap-2 bg-surface-container-lowest border border-outline-variant/30 text-on-surface font-mono text-xs font-bold py-3.5 rounded-xl hover:border-secondary hover:text-secondary transition-all shadow-sm">
           <span className="material-symbols-outlined text-[18px]">home</span>
           Kembali ke Beranda

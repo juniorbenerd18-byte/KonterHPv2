@@ -17,6 +17,7 @@ export default function HomePage() {
     // Trade-in calculator state
     const [tradeInInput, setTradeInInput] = useState('');
     const [selectedEntry, setSelectedEntry] = useState<TradeInEntry | null>(null);
+    const [matchingEntries, setMatchingEntries] = useState<TradeInEntry[]>([]);
     const [selectedVariant, setSelectedVariant] = useState<TradeInVariant | null>(null);
     const [tradeInNotFound, setTradeInNotFound] = useState(false);
 
@@ -63,6 +64,7 @@ export default function HomePage() {
         const query = val.trim();
         if (query.length < 2) {
             setSelectedEntry(null);
+            setMatchingEntries([]);
             setSelectedVariant(null);
             setTradeInNotFound(false);
             return;
@@ -70,30 +72,36 @@ export default function HomePage() {
 
         const autoStorage = detectStorageFromQuery(query);
 
-        let bestMatch: TradeInEntry | null = null;
-        let maxScore = 0;
+        // Collect all matching entries scored by scoreMatch
+        const scoredEntries: { entry: TradeInEntry; score: number }[] = [];
 
         for (const entry of TRADE_IN_DB) {
             const score = scoreMatch(query, entry);
-            if (score > maxScore) {
-                maxScore = score;
-                bestMatch = entry;
+            if (score > 0) {
+                scoredEntries.push({ entry, score });
             }
         }
 
-        if (bestMatch && maxScore >= 0.5) {
-            setSelectedEntry(bestMatch);
+        // Sort descending by score
+        scoredEntries.sort((a, b) => b.score - a.score);
+
+        if (scoredEntries.length > 0) {
+            const topMatch = scoredEntries[0].entry;
+            setSelectedEntry(topMatch);
+            setMatchingEntries(scoredEntries.slice(0, 12).map(s => s.entry));
             setTradeInNotFound(false);
+
             if (autoStorage) {
-                const foundVar = bestMatch.variants.find(
+                const foundVar = topMatch.variants.find(
                     v => v.storage.toLowerCase() === autoStorage.toLowerCase()
                 );
-                setSelectedVariant(foundVar || bestMatch.variants[0]);
+                setSelectedVariant(foundVar || topMatch.variants[0]);
             } else {
-                setSelectedVariant(bestMatch.variants[0]);
+                setSelectedVariant(topMatch.variants[0]);
             }
         } else {
             setSelectedEntry(null);
+            setMatchingEntries([]);
             setSelectedVariant(null);
             setTradeInNotFound(true);
         }
@@ -530,6 +538,42 @@ export default function HomePage() {
                                         <span className="material-symbols-outlined text-base">search</span>
                                     </button>
                                 </div>
+
+                                {/* Similar Models Pills / Quick Switch */}
+                                {matchingEntries.length > 1 && (
+                                    <div className="bg-white/5 border border-white/10 rounded-xl p-3 space-y-1.5 animate-fadeIn">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-[11px] font-mono text-slate-300 flex items-center gap-1.5 font-medium">
+                                                <span className="material-symbols-outlined text-sm text-cyan-300">devices</span>
+                                                <span>Model serupa ditemukan ({matchingEntries.length}):</span>
+                                            </p>
+                                            <span className="text-[10px] font-mono text-cyan-300">Klik untuk pilih model</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-1.5 pt-1">
+                                            {matchingEntries.map((m) => {
+                                                const isCurrent = selectedEntry?.name === m.name;
+                                                return (
+                                                    <button
+                                                        key={m.name}
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setSelectedEntry(m);
+                                                            setSelectedVariant(m.variants[0]);
+                                                        }}
+                                                        className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1 active:scale-95 ${
+                                                            isCurrent
+                                                                ? 'bg-cyan-400 text-slate-950 font-bold shadow-sm ring-1 ring-cyan-200'
+                                                                : 'bg-white/10 text-white/90 hover:bg-white/20 border border-white/10'
+                                                        }`}
+                                                    >
+                                                        {isCurrent && <span className="material-symbols-outlined text-[12px]">check</span>}
+                                                        <span>{m.name}</span>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Result Box with Storage Selection */}
                                 {selectedEntry && (

@@ -115,6 +115,32 @@ export const INITIAL_PRODUCTS: Product[] = [
         is_active: true
     },
     {
+        id: 71,
+        name: 'Infinix Note 40 Pro 8/256GB',
+        category: 'smartphone',
+        brand: 'Infinix',
+        price: 3499000,
+        stock: 12,
+        icon: '📱',
+        description: 'All-Round FastCharge 2.0 70W + 20W Wireless MagCharge, Layar Lengkung 3D AMOLED 120Hz, Kamera 108MP OIS.',
+        rating: 4.8,
+        review_count: 64,
+        is_active: true
+    },
+    {
+        id: 72,
+        name: 'Xiaomi Redmi Note 13 Pro+ 5G',
+        category: 'smartphone',
+        brand: 'Xiaomi',
+        price: 5999000,
+        stock: 10,
+        icon: '📱',
+        description: 'Dimensity 7200 Ultra, Kamera 200MP OIS, 120W HyperCharge, IP68 tahan air dan debu.',
+        rating: 4.8,
+        review_count: 95,
+        is_active: true
+    },
+    {
         id: 8,
         name: 'Charger 65W GaN USB-C',
         category: 'aksesoris',

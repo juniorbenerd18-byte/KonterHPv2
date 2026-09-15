@@ -172,16 +172,16 @@ CREATE POLICY "Staff Insert Delivery" ON public.deliveries FOR INSERT WITH CHECK
 ALTER PUBLICATION supabase_realtime ADD TABLE public.deliveries;
 
 -- 11. INITIAL SEED DATA (Produk Toko HP Awal)
-INSERT INTO public.products (name, category, brand, price, stock, icon, description, rating, review_count, is_active)
+INSERT INTO public.products (name, category, brand, price, stock, icon, image, description, rating, review_count, is_active)
 VALUES
-('Samsung Galaxy S24 Ultra 5G', 'smartphone', 'Samsung', 21999000, 8, '📱', 'Snapdragon 8 Gen 3, Layar 6.8 inch Dynamic AMOLED 2X, S-Pen included, Kamera 200MP.', 4.9, 32, true),
-('iPhone 15 Pro Max 256GB', 'smartphone', 'Apple', 23499000, 5, '📱', 'Titanium design, A17 Pro Chip, Action button, USB-C 3.0, 5x Telephoto optical zoom.', 5.0, 48, true),
-('Xiaomi Redmi Note 13 Pro+ 5G', 'smartphone', 'Xiaomi', 5999000, 14, '📱', 'Dimensity 7200 Ultra, Kamera 200MP OIS, 120W HyperCharge, IP68 tahan air.', 4.8, 19, true),
-('Infinix Note 40 Pro 8/256GB', 'smartphone', 'Infinix', 3499000, 10, '📱', 'All-Round FastCharge 2.0 70W + 20W Wireless MagCharge, Layar Lengkung 3D AMOLED 120Hz.', 4.7, 15, true),
-('Charger GaN 65W Fast Charging Type-C', 'aksesoris', 'Baseus', 249000, 35, '🔌', 'Teknologi Gallium Nitride (GaN), triple port (2C+1A), support Power Delivery 3.0 & QC 4+.', 4.9, 56, true),
-('TWS Earbuds ANC Low Latency Gaming', 'aksesoris', 'Anker', 499000, 22, '🎧', 'Active Noise Cancelling hingga 35dB, baterai tahan 32 jam, driver audio 11mm bass mantap.', 4.8, 27, true),
-('Kabel Data Type-C Braided 100W 1.2m', 'aksesoris', 'UGreen', 65000, 60, '🔌', 'Nylon braided super kuat, chip E-marker, mendukung charging laptop & HP hingga 100 watt.', 4.9, 120, true),
-('Hydrogel Screen Protector Full Cover', 'aksesoris', 'NexusArmor', 45000, 80, '🛡️', 'Self-healing screen protector, jernih HD, tahan goresan kuku & benda tajam, anti-fingerprint.', 4.7, 43, true),
-('Paket Data Telkomsel 50GB 30 Hari', 'pulsa', 'Telkomsel', 115000, 999, '📶', 'Kuota Nasional 50GB 24 Jam di semua jaringan 2G/3G/4G/5G, masa aktif 30 hari.', 5.0, 88, true),
-('Pulsa Reguler Indosat 100.000', 'pulsa', 'Indosat', 98000, 999, '📶', 'Pulsa reguler menambah masa aktif kartu Indosat Ooredoo IM3 hingga 60 hari.', 5.0, 64, true)
+('Samsung Galaxy S24 Ultra 5G', 'smartphone', 'Samsung', 21999000, 8, '📱', '/storage/products/b68BRBuwTQTBjrTFjiD9ZQn5vGSgqCebxAD1ylMX.jpg', 'Snapdragon 8 Gen 3, Layar 6.8 inch Dynamic AMOLED 2X, S-Pen included, Kamera 200MP.', 4.9, 32, true),
+('iPhone 15 Pro Max 256GB', 'smartphone', 'Apple', 23499000, 5, '📱', '/storage/products/jZ9NEPyB669ZtZ1DYW4Wve88AG7jPxl4H6lmGXNi.jpg', 'Titanium design, A17 Pro Chip, Action button, USB-C 3.0, 5x Telephoto optical zoom.', 5.0, 48, true),
+('Xiaomi Redmi Note 13 Pro+ 5G', 'smartphone', 'Xiaomi', 5999000, 14, '📱', null, 'Dimensity 7200 Ultra, Kamera 200MP OIS, 120W HyperCharge, IP68 tahan air.', 4.8, 19, true),
+('Infinix Note 40 Pro 8/256GB', 'smartphone', 'Infinix', 3499000, 10, '📱', null, 'All-Round FastCharge 2.0 70W + 20W Wireless MagCharge, Layar Lengkung 3D AMOLED 120Hz.', 4.7, 15, true),
+('Charger GaN 65W Fast Charging Type-C', 'aksesoris', 'Baseus', 249000, 35, '🔌', null, 'Teknologi Gallium Nitride (GaN), triple port (2C+1A), support Power Delivery 3.0 & QC 4+.', 4.9, 56, true),
+('TWS Earbuds ANC Low Latency Gaming', 'aksesoris', 'Anker', 499000, 22, '🎧', null, 'Active Noise Cancelling hingga 35dB, baterai tahan 32 jam, driver audio 11mm bass mantap.', 4.8, 27, true),
+('Kabel Data Type-C Braided 100W 1.2m', 'aksesoris', 'UGreen', 65000, 60, '🔌', null, 'Nylon braided super kuat, chip E-marker, mendukung charging laptop & HP hingga 100 watt.', 4.9, 120, true),
+('Hydrogel Screen Protector Full Cover', 'aksesoris', 'NexusArmor', 45000, 80, '🛡️', null, 'Self-healing screen protector, jernih HD, tahan goresan kuku & benda tajam, anti-fingerprint.', 4.7, 43, true),
+('Paket Data Telkomsel 50GB 30 Hari', 'pulsa', 'Telkomsel', 115000, 999, '📶', null, 'Kuota Nasional 50GB 24 Jam di semua jaringan 2G/3G/4G/5G, masa aktif 30 hari.', 5.0, 88, true),
+('Pulsa Reguler Indosat 100.000', 'pulsa', 'Indosat', 98000, 999, '📶', null, 'Pulsa reguler menambah masa aktif kartu Indosat Ooredoo IM3 hingga 60 hari.', 5.0, 64, true)
 ON CONFLICT DO NOTHING;

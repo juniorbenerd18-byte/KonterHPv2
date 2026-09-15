@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
 import { DeliveryOrder, Sale, ServiceOrder } from '@/types/database';
+import { STORE_LAT, STORE_LNG } from '@/lib/geo';
 
 export default function DeliveryManagementPage() {
     const router = useRouter();
@@ -96,10 +97,10 @@ export default function DeliveryManagementPage() {
             customer_name: customerName,
             customer_phone: customerPhone,
             customer_address: customerAddress,
-            courier_lat: -7.588800,
-            courier_lng: 110.748300,
-            customer_lat: -7.588800 + (Math.random() - 0.5) * 0.02,
-            customer_lng: 110.748300 + (Math.random() - 0.5) * 0.02,
+            courier_lat: STORE_LAT,
+            courier_lng: STORE_LNG,
+            customer_lat: STORE_LAT + (Math.random() - 0.5) * 0.02,
+            customer_lng: STORE_LNG + (Math.random() - 0.5) * 0.02,
             status: 'pending'
         });
 

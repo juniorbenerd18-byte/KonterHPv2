@@ -4,9 +4,17 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
-import { CartItem, getSelectedCheckoutItems, removeItemsFromCart } from '@/lib/cart';
+import { CartItem, getSelectedCheckoutItems, removeItemsFromCart, getCheckoutPrefs } from '@/lib/cart';
+import MapLocationPicker from '@/components/MapLocationPicker';
+import { STORE_LAT, STORE_LNG, FREE_DELIVERY_KM, geocodeAddress, haversineKm, parseMapCoords } from '@/lib/geo';
 
-
+interface SavedAddress {
+    id: number;
+    label: string;
+    address: string;
+    lat: number;
+    lng: number;
+}
 
 export default function CheckoutPage() {
     const router = useRouter();
@@ -14,20 +22,18 @@ export default function CheckoutPage() {
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
     const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('delivery');
-    const [customerAddress, setCustomerAddress] = useState('Jl. Raya Gawok No. 12, Sukoharjo');
-    const [customerLat, setCustomerLat] = useState<number>(-7.588800);
-    const [customerLng, setCustomerLng] = useState<number>(110.748300);
+    const [customerAddress, setCustomerAddress] = useState('');
+    const [customerLat, setCustomerLat] = useState<number>(STORE_LAT);
+    const [customerLng, setCustomerLng] = useState<number>(STORE_LNG);
+    const [isCustomLocation, setIsCustomLocation] = useState(false);
+    const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
     const [paymentMethod, setPaymentMethod] = useState<'QRIS' | 'Transfer' | 'Debit' | 'Tunai'>('QRIS');
     const [distanceKm, setDistanceKm] = useState<number>(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [authChecked, setAuthChecked] = useState(false);
+    const [isGeocoding, setIsGeocoding] = useState(false);
 
-    const STORE_LAT = -7.588800;
-    const STORE_LNG = 110.748300;
-
-    const mapContainerRef = useRef<HTMLDivElement>(null);
-    const mapInstanceRef = useRef<any>(null);
-    const markerRef = useRef<any>(null);
+    const geocodeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         // Auth guard: must be logged in to checkout
@@ -47,85 +53,73 @@ export default function CheckoutPage() {
             setCustomerPhone(user.phone || '');
         }
 
-        calcDistance(STORE_LAT, STORE_LNG, customerLat, customerLng);
-    }, []);
+        // 1. Check preferences passed from Cart page
+        const prefs = getCheckoutPrefs();
+        let loadedAddr = '';
+        let loadedLat = STORE_LAT;
+        let loadedLng = STORE_LNG;
+        let locationFound = false;
 
-
-    // Initialize Leaflet Map dynamically
-    useEffect(() => {
-        if (typeof window === 'undefined' || !mapContainerRef.current) return;
-
-        let isMounted = true;
-
-        import('leaflet').then(L => {
-            if (!isMounted || !mapContainerRef.current) return;
-
-            // If already initialized, return
-            if (mapInstanceRef.current) return;
-
-            // Fix leaflet icon default path issue
-            delete (L.Icon.Default.prototype as any)._getIconUrl;
-            L.Icon.Default.mergeOptions({
-                iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-                iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-            });
-
-            const map = L.map(mapContainerRef.current).setView([customerLat, customerLng], 14);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap'
-            }).addTo(map);
-
-            const marker = L.marker([customerLat, customerLng], { draggable: true }).addTo(map);
-
-            marker.on('dragend', function (e: any) {
-                const position = e.target.getLatLng();
-                updateCoords(position.lat, position.lng, false, true, L);
-            });
-
-            map.on('click', function (e: any) {
-                marker.setLatLng(e.latlng);
-                updateCoords(e.latlng.lat, e.latlng.lng, false, true, L);
-            });
-
-            mapInstanceRef.current = map;
-            markerRef.current = marker;
-        });
-
-        return () => {
-            isMounted = false;
-            if (mapInstanceRef.current) {
-                mapInstanceRef.current.remove();
-                mapInstanceRef.current = null;
+        if (prefs) {
+            if (prefs.deliveryType) setDeliveryType(prefs.deliveryType);
+            if (prefs.address && prefs.address.trim()) {
+                loadedAddr = prefs.address.trim();
+                locationFound = true;
             }
-        };
-    }, []);
+            if (typeof prefs.lat === 'number' && typeof prefs.lng === 'number') {
+                loadedLat = prefs.lat;
+                loadedLng = prefs.lng;
+                locationFound = true;
+            }
+        }
 
-    const calcDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-        const R = 6371;
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const dist = R * c;
-        setDistanceKm(dist);
-        return dist;
-    };
+        // 2. Check saved customer addresses
+        try {
+            const customerAddrs = DataService.getCustomerAddresses(user?.id);
+            if (customerAddrs && customerAddrs.length > 0) {
+                setSavedAddresses(customerAddrs);
+                if (!locationFound) {
+                    loadedAddr = customerAddrs[0].address;
+                    loadedLat = customerAddrs[0].lat;
+                    loadedLng = customerAddrs[0].lng;
+                    locationFound = true;
+                }
+            }
+        } catch {}
 
-    const updateCoords = (lat: number, lng: number, moveMap = true, updateAddr = false, L?: any) => {
+        // 3. Fallback to user account address
+        if (!locationFound && user?.address && user.address.trim()) {
+            loadedAddr = user.address.trim();
+            if (typeof user.latitude === 'number' && typeof user.longitude === 'number') {
+                loadedLat = user.latitude;
+                loadedLng = user.longitude;
+            }
+            locationFound = true;
+        }
+
+        if (locationFound) {
+            setCustomerAddress(loadedAddr);
+            setCustomerLat(loadedLat);
+            setCustomerLng(loadedLng);
+            setIsCustomLocation(true);
+            const dist = haversineKm(STORE_LAT, STORE_LNG, loadedLat, loadedLng);
+            setDistanceKm(dist);
+        } else {
+            // New user without address: leave empty with placeholder so user knows to input
+            setCustomerAddress('');
+            setCustomerLat(STORE_LAT);
+            setCustomerLng(STORE_LNG);
+            setIsCustomLocation(false);
+            setDistanceKm(0);
+        }
+    }, [router]);
+
+    const updateCoords = (lat: number, lng: number, updateAddr = false) => {
         setCustomerLat(lat);
         setCustomerLng(lng);
-        calcDistance(STORE_LAT, STORE_LNG, lat, lng);
-
-        if (markerRef.current) {
-            markerRef.current.setLatLng([lat, lng]);
-        }
-        if (moveMap && mapInstanceRef.current) {
-            mapInstanceRef.current.setView([lat, lng], 15);
-        }
+        const dist = haversineKm(STORE_LAT, STORE_LNG, lat, lng);
+        setDistanceKm(dist);
+        setIsCustomLocation(true);
 
         if (updateAddr) {
             fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
@@ -145,7 +139,7 @@ export default function CheckoutPage() {
                 pos => {
                     const lat = pos.coords.latitude;
                     const lng = pos.coords.longitude;
-                    updateCoords(lat, lng, true, true);
+                    updateCoords(lat, lng, true);
                 },
                 () => {
                     alert('Gagal membaca lokasi GPS. Pastikan izin lokasi aktif pada browser Anda.');
@@ -158,13 +152,34 @@ export default function CheckoutPage() {
 
     const handleAddressInput = (text: string) => {
         setCustomerAddress(text);
-        // Match coordinates or Google Maps format
-        const coordMatch = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) || text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
-        if (coordMatch) {
-            const lat = parseFloat(coordMatch[1]);
-            const lng = parseFloat(coordMatch[2]);
-            updateCoords(lat, lng, true, false);
+
+        // Check if input contains Google Maps coordinates or URL
+        const parsed = parseMapCoords(text);
+        if (parsed) {
+            updateCoords(parsed.lat, parsed.lng, false);
+            return;
         }
+
+        // Debounce search via Nominatim
+        if (geocodeTimerRef.current) clearTimeout(geocodeTimerRef.current);
+        if (text.trim().length >= 4) {
+            setIsGeocoding(true);
+            geocodeTimerRef.current = setTimeout(async () => {
+                try {
+                    const found = await geocodeAddress(text);
+                    if (found) {
+                        updateCoords(found.lat, found.lng, false);
+                    }
+                } finally {
+                    setIsGeocoding(false);
+                }
+            }, 700);
+        }
+    };
+
+    const handleSelectSavedAddress = (saved: SavedAddress) => {
+        setCustomerAddress(saved.address);
+        updateCoords(saved.lat, saved.lng, false);
     };
 
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -173,6 +188,11 @@ export default function CheckoutPage() {
         e.preventDefault();
         if (cart.length === 0) {
             alert('Keranjang belanja Anda kosong!');
+            return;
+        }
+
+        if (deliveryType === 'delivery' && !customerAddress.trim()) {
+            alert('Alamat pengiriman wajib diisi jika memilih pengantaran ke rumah!');
             return;
         }
 
@@ -188,12 +208,16 @@ export default function CheckoutPage() {
                 subtotal: item.price * item.qty
             }));
 
+            // Create sale with complete coordinates and delivery type
             const sale = await DataService.createSale({
                 invoice_number: invoiceNumber,
                 cashier_name: 'Online Store',
                 customer_name: customerName,
                 customer_phone: customerPhone,
                 customer_address: deliveryType === 'delivery' ? customerAddress : 'Ambil di Konter (Pickup)',
+                customer_lat: deliveryType === 'delivery' ? customerLat : STORE_LAT,
+                customer_lng: deliveryType === 'delivery' ? customerLng : STORE_LNG,
+                delivery_type: deliveryType,
                 total: subtotal,
                 payment_method: paymentMethod,
                 amount_paid: subtotal,
@@ -201,27 +225,6 @@ export default function CheckoutPage() {
                 discount: 0,
                 items: saleItems
             });
-
-            // Create automatic delivery task if delivery was chosen
-            if (deliveryType === 'delivery') {
-                const trackingCode = `TRK-${Math.floor(100000 + Math.random() * 900000)}`;
-                const pin = String(Math.floor(1000 + Math.random() * 9000));
-                await DataService.createDelivery({
-                    sale_id: sale.id,
-                    tracking_code: trackingCode,
-                    delivery_pin: pin,
-                    courier_name: 'Mas Budi Kurir',
-                    courier_phone: '081234567890',
-                    customer_name: customerName,
-                    customer_phone: customerPhone,
-                    customer_address: customerAddress,
-                    customer_lat: customerLat,
-                    customer_lng: customerLng,
-                    courier_lat: STORE_LAT,
-                    courier_lng: STORE_LNG,
-                    status: 'pending'
-                });
-            }
 
             // Clear only checked out items
             removeItemsFromCart(cart.map(it => it.id));
@@ -233,6 +236,14 @@ export default function CheckoutPage() {
             setIsSubmitting(false);
         }
     };
+
+    if (!authChecked) {
+        return (
+            <div className="max-w-[1440px] mx-auto px-4 py-24 text-center font-mono text-sm text-on-surface-variant">
+                Memverifikasi sesi login...
+            </div>
+        );
+    }
 
     return (
         <div className="fade-in max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-12 font-sans">
@@ -323,68 +334,115 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
 
-                            {deliveryType === 'delivery' && (
-                                <div id="address-field-wrap" className="space-y-3">
-                                    <div className="flex items-center justify-between">
-                                        <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase">
-                                            Alamat Lengkap / Salinan Google Maps *
-                                        </label>
-                                        <button
-                                            type="button"
-                                            onClick={detectGPS}
-                                            className="text-xs font-mono text-secondary hover:underline font-bold flex items-center gap-1 cursor-pointer"
-                                        >
-                                            <span className="material-symbols-outlined text-[16px]">my_location</span> Deteksi GPS Saya
-                                        </button>
+                            {/* Address container - preserved in DOM and toggled via CSS to prevent Leaflet unmount glitches */}
+                            <div id="address-field-wrap" className={`space-y-3 ${deliveryType === 'delivery' ? 'block' : 'hidden'}`}>
+                                <div className="flex items-center justify-between">
+                                    <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase">
+                                        Alamat Lengkap / Salinan Google Maps *
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={detectGPS}
+                                        className="text-xs font-mono text-secondary hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                                    >
+                                        <span className="material-symbols-outlined text-[16px]">my_location</span> Deteksi GPS Saya
+                                    </button>
+                                </div>
+
+                                {/* Saved addresses quick picker if any */}
+                                {savedAddresses.length > 0 && (
+                                    <div className="flex items-center gap-2 flex-wrap text-xs font-mono">
+                                        <span className="text-on-surface-variant text-[11px]">Gunakan Alamat Tersimpan:</span>
+                                        {savedAddresses.map(sa => (
+                                            <button
+                                                key={sa.id}
+                                                type="button"
+                                                onClick={() => handleSelectSavedAddress(sa)}
+                                                className={`px-2.5 py-1 rounded-lg border text-[11px] font-bold transition-all cursor-pointer ${
+                                                    customerAddress === sa.address
+                                                        ? 'bg-secondary text-white border-secondary'
+                                                        : 'bg-surface-container-low text-primary border-outline-variant/40 hover:border-secondary'
+                                                }`}
+                                            >
+                                                📍 {sa.label}
+                                            </button>
+                                        ))}
                                     </div>
+                                )}
+
+                                <div className="relative">
                                     <textarea
                                         rows={2}
-                                        required
+                                        required={deliveryType === 'delivery'}
                                         value={customerAddress}
                                         onChange={e => handleAddressInput(e.target.value)}
                                         className="w-full bg-surface-container-low border border-outline-variant/40 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
-                                        placeholder="Jl. Raya Gawok No. XX, Sukoharjo... (Bisa juga tempelkan link/teks dari Google Maps)"
+                                        placeholder="Ketik alamat pengiriman lengkap rumah Anda, atau tempelkan link/koordinat Google Maps..."
                                     ></textarea>
+                                    {isGeocoding && (
+                                        <span className="absolute right-3 bottom-3 text-xs font-mono text-secondary flex items-center gap-1 bg-surface-container/90 px-2 py-1 rounded-md">
+                                            <span className="w-2.5 h-2.5 border-2 border-secondary/30 border-t-secondary rounded-full animate-spin"></span>
+                                            Mencari titik peta...
+                                        </span>
+                                    )}
+                                </div>
 
-                                    <p className="text-[11px] font-mono text-on-surface-variant/80">
-                                        💡 Anda dapat mengetik alamat atau menempelkan (paste) salinan link/koordinat dari Google Maps.
-                                    </p>
+                                <p className="text-[11px] font-mono text-on-surface-variant/80">
+                                    💡 Anda dapat mengetik alamat rumah atau menempelkan (paste) salinan link/koordinat dari Google Maps.
+                                </p>
 
-                                    {/* Leaflet Map Container */}
-                                    <div className="border border-outline-variant/30 rounded-xl overflow-hidden shadow-inner">
-                                        <div className="bg-surface-container-low px-3 py-2 border-b border-outline-variant/20 flex items-center justify-between text-xs font-mono">
-                                            <span className="font-bold text-primary flex items-center gap-1">
-                                                <span className="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                                                Peta Pin Lokasi Rumah (Geser pin jika kurang pas)
-                                            </span>
-                                            <span className="text-[11px] text-secondary font-bold">
-                                                {customerLat.toFixed(5)}, {customerLng.toFixed(5)}
-                                            </span>
-                                        </div>
-                                        <div ref={mapContainerRef} className="w-full h-[220px] bg-surface-container z-10"></div>
+                                {/* Leaflet Map Picker Component */}
+                                <div className="border border-outline-variant/30 rounded-xl overflow-hidden shadow-inner">
+                                    <div className="bg-surface-container-low px-3 py-2 border-b border-outline-variant/20 flex items-center justify-between text-xs font-mono">
+                                        <span className="font-bold text-primary flex items-center gap-1">
+                                            <span className="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+                                            Peta Pin Lokasi Rumah (Geser pin jika kurang pas)
+                                        </span>
+                                        <span className="text-[11px] text-secondary font-bold">
+                                            {isCustomLocation ? `${customerLat.toFixed(5)}, ${customerLng.toFixed(5)}` : 'Titik belum ditentukan'}
+                                        </span>
                                     </div>
+                                    <MapLocationPicker
+                                        visible={deliveryType === 'delivery'}
+                                        lat={customerLat}
+                                        lng={customerLng}
+                                        height={220}
+                                        onLocationChange={(lat, lng) => updateCoords(lat, lng, true)}
+                                    />
+                                </div>
 
-                                    {/* Distance Badge */}
-                                    <div className={`p-3 rounded-xl text-xs font-mono flex items-center gap-2 ${
-                                        distanceKm <= 4.0
+                                {/* Distance Badge */}
+                                <div className={`p-3 rounded-xl text-xs font-mono flex items-center gap-2 ${
+                                    !isCustomLocation
+                                        ? 'bg-blue-50 border border-blue-200 text-blue-800'
+                                        : distanceKm <= FREE_DELIVERY_KM
                                             ? 'bg-green-50 border border-green-200 text-green-800'
                                             : 'bg-amber-50 border border-amber-200 text-amber-800'
+                                }`}>
+                                    <span className={`material-symbols-outlined text-[18px] ${
+                                        !isCustomLocation
+                                            ? 'text-blue-600'
+                                            : distanceKm <= FREE_DELIVERY_KM
+                                                ? 'text-green-600'
+                                                : 'text-amber-600'
                                     }`}>
-                                        <span className={`material-symbols-outlined text-[18px] ${
-                                            distanceKm <= 4.0 ? 'text-green-600' : 'text-amber-600'
-                                        }`}>
-                                            {distanceKm <= 4.0 ? 'verified' : 'warning'}
-                                        </span>
-                                        <div>
-                                            <strong>Jarak ke Konter Gawok: {distanceKm.toFixed(1)} km</strong> {distanceKm <= 4.0 ? (
-                                                <span className="font-bold text-green-700">(≤ 4km) — GRATIS ONGKIR!</span>
-                                            ) : (
-                                                <span>(&gt; 4km) — Melebihi batas {(distanceKm - 4.0).toFixed(1)} km. Ongkir tambahan dihitung oleh kurir.</span>
-                                            )}
-                                        </div>
+                                        {!isCustomLocation ? 'info' : distanceKm <= FREE_DELIVERY_KM ? 'verified' : 'warning'}
+                                    </span>
+                                    <div>
+                                        {!isCustomLocation ? (
+                                            <span>💡 <strong>Silakan tentukan titik lokasi rumah:</strong> Ketik alamat atau geser pin di peta untuk mengukur jarak &amp; gratis ongkir.</span>
+                                        ) : (
+                                            <>
+                                                <strong>Jarak ke Konter Gawok: {distanceKm.toFixed(1)} km</strong> {distanceKm <= FREE_DELIVERY_KM ? (
+                                                    <span className="font-bold text-green-700">(≤ {FREE_DELIVERY_KM}km) — GRATIS ONGKIR!</span>
+                                                ) : (
+                                                    <span>(&gt; {FREE_DELIVERY_KM}km) — Melebihi batas {(distanceKm - FREE_DELIVERY_KM).toFixed(1)} km. Ongkir tambahan dihitung oleh kurir.</span>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
                                 </div>
-                            )}
+                            </div>
 
                             <div>
                                 <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-2">
@@ -469,7 +527,15 @@ export default function CheckoutPage() {
                             </div>
                             <div className="flex justify-between text-on-surface-variant">
                                 <span>Ongkos Kirim</span>
-                                <span className="text-green-700 font-bold">GRATIS</span>
+                                {deliveryType === 'pickup' ? (
+                                    <span className="text-secondary font-bold">Ambil di Toko (Rp 0)</span>
+                                ) : !isCustomLocation ? (
+                                    <span className="text-on-surface-variant font-bold">Menunggu Alamat</span>
+                                ) : distanceKm <= FREE_DELIVERY_KM ? (
+                                    <span className="text-green-700 font-bold">GRATIS (Radius ≤ {FREE_DELIVERY_KM}km)</span>
+                                ) : (
+                                    <span className="text-amber-700 font-bold">Ongkir Tambahan Kurir</span>
+                                )}
                             </div>
                             <div className="flex justify-between font-bold text-base text-on-surface pt-2 border-t border-outline-variant/15">
                                 <span>Total Pembayaran</span>

@@ -1,19 +1,13 @@
 'use client';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { DataService } from '@/lib/store';
-import { Sale, Service, UserProfile, Role } from '@/types/database';
+import { DataService, INITIAL_STORE_LOCATION } from '@/lib/store';
+import { Sale, Service, UserProfile, Role, StoreLocation, CustomerAddress } from '@/types/database';
+import { STORE_LAT, STORE_LNG, parseMapCoords } from '@/lib/geo';
+import MapLocationPicker from '@/components/MapLocationPicker';
 
 type Tab = 'account' | 'orders' | 'services' | 'addresses';
-
-interface SavedAddress {
-  id: number;
-  label: string;
-  address: string;
-  lat: number;
-  lng: number;
-}
 
 function fmt(n: number) {
   return 'Rp ' + n.toLocaleString('id-ID');
@@ -25,9 +19,11 @@ export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile>({
     id: 1,
     name: 'Pelanggan Setia TECHCELL',
-    email: 'pelanggan@nexuscenter.id',
+    email: 'budi@gmail.com',
     phone: '081234567890',
     address: 'Jl. Ahmad Yani No. 88, Kartasura, Sukoharjo',
+    latitude: -7.5583,
+    longitude: 110.7681,
     role: 'pengguna',
     is_active: true,
     created_at: new Date().toISOString(),
@@ -37,20 +33,25 @@ export default function ProfilePage() {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Address picker state
-  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
-  const [newAddressLabel, setNewAddressLabel] = useState('');
-  const [newAddressText, setNewAddressText] = useState('Jl. Raya Gawok No. 12, Sukoharjo');
-  const [newAddressLat, setNewAddressLat] = useState(-7.588800);
-  const [newAddressLng, setNewAddressLng] = useState(110.748300);
-  const [showAddForm, setShowAddForm] = useState(false);
+  // 🏪 Staff Store Location state (khusus Admin & Kasir)
+  const [storeLoc, setStoreLoc] = useState<StoreLocation>(INITIAL_STORE_LOCATION);
+  const [isEditingStore, setIsEditingStore] = useState(false);
+  const [storeFormName, setStoreFormName] = useState(INITIAL_STORE_LOCATION.name);
+  const [storeFormPlusCode, setStoreFormPlusCode] = useState(INITIAL_STORE_LOCATION.plus_code);
+  const [storeFormAddress, setStoreFormAddress] = useState(INITIAL_STORE_LOCATION.address);
+  const [storeFormLat, setStoreFormLat] = useState(INITIAL_STORE_LOCATION.latitude);
+  const [storeFormLng, setStoreFormLng] = useState(INITIAL_STORE_LOCATION.longitude);
+  const [storeFormHours, setStoreFormHours] = useState(INITIAL_STORE_LOCATION.opening_hours);
+  const [storeFormPhone, setStoreFormPhone] = useState(INITIAL_STORE_LOCATION.phone);
+  const [storeFormRadius, setStoreFormRadius] = useState(INITIAL_STORE_LOCATION.free_delivery_km);
 
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markerRef = useRef<any>(null);
-
-  const STORE_LAT = -7.588800;
-  const STORE_LNG = 110.748300;
+  // 🏠 Customer Delivery Addresses state (khusus Pengguna)
+  const [customerAddresses, setCustomerAddresses] = useState<CustomerAddress[]>([]);
+  const [newCustLabel, setNewCustLabel] = useState('');
+  const [newCustText, setNewCustText] = useState('');
+  const [newCustLat, setNewCustLat] = useState(-7.5583);
+  const [newCustLng, setNewCustLng] = useState(110.7681);
+  const [showCustAddForm, setShowCustAddForm] = useState(false);
 
   const loadData = useCallback(async () => {
     if (!DataService.isLoggedIn()) {
@@ -66,215 +67,161 @@ export default function ProfilePage() {
     setServices(allServices);
 
     try {
-      const stored = localStorage.getItem('nexus_user_profile');
-      if (stored) {
-        setUser(JSON.parse(stored));
+      const current = DataService.getCurrentUser();
+      if (current) {
+        setUser(current);
       } else {
-        const currentRole = DataService.getCurrentRole();
-        setUser((prev) => ({
-          ...prev,
-          role: currentRole,
-          name: currentRole === 'admin' ? 'Super Admin TECHCELL' : currentRole === 'kasir' ? 'Ahmad Kasir' : 'Pelanggan Setia TECHCELL',
-          email: currentRole === 'admin' ? 'admin@nexuscenter.id' : currentRole === 'kasir' ? 'kasir@nexuscenter.id' : 'pelanggan@nexuscenter.id',
-        }));
+        const stored = localStorage.getItem('nexus_user_profile');
+        if (stored) {
+          setUser(JSON.parse(stored));
+        } else {
+          const currentRole = DataService.getCurrentRole();
+          setUser((prev) => ({
+            ...prev,
+            role: currentRole,
+            name: currentRole === 'admin' ? 'Super Admin TECHCELL' : currentRole === 'kasir' ? 'Ahmad Kasir' : 'Pelanggan Setia TECHCELL',
+            email: currentRole === 'admin' ? 'admin@techcell.com' : currentRole === 'kasir' ? 'kasir@techcell.com' : 'budi@gmail.com',
+          }));
+        }
       }
 
-      // Load saved addresses
-      const addressesStored = localStorage.getItem('nexus_saved_addresses');
-      if (addressesStored) {
-        setSavedAddresses(JSON.parse(addressesStored));
-      }
+      // Load store location
+      const loc = DataService.getStoreLocation();
+      setStoreLoc(loc);
+      setStoreFormName(loc.name);
+      setStoreFormPlusCode(loc.plus_code);
+      setStoreFormAddress(loc.address);
+      setStoreFormLat(loc.latitude);
+      setStoreFormLng(loc.longitude);
+      setStoreFormHours(loc.opening_hours);
+      setStoreFormPhone(loc.phone);
+      setStoreFormRadius(loc.free_delivery_km);
+
+      // Load customer addresses
+      const addrs = DataService.getCustomerAddresses(current?.id);
+      setCustomerAddresses(addrs);
     } catch {}
     setLoading(false);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     loadData();
-    if (typeof window !== 'undefined' && window.location.hash.includes('orders')) {
-      setTab('orders');
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash;
+      const params = new URLSearchParams(window.location.search);
+      const qTab = params.get('tab');
+      if (hash.includes('orders') || qTab === 'orders') {
+        setTab('orders');
+      } else if (hash.includes('services') || qTab === 'services') {
+        setTab('services');
+      } else if (hash.includes('addresses') || hash.includes('store-location') || qTab === 'addresses' || qTab === 'store-location') {
+        setTab('addresses');
+      }
     }
   }, [loadData]);
 
-  // Initialize map when addresses tab is active and add form is shown
-  useEffect(() => {
-    // Cleanup if conditions not met
-    if (tab !== 'addresses' || !showAddForm) {
-      if (mapInstanceRef.current) {
-        try {
-          mapInstanceRef.current.remove();
-        } catch (e) {
-          console.warn('Map cleanup warning:', e);
-        }
-        mapInstanceRef.current = null;
-        markerRef.current = null;
-      }
-      return;
-    }
-
-    // Don't init if no container
-    if (typeof window === 'undefined' || !mapContainerRef.current) {
-      return;
-    }
-
-    // Don't re-init if already exists
-    if (mapInstanceRef.current) {
-      return;
-    }
-
-    let isMounted = true;
-    let initTimeout: NodeJS.Timeout;
-
-    initTimeout = setTimeout(() => {
-      if (!isMounted || !mapContainerRef.current) return;
-
-      import('leaflet').then(L => {
-        if (!isMounted || !mapContainerRef.current || mapInstanceRef.current) return;
-
-        try {
-          // Clear container
-          const container = mapContainerRef.current;
-          container.innerHTML = '';
-          container.className = 'w-full h-[280px] bg-surface-container';
-
-          delete (L.Icon.Default.prototype as any)._getIconUrl;
-          L.Icon.Default.mergeOptions({
-            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-          });
-
-          const map = L.map(container, {
-            center: [newAddressLat, newAddressLng],
-            zoom: 14,
-            zoomControl: true,
-            attributionControl: false
-          });
-
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-          }).addTo(map);
-
-          const marker = L.marker([newAddressLat, newAddressLng], { draggable: true }).addTo(map);
-
-          marker.on('dragend', function (e: any) {
-            const position = e.target.getLatLng();
-            updateAddressCoords(position.lat, position.lng, false, true);
-          });
-
-          map.on('click', function (e: any) {
-            marker.setLatLng(e.latlng);
-            updateAddressCoords(e.latlng.lat, e.latlng.lng, false, true);
-          });
-
-          mapInstanceRef.current = map;
-          markerRef.current = marker;
-
-          setTimeout(() => {
-            if (mapInstanceRef.current && isMounted) {
-              mapInstanceRef.current.invalidateSize();
-            }
-          }, 150);
-        } catch (error) {
-          console.error('Map initialization error:', error);
-          mapInstanceRef.current = null;
-          markerRef.current = null;
-        }
-      }).catch(err => {
-        console.error('Leaflet import error:', err);
-      });
-    }, 200);
-
-    return () => {
-      isMounted = false;
-      clearTimeout(initTimeout);
-    };
-  }, [tab, showAddForm]);
-
-  const updateAddressCoords = (lat: number, lng: number, moveMap = true, updateAddr = false) => {
-    setNewAddressLat(lat);
-    setNewAddressLng(lng);
-
-    if (markerRef.current) {
-      markerRef.current.setLatLng([lat, lng]);
-    }
-    if (moveMap && mapInstanceRef.current) {
-      mapInstanceRef.current.setView([lat, lng], 15);
-    }
-
-    if (updateAddr) {
-      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
-        .then(r => r.json())
-        .then(data => {
-          if (data && data.display_name) {
-            setNewAddressText(data.display_name);
-          }
-        })
-        .catch(() => {});
+  // 🏪 Store Location Handlers
+  const handleStoreAddressInput = (text: string) => {
+    setStoreFormAddress(text);
+    const parsed = parseMapCoords(text);
+    if (parsed) {
+      setStoreFormLat(parsed.lat);
+      setStoreFormLng(parsed.lng);
     }
   };
 
-  const detectAddressGPS = () => {
+  const handleSaveStoreLocation = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const updated = DataService.updateStoreLocation({
+      name: storeFormName.trim() || 'TECHCELL NexusCenter',
+      plus_code: storeFormPlusCode.trim() || 'FQ2W+XGM',
+      address: storeFormAddress.trim(),
+      latitude: storeFormLat,
+      longitude: storeFormLng,
+      opening_hours: storeFormHours.trim(),
+      phone: storeFormPhone.trim(),
+      free_delivery_km: Number(storeFormRadius) || 4.0
+    });
+    setStoreLoc(updated);
+    setIsEditingStore(false);
+    setSavedSuccess(true);
+    DataService.updateCurrentUser({
+      address: updated.address,
+      latitude: updated.latitude,
+      longitude: updated.longitude
+    });
+    setTimeout(() => setSavedSuccess(false), 3000);
+  };
+
+  // 🏠 Customer Address Handlers
+  const detectCustomerGPS = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         pos => {
-          updateAddressCoords(pos.coords.latitude, pos.coords.longitude, true, true);
+          setNewCustLat(pos.coords.latitude);
+          setNewCustLng(pos.coords.longitude);
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`)
+            .then(r => r.json())
+            .then(data => {
+              if (data && data.display_name) {
+                setNewCustText(data.display_name);
+              }
+            })
+            .catch(() => {});
         },
-        () => {
-          alert('Gagal deteksi GPS. Pastikan izin lokasi aktif.');
-        }
+        () => alert('Gagal deteksi GPS. Pastikan izin lokasi aktif.')
       );
     } else {
       alert('Browser tidak mendukung GPS.');
     }
   };
 
-  const handleAddressInput = (text: string) => {
-    setNewAddressText(text);
-    const coordMatch = text.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) || text.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
-    if (coordMatch) {
-      const lat = parseFloat(coordMatch[1]);
-      const lng = parseFloat(coordMatch[2]);
-      updateAddressCoords(lat, lng, true, false);
+  const handleCustomerAddressInput = (text: string) => {
+    setNewCustText(text);
+    const parsed = parseMapCoords(text);
+    if (parsed) {
+      setNewCustLat(parsed.lat);
+      setNewCustLng(parsed.lng);
     }
   };
 
-  const handleSaveNewAddress = () => {
-    if (!newAddressLabel.trim()) {
-      alert('Masukkan label alamat (contoh: Rumah, Kantor, dll)');
+  const handleSaveNewCustomerAddress = () => {
+    if (!newCustLabel.trim()) {
+      alert('Masukkan label alamat (contoh: Rumah, Kantor, Kos)');
       return;
     }
-    const newAddr: SavedAddress = {
-      id: Date.now(),
-      label: newAddressLabel.trim(),
-      address: newAddressText.trim(),
-      lat: newAddressLat,
-      lng: newAddressLng
-    };
-    const updated = [...savedAddresses, newAddr];
-    setSavedAddresses(updated);
-    localStorage.setItem('nexus_saved_addresses', JSON.stringify(updated));
-    
-    // Reset form
-    setNewAddressLabel('');
-    setNewAddressText('Jl. Raya Gawok No. 12, Sukoharjo');
-    setNewAddressLat(-7.588800);
-    setNewAddressLng(110.748300);
-    setShowAddForm(false);
+    if (!newCustText.trim()) {
+      alert('Masukkan alamat lengkap pengiriman');
+      return;
+    }
+    const updated = DataService.saveCustomerAddress({
+      label: newCustLabel.trim(),
+      address: newCustText.trim(),
+      lat: newCustLat,
+      lng: newCustLng,
+      is_default: customerAddresses.length === 0
+    }, user.id);
+    setCustomerAddresses(updated);
+    setNewCustLabel('');
+    setNewCustText('');
+    setNewCustLat(-7.5583);
+    setNewCustLng(110.7681);
+    setShowCustAddForm(false);
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
-  const handleDeleteAddress = (id: number) => {
-    if (confirm('Hapus alamat ini?')) {
-      const updated = savedAddresses.filter(a => a.id !== id);
-      setSavedAddresses(updated);
-      localStorage.setItem('nexus_saved_addresses', JSON.stringify(updated));
+  const handleDeleteCustomerAddress = (id: number) => {
+    if (confirm('Hapus alamat pengiriman ini?')) {
+      const updated = DataService.deleteCustomerAddress(id, user.id);
+      setCustomerAddresses(updated);
     }
   };
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      DataService.updateCurrentUser(user);
       localStorage.setItem('nexus_user_profile', JSON.stringify(user));
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3000);
@@ -351,8 +298,8 @@ export default function ProfilePage() {
                     : 'text-on-surface-variant hover:bg-surface-container hover:text-primary'
                 }`}
               >
-                <span className="material-symbols-outlined">location_on</span>
-                Alamat Saya
+                <span className="material-symbols-outlined">{isStaff ? 'storefront' : 'location_on'}</span>
+                {isStaff ? 'Lokasi Konter Toko' : 'Alamat Pengiriman'}
               </button>
 
               <Link
@@ -559,151 +506,444 @@ export default function ProfilePage() {
             </section>
           )}
 
-          {/* TAB 4: ALAMAT SAYA */}
+          {/* TAB 4: ALAMAT / LOKASI KONTER */}
           {tab === 'addresses' && (
             <section className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 md:p-8 shadow-card space-y-6">
-              <div className="flex items-center justify-between border-b border-outline-variant/20 pb-4">
-                <div>
-                  <h2 className="font-display font-bold text-xl text-primary flex items-center gap-2">
-                    <span className="material-symbols-outlined text-secondary">location_on</span>
-                    Alamat Tersimpan
-                  </h2>
-                  <p className="text-xs font-mono text-on-surface-variant mt-1">Simpan alamat favorit untuk pengiriman lebih cepat</p>
-                </div>
-                {!showAddForm && (
-                  <button
-                    onClick={() => setShowAddForm(true)}
-                    className="bg-secondary text-white font-mono text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-secondary/90 transition-all shadow-md active:scale-95 flex items-center gap-1.5"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">add_location</span>
-                    Tambah Alamat
-                  </button>
-                )}
-              </div>
-
-              {/* Add Address Form */}
-              {showAddForm && (
-                <div className="bg-surface-container-low border border-secondary/30 rounded-xl p-6 space-y-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-bold text-sm text-primary flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[18px] text-secondary">add_location_alt</span>
-                      Tambah Alamat Baru
-                    </h3>
-                    <button
-                      onClick={() => setShowAddForm(false)}
-                      className="text-xs font-mono text-on-surface-variant hover:text-error"
-                    >
-                      ✕ Batal
-                    </button>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-2">
-                      Label Alamat (contoh: Rumah, Kantor, Kos) *
-                    </label>
-                    <input
-                      type="text"
-                      value={newAddressLabel}
-                      onChange={(e) => setNewAddressLabel(e.target.value)}
-                      placeholder="Rumah"
-                      className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-xs font-mono font-bold text-on-surface-variant uppercase">
-                        Alamat Lengkap / Google Maps *
-                      </label>
-                      <button
-                        type="button"
-                        onClick={detectAddressGPS}
-                        className="text-xs font-mono text-secondary hover:underline font-bold flex items-center gap-1 cursor-pointer"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">my_location</span> Deteksi GPS
-                      </button>
+              {isStaff ? (
+                /* ════════════════════════════════════════════════════════════════════════
+                   TAMPILAN KHUSUS ADMIN & KASIR: LOKASI KONTER TOKO FISIK
+                   ════════════════════════════════════════════════════════════════════════ */
+                <div className="space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-outline-variant/20 pb-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="material-symbols-outlined text-secondary text-2xl">storefront</span>
+                        <h2 className="font-display font-bold text-xl text-primary">
+                          Lokasi Konter Fisik &amp; Operasional Toko
+                        </h2>
+                        <span className="bg-secondary/10 text-secondary text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border border-secondary/20">
+                          Khusus Staf
+                        </span>
+                      </div>
+                      <p className="text-xs font-mono text-on-surface-variant">
+                        Titik pusat konter operasional TECHCELL, pangkalan kurir, dan acuan jarak bebas ongkir ({storeLoc.free_delivery_km} km).
+                      </p>
                     </div>
-                    <textarea
-                      value={newAddressText}
-                      onChange={(e) => handleAddressInput(e.target.value)}
-                      placeholder="Alamat lengkap atau paste link Google Maps..."
-                      rows={2}
-                      className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
-                    />
-                    <p className="text-[10px] font-mono text-on-surface-variant mt-1">💡 Bisa paste link/koordinat dari Google Maps</p>
-                  </div>
-
-                  {/* Map Picker */}
-                  <div className="border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
-                    <div className="bg-surface-container px-3 py-2 border-b border-outline-variant/20 flex items-center justify-between text-xs font-mono">
-                      <span className="font-bold text-primary flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                        Peta Pin Lokasi (Geser/Klik untuk set lokasi)
-                      </span>
-                      <span className="text-[11px] text-secondary font-bold">
-                        {newAddressLat.toFixed(5)}, {newAddressLng.toFixed(5)}
-                      </span>
-                    </div>
-                    <div ref={mapContainerRef} className="w-full h-[280px] bg-surface-container"></div>
-                  </div>
-
-                  <div className="flex gap-3 pt-2">
                     <button
-                      onClick={handleSaveNewAddress}
-                      className="flex-1 bg-secondary text-white font-mono text-sm font-bold px-6 py-3 rounded-xl hover:bg-secondary/90 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+                      onClick={() => setIsEditingStore(!isEditingStore)}
+                      className={`font-mono text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-1.5 self-start sm:self-auto ${
+                        isEditingStore
+                          ? 'bg-surface-container border border-outline-variant text-on-surface hover:bg-surface-container-high'
+                          : 'bg-secondary text-white hover:bg-secondary/90'
+                      }`}
                     >
-                      <span className="material-symbols-outlined text-[18px]">save</span>
-                      Simpan Alamat
-                    </button>
-                    <button
-                      onClick={() => setShowAddForm(false)}
-                      className="px-6 py-3 border border-outline-variant/40 rounded-xl text-sm font-mono font-bold text-on-surface hover:bg-surface-container transition-all"
-                    >
-                      Batal
+                      <span className="material-symbols-outlined text-[16px]">
+                        {isEditingStore ? 'close' : 'edit_location_alt'}
+                      </span>
+                      {isEditingStore ? 'Tutup Form' : 'Ubah Data Konter'}
                     </button>
                   </div>
-                </div>
-              )}
 
-              {/* Saved Addresses List */}
-              {savedAddresses.length === 0 && !showAddForm ? (
-                <div className="py-12 text-center text-on-surface-variant font-mono text-sm">
-                  <span className="material-symbols-outlined text-4xl block mb-2 opacity-30">location_off</span>
-                  Belum ada alamat tersimpan. Klik "Tambah Alamat" untuk mulai.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {savedAddresses.map((addr) => (
-                    <div key={addr.id} className="bg-surface-container border border-outline-variant/30 rounded-xl p-4 hover:border-secondary/40 transition-all">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="material-symbols-outlined text-secondary text-[20px]">home</span>
-                          <h4 className="font-display font-bold text-sm text-primary">{addr.label}</h4>
+                  {/* Form Edit Lokasi Konter (Jika aktif) */}
+                  {isEditingStore ? (
+                    <form onSubmit={handleSaveStoreLocation} className="bg-surface-container-low border border-secondary/30 rounded-2xl p-6 space-y-5">
+                      <div className="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+                        <h3 className="font-bold text-sm text-primary flex items-center gap-2">
+                          <span className="material-symbols-outlined text-secondary text-[20px]">edit_note</span>
+                          Form Perubahan Lokasi Konter Fisik
+                        </h3>
+                        <span className="text-[11px] font-mono text-on-surface-variant">Data tersimpan di Konfigurasi Toko</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-1.5">
+                            Nama Konter Toko *
+                          </label>
+                          <input
+                            type="text"
+                            value={storeFormName}
+                            onChange={(e) => setStoreFormName(e.target.value)}
+                            className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
+                            required
+                          />
                         </div>
+                        <div>
+                          <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-1.5">
+                            Google Plus Code *
+                          </label>
+                          <input
+                            type="text"
+                            value={storeFormPlusCode}
+                            onChange={(e) => setStoreFormPlusCode(e.target.value)}
+                            placeholder="Contoh: FQ2W+XGM"
+                            className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm font-mono focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-1.5">
+                          Alamat Lengkap Konter Fisik *
+                        </label>
+                        <textarea
+                          value={storeFormAddress}
+                          onChange={(e) => handleStoreAddressInput(e.target.value)}
+                          rows={2}
+                          className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
+                          required
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-1.5">
+                            Jam Operasional
+                          </label>
+                          <input
+                            type="text"
+                            value={storeFormHours}
+                            onChange={(e) => setStoreFormHours(e.target.value)}
+                            placeholder="08:00 - 21:00 WIB"
+                            className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm font-mono focus:outline-none focus:border-secondary"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-1.5">
+                            Telepon / WhatsApp Konter
+                          </label>
+                          <input
+                            type="text"
+                            value={storeFormPhone}
+                            onChange={(e) => setStoreFormPhone(e.target.value)}
+                            placeholder="081234567890"
+                            className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm font-mono focus:outline-none focus:border-secondary"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-1.5">
+                            Radius Bebas Ongkir (km)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.5"
+                            min="1"
+                            max="30"
+                            value={storeFormRadius}
+                            onChange={(e) => setStoreFormRadius(Number(e.target.value))}
+                            className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm font-mono focus:outline-none focus:border-secondary"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Map Location Picker untuk Edit Lokasi Toko */}
+                      <div className="border border-outline-variant/30 rounded-2xl overflow-hidden shadow-sm">
+                        <div className="bg-surface-container px-4 py-2.5 border-b border-outline-variant/20 flex items-center justify-between text-xs font-mono">
+                          <span className="font-bold text-primary flex items-center gap-1.5">
+                            <span className="material-symbols-outlined text-[16px] text-secondary">pin_drop</span>
+                            Geser atau Klik Peta untuk menentukan Titik Fisik Konter
+                          </span>
+                          <span className="text-secondary font-bold">
+                            {storeFormLat.toFixed(6)}, {storeFormLng.toFixed(6)}
+                          </span>
+                        </div>
+                        <MapLocationPicker
+                          lat={storeFormLat}
+                          lng={storeFormLng}
+                          height={280}
+                          circleRadiusKm={storeFormRadius}
+                          label="Titik Konter Toko"
+                          onLocationChange={(lat, lng) => {
+                            setStoreFormLat(lat);
+                            setStoreFormLng(lng);
+                          }}
+                        />
+                      </div>
+
+                      <div className="flex gap-3 pt-2">
                         <button
-                          onClick={() => handleDeleteAddress(addr.id)}
-                          className="text-error hover:bg-red-50 p-1.5 rounded-lg transition-all"
-                          title="Hapus alamat"
+                          type="submit"
+                          className="flex-1 bg-secondary text-white font-mono text-xs font-bold px-6 py-3 rounded-xl hover:bg-secondary/90 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
                         >
-                          <span className="material-symbols-outlined text-[18px]">delete</span>
+                          <span className="material-symbols-outlined text-[18px]">save</span>
+                          Simpan Perubahan Lokasi Konter
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsEditingStore(false)}
+                          className="px-6 py-3 border border-outline-variant/40 rounded-xl text-xs font-mono font-bold text-on-surface hover:bg-surface-container transition-all"
+                        >
+                          Batal
                         </button>
                       </div>
-                      <p className="text-xs text-on-surface-variant line-clamp-2 mb-2">{addr.address}</p>
-                      <div className="flex items-center gap-2 text-[10px] font-mono text-on-surface-variant">
-                        <span className="material-symbols-outlined text-[14px]">pin_drop</span>
-                        <span>{addr.lat.toFixed(4)}, {addr.lng.toFixed(4)}</span>
+                    </form>
+                  ) : (
+                    /* Display Mode Konter Toko */
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="md:col-span-2 bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 space-y-4">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full mb-2">
+                                <span className="w-1.5 h-1.5 bg-green-600 rounded-full animate-pulse"></span>
+                                Konter Fisik Aktif
+                              </span>
+                              <h3 className="font-display font-extrabold text-lg text-on-surface">
+                                {storeLoc.name}
+                              </h3>
+                              <p className="font-mono text-xs text-secondary font-bold mt-0.5">
+                                Plus Code: {storeLoc.plus_code}
+                              </p>
+                            </div>
+                            <span className="w-10 h-10 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center">
+                              <span className="material-symbols-outlined text-2xl icon-filled">storefront</span>
+                            </span>
+                          </div>
+
+                          <div className="p-4 bg-surface rounded-xl border border-outline-variant/20 space-y-2 text-xs">
+                            <p className="text-on-surface font-medium leading-relaxed">
+                              {storeLoc.address}
+                            </p>
+                            <div className="pt-2 border-t border-outline-variant/20 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono text-on-surface-variant">
+                              <div>⏰ Buka: <strong className="text-on-surface">{storeLoc.opening_hours}</strong></div>
+                              <div>📞 Kontak: <strong className="text-on-surface">{storeLoc.phone}</strong></div>
+                              <div>📍 Koordinat: <strong className="text-on-surface">{storeLoc.latitude.toFixed(6)}, {storeLoc.longitude.toFixed(6)}</strong></div>
+                              <div>🚚 Free Ongkir: <strong className="text-secondary font-bold">Maks. {storeLoc.free_delivery_km} km</strong></div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3 pt-1 flex-wrap">
+                            <a
+                              href={`https://www.google.com/maps?q=${storeLoc.latitude},${storeLoc.longitude}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-surface border border-outline-variant/30 text-on-surface hover:bg-surface-container text-xs font-mono font-bold rounded-xl transition-all"
+                            >
+                              <span className="material-symbols-outlined text-[16px] text-secondary">open_in_new</span>
+                              Buka Google Maps
+                            </a>
+                            <button
+                              onClick={() => setIsEditingStore(true)}
+                              className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-secondary text-white text-xs font-mono font-bold rounded-xl hover:bg-secondary/90 transition-all shadow-sm"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">edit</span>
+                              Ubah Informasi Konter
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Side Info Box */}
+                        <div className="bg-gradient-to-br from-secondary/10 via-surface-container-low to-surface-container-low border border-secondary/20 rounded-2xl p-6 flex flex-col justify-between">
+                          <div className="space-y-3">
+                            <div className="w-10 h-10 rounded-xl bg-secondary text-white flex items-center justify-center shadow-sm">
+                              <span className="material-symbols-outlined text-xl">two_wheeler</span>
+                            </div>
+                            <h4 className="font-display font-bold text-sm text-primary">
+                              Pusat Armada &amp; Pengiriman
+                            </h4>
+                            <p className="text-xs text-on-surface-variant leading-relaxed">
+                              Titik ini adalah lokasi awal kurir bertolak untuk pesanan pesan antar, serta acuan sistem dalam menghitung jarak ongkos kirim otomatis.
+                            </p>
+                          </div>
+                          <div className="pt-4 border-t border-secondary/20 font-mono text-[11px] text-secondary font-bold">
+                            ✓ Terintegrasi dengan POS &amp; Pengantaran
+                          </div>
+                        </div>
                       </div>
-                      <a
-                        href={`https://www.google.com/maps?q=${addr.lat},${addr.lng}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs font-mono text-secondary hover:underline mt-2 font-bold"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                        Buka di Google Maps
-                      </a>
+
+                      {/* Interactive Map View */}
+                      <div className="border border-outline-variant/30 rounded-2xl overflow-hidden shadow-card">
+                        <div className="bg-surface-container px-4 py-3 border-b border-outline-variant/20 flex items-center justify-between text-xs font-mono">
+                          <span className="font-bold text-primary flex items-center gap-2">
+                            <span className="material-symbols-outlined text-[18px] text-secondary">map</span>
+                            Peta Lokasi Konter &amp; Zona Bebas Ongkir (Lingkaran ≤ {storeLoc.free_delivery_km} km)
+                          </span>
+                          <span className="text-secondary font-bold">
+                            FQ2W+XGM Baturan
+                          </span>
+                        </div>
+                        <MapLocationPicker
+                          lat={storeLoc.latitude}
+                          lng={storeLoc.longitude}
+                          height={320}
+                          circleRadiusKm={storeLoc.free_delivery_km}
+                          interactive={false}
+                          label={`${storeLoc.name} (${storeLoc.plus_code})`}
+                        />
+                      </div>
                     </div>
-                  ))}
+                  )}
+                </div>
+              ) : (
+                /* ════════════════════════════════════════════════════════════════════════
+                   TAMPILAN KHUSUS PENGGUNA/CUSTOMER: ALAMAT PENGIRIMAN
+                   ════════════════════════════════════════════════════════════════════════ */
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-outline-variant/20 pb-4">
+                    <div>
+                      <h2 className="font-display font-bold text-xl text-primary flex items-center gap-2">
+                        <span className="material-symbols-outlined text-secondary">location_on</span>
+                        Alamat Pengiriman Saya
+                      </h2>
+                      <p className="text-xs font-mono text-on-surface-variant mt-1">
+                        Simpan alamat favorit (Rumah, Kantor, dll) untuk pemesanan barang dan pengiriman cepat.
+                      </p>
+                    </div>
+                    {!showCustAddForm && (
+                      <button
+                        onClick={() => setShowCustAddForm(true)}
+                        className="bg-secondary text-white font-mono text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-secondary/90 transition-all shadow-md active:scale-95 flex items-center gap-1.5"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">add_location</span>
+                        Tambah Alamat
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Add Customer Address Form */}
+                  {showCustAddForm && (
+                    <div className="bg-surface-container-low border border-secondary/30 rounded-2xl p-6 space-y-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-bold text-sm text-primary flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[18px] text-secondary">add_location_alt</span>
+                          Tambah Alamat Pengiriman Baru
+                        </h3>
+                        <button
+                          onClick={() => setShowCustAddForm(false)}
+                          className="text-xs font-mono text-on-surface-variant hover:text-error"
+                        >
+                          ✕ Batal
+                        </button>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-mono font-bold text-on-surface-variant uppercase mb-1.5">
+                          Label Alamat (contoh: Rumah, Kantor, Kos) *
+                        </label>
+                        <input
+                          type="text"
+                          value={newCustLabel}
+                          onChange={(e) => setNewCustLabel(e.target.value)}
+                          placeholder="Rumah Utama"
+                          className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
+                        />
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <label className="text-xs font-mono font-bold text-on-surface-variant uppercase">
+                            Alamat Lengkap Pengiriman *
+                          </label>
+                          <button
+                            type="button"
+                            onClick={detectCustomerGPS}
+                            className="text-xs font-mono text-secondary hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">my_location</span> Deteksi GPS
+                          </button>
+                        </div>
+                        <textarea
+                          value={newCustText}
+                          onChange={(e) => handleCustomerAddressInput(e.target.value)}
+                          placeholder="Masukkan jalan, no rumah, RT/RW, kelurahan atau koordinat..."
+                          rows={2}
+                          className="w-full bg-surface border border-outline-variant/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
+                        />
+                        <p className="text-[10px] font-mono text-on-surface-variant mt-1">💡 Bisa paste link Google Maps atau geser pin di peta</p>
+                      </div>
+
+                      {/* Map Location Picker */}
+                      <div className="border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+                        <div className="bg-surface-container px-3 py-2 border-b border-outline-variant/20 flex items-center justify-between text-xs font-mono">
+                          <span className="font-bold text-primary flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[16px] text-secondary">pin_drop</span>
+                            Peta Pin Lokasi (Geser/Klik untuk set lokasi rumah)
+                          </span>
+                          <span className="text-[11px] text-secondary font-bold">
+                            {newCustLat.toFixed(5)}, {newCustLng.toFixed(5)}
+                          </span>
+                        </div>
+                        <MapLocationPicker
+                          lat={newCustLat}
+                          lng={newCustLng}
+                          height={260}
+                          label="Lokasi Pengiriman"
+                          onLocationChange={(lat, lng) => {
+                            setNewCustLat(lat);
+                            setNewCustLng(lng);
+                          }}
+                        />
+                      </div>
+
+                      <div className="flex gap-3 pt-2">
+                        <button
+                          onClick={handleSaveNewCustomerAddress}
+                          className="flex-1 bg-secondary text-white font-mono text-xs font-bold px-6 py-3 rounded-xl hover:bg-secondary/90 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">save</span>
+                          Simpan Alamat Pengiriman
+                        </button>
+                        <button
+                          onClick={() => setShowCustAddForm(false)}
+                          className="px-6 py-3 border border-outline-variant/40 rounded-xl text-xs font-mono font-bold text-on-surface hover:bg-surface-container transition-all"
+                        >
+                          Batal
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Customer Saved Addresses List */}
+                  {customerAddresses.length === 0 && !showCustAddForm ? (
+                    <div className="py-12 text-center text-on-surface-variant font-mono text-sm">
+                      <span className="material-symbols-outlined text-4xl block mb-2 opacity-30">location_off</span>
+                      Belum ada alamat tersimpan. Klik "Tambah Alamat" untuk mulai.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {customerAddresses.map((addr) => (
+                        <div key={addr.id} className="bg-surface-container border border-outline-variant/30 rounded-2xl p-5 hover:border-secondary/40 transition-all flex flex-col justify-between">
+                          <div>
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <span className="material-symbols-outlined text-secondary text-[20px]">home</span>
+                                <h4 className="font-display font-bold text-sm text-primary">{addr.label}</h4>
+                                {addr.is_default && (
+                                  <span className="bg-secondary/10 text-secondary text-[10px] font-mono px-2 py-0.5 rounded-full font-bold">
+                                    Utama
+                                  </span>
+                                )}
+                              </div>
+                              <button
+                                onClick={() => handleDeleteCustomerAddress(addr.id)}
+                                className="text-error hover:bg-red-50 p-1.5 rounded-lg transition-all"
+                                title="Hapus alamat"
+                              >
+                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                              </button>
+                            </div>
+                            <p className="text-xs text-on-surface-variant leading-relaxed mb-3">{addr.address}</p>
+                          </div>
+                          <div className="pt-2 border-t border-outline-variant/20 flex items-center justify-between">
+                            <div className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant">
+                              <span className="material-symbols-outlined text-[14px]">pin_drop</span>
+                              <span>{addr.lat.toFixed(4)}, {addr.lng.toFixed(4)}</span>
+                            </div>
+                            <a
+                              href={`https://www.google.com/maps?q=${addr.lat},${addr.lng}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs font-mono text-secondary hover:underline font-bold"
+                            >
+                              <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                              Buka Maps
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </section>

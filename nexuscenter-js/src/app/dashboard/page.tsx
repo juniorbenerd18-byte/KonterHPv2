@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DataService } from '@/lib/store';
-import { Sale, ServiceOrder, Product } from '@/types/database';
+import { Sale, ServiceOrder, Product, StoreLocation } from '@/types/database';
 
 export default function DashboardPage() {
     const router = useRouter();
     const [sales, setSales] = useState<Sale[]>([]);
     const [services, setServices] = useState<ServiceOrder[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
+    const [storeLoc, setStoreLoc] = useState<StoreLocation | null>(null);
     const [currentRole, setCurrentRole] = useState('admin');
 
     useEffect(() => {
@@ -24,6 +25,7 @@ export default function DashboardPage() {
             return;
         }
         setCurrentRole(r);
+        setStoreLoc(DataService.getStoreLocation());
         Promise.all([
             DataService.getSales(),
             DataService.getServices(),
@@ -182,6 +184,56 @@ export default function DashboardPage() {
                 </div>
                 <span className="material-symbols-outlined text-secondary text-[22px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </Link>
+
+            {/* Store Location Card (Tempat Konter Khusus Admin & Kasir) */}
+            {storeLoc && (
+                <div className="mb-6 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 md:p-6 shadow-card flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
+                    <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center flex-shrink-0 border border-secondary/20">
+                            <span className="material-symbols-outlined text-2xl icon-filled">storefront</span>
+                        </div>
+                        <div className="space-y-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <h3 className="font-display font-bold text-base text-on-surface">
+                                    {storeLoc.name}
+                                </h3>
+                                <span className="bg-secondary/15 text-secondary text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border border-secondary/25">
+                                    Plus Code: {storeLoc.plus_code}
+                                </span>
+                                <span className="bg-green-100 text-green-800 text-[11px] font-mono font-bold px-2 py-0.5 rounded-full">
+                                    ● Buka {storeLoc.opening_hours}
+                                </span>
+                            </div>
+                            <p className="text-xs text-on-surface-variant max-w-2xl leading-relaxed">
+                                {storeLoc.address}
+                            </p>
+                            <p className="text-[11px] font-mono text-on-surface-variant flex items-center gap-4 pt-1 flex-wrap">
+                                <span>📍 Lat: {storeLoc.latitude.toFixed(5)}, Lng: {storeLoc.longitude.toFixed(5)}</span>
+                                <span>🚚 Bebas Ongkir: ≤ {storeLoc.free_delivery_km} km</span>
+                                <span>📞 Kontak: {storeLoc.phone}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0 w-full md:w-auto">
+                        <a
+                            href={`https://www.google.com/maps?q=${storeLoc.latitude},${storeLoc.longitude}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 bg-surface-container-low hover:bg-surface-container text-on-surface text-xs font-mono font-bold rounded-xl border border-outline-variant/30 transition-all"
+                        >
+                            <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                            Google Maps
+                        </a>
+                        <Link
+                            href="/profile?tab=addresses"
+                            className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 bg-secondary text-white text-xs font-mono font-bold rounded-xl hover:bg-secondary/90 transition-all shadow-sm"
+                        >
+                            <span className="material-symbols-outlined text-[16px]">edit_location_alt</span>
+                            Kelola Lokasi Konter
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             {/* Tables Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

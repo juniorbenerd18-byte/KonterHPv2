@@ -41,6 +41,27 @@ function CountdownTimer() {
   );
 }
 
+function resolveProductImage(image?: string | null, name?: string): string {
+  if (image && image.trim()) {
+    const trimmed = image.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:') || trimmed.startsWith('/')) {
+      return trimmed;
+    }
+    return `/storage/products/${trimmed}`;
+  }
+  // Smart fallback for known models if image is missing from database
+  if (name) {
+    const lower = name.toLowerCase();
+    if (lower.includes('s24') || (lower.includes('samsung') && lower.includes('ultra'))) {
+      return '/storage/products/b68BRBuwTQTBjrTFjiD9ZQn5vGSgqCebxAD1ylMX.jpg';
+    }
+    if (lower.includes('iphone 15') || (lower.includes('apple') && lower.includes('pro'))) {
+      return '/storage/products/jZ9NEPyB669ZtZ1DYW4Wve88AG7jPxl4H6lmGXNi.jpg';
+    }
+  }
+  return '';
+}
+
 export default function PromosPage() {
   const [flashSales, setFlashSales] = useState<Product[]>([]);
 
@@ -90,22 +111,36 @@ export default function PromosPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {flashSales.map((product) => {
               const origPrice = Math.round((product.price || 0) * 1.15);
+              const imgUrl = resolveProductImage(product.image, product.name);
               return (
                 <div key={product.id} className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 relative group transition-all duration-300 hover:border-secondary hover:shadow-lg flex flex-col justify-between">
                   <div className="absolute top-4 left-4 bg-error text-white font-mono text-xs font-bold px-2.5 py-1 rounded-full z-10 shadow-sm">PROMO</div>
                   <div className="h-48 relative mb-4 flex items-center justify-center bg-surface-container-low rounded-xl overflow-hidden">
-                    {product.image ? (
-                      <img src={`/storage/products/${product.image}`} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
-                    ) : (
-                      <span className="text-6xl group-hover:scale-110 transition-transform duration-300">{product.icon || '📱'}</span>
-                    )}
+                    {imgUrl ? (
+                      <img 
+                        src={imgUrl} 
+                        alt={product.name} 
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          target.style.display = 'none';
+                          const fallback = target.parentElement?.querySelector('.fallback-icon');
+                          if (fallback) {
+                            (fallback as HTMLElement).style.display = 'flex';
+                          }
+                        }}
+                      />
+                    ) : null}
+                    <span className={`fallback-icon text-6xl group-hover:scale-110 transition-transform duration-300 ${imgUrl ? 'hidden' : 'flex'} items-center justify-center`}>
+                      {product.icon || '📱'}
+                    </span>
                   </div>
                   <div>
                     <span className="text-xs font-mono text-on-surface-variant uppercase">{product.brand || 'TECHCELL'}</span>
                     <h3 className="font-display font-bold text-base text-on-surface mb-2 line-clamp-1">{product.name}</h3>
                     <p className="font-mono text-xs text-outline line-through mb-1">Rp {origPrice.toLocaleString('id-ID')}</p>
                     <p className="font-mono font-bold text-lg text-secondary mb-4">Rp {(product.price || 0).toLocaleString('id-ID')}</p>
-                    <Link href="/produk" className="block text-center w-full bg-secondary text-white font-mono text-xs font-bold py-2.5 rounded-lg hover:bg-secondary/90 transition-colors shadow-sm">
+                    <Link href={`/produk?highlight=${product.id}`} className="block text-center w-full bg-secondary text-white font-mono text-xs font-bold py-2.5 rounded-lg hover:bg-secondary/90 transition-colors shadow-sm">
                       Beli Sekarang
                     </Link>
                   </div>

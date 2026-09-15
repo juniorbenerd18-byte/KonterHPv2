@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { CartItem, getCart, saveCart, setSelectedCheckoutItems } from '@/lib/cart';
+import { CartItem, getCart, saveCart, setSelectedCheckoutItems, setCheckoutPrefs } from '@/lib/cart';
 import { DataService } from '@/lib/store';
+import { STORE_LAT, STORE_LNG, FREE_DELIVERY_KM, haversineKm, parseMapCoords } from '@/lib/geo';
 
 function fmt(n: number) {
     if (isNaN(n) || n < 0) return 'Rp 0';
@@ -20,9 +21,6 @@ export default function CartPage() {
     const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
     const [isLoaded, setIsLoaded] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    const STORE_LAT = -7.588800;
-    const STORE_LNG = 110.748300;
 
     useEffect(() => {
         setIsLoggedIn(DataService.isLoggedIn());
@@ -91,20 +89,18 @@ export default function CartPage() {
 
         setDistanceResult({ text: '📡 Menghitung jarak dari konter...', type: 'loading' });
 
-        const coordMatch = addr.match(/@?(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/) || addr.match(/q=(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
-        if (coordMatch) {
-            const lat = parseFloat(coordMatch[1]);
-            const lng = parseFloat(coordMatch[2]);
-            calcHaversine(lat, lng);
+        const parsed = parseMapCoords(addr);
+        if (parsed) {
+            calcHaversine(parsed.lat, parsed.lng);
             return;
         }
 
         let searchQuery = addr;
-        if (!/sukoharjo|surakarta|solo|jawa\s+tengah|gawok/i.test(searchQuery)) {
-            searchQuery += ', Sukoharjo, Jawa Tengah';
+        if (!/sukoharjo|surakarta|solo|jawa\s+tengah|colomadu|karanganyar|baturan|kartasura/i.test(searchQuery)) {
+            searchQuery += ', Colomadu, Karanganyar, Jawa Tengah';
         }
 
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1&countrycodes=id&bounded=1&viewbox=110.40,-7.75,111.00,-7.40`)
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1&countrycodes=id`)
             .then(r => r.json())
             .then(data => {
                 if (data && data.length > 0) {
@@ -112,30 +108,25 @@ export default function CartPage() {
                     const lng = parseFloat(data[0].lon);
                     calcHaversine(lat, lng);
                 } else {
-                    setDistanceResult({ text: '✓ Alamat terdaftar. Estimasi jarak < 4km — Gratis Ongkir.', type: 'success' });
+                    setDistanceResult({ text: `✓ Alamat terdaftar. Estimasi jarak ≤ ${FREE_DELIVERY_KM}km — Gratis Ongkir.`, type: 'success' });
                 }
             })
             .catch(() => {
-                setDistanceResult({ text: '✓ Estimasi jarak < 4km — Gratis Ongkir.', type: 'success' });
+                setDistanceResult({ text: `✓ Estimasi jarak ≤ ${FREE_DELIVERY_KM}km — Gratis Ongkir.`, type: 'success' });
             });
     };
 
     const calcHaversine = (lat: number, lng: number) => {
-        const dLat = (lat - STORE_LAT) * Math.PI / 180;
-        const dLon = (lng - STORE_LNG) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(STORE_LAT * Math.PI / 180) * Math.cos(lat * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const distKm = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distKm = haversineKm(STORE_LAT, STORE_LNG, lat, lng);
 
-        if (distKm <= 4.0) {
+        if (distKm <= FREE_DELIVERY_KM) {
             setDistanceResult({
-                text: `✓ Jarak: ${distKm.toFixed(1)} km (≤ 4km). Selamat! Anda mendapatkan Gratis Ongkir.`,
+                text: `✓ Jarak ke Konter: ${distKm.toFixed(1)} km (≤ ${FREE_DELIVERY_KM}km). Selamat! Anda mendapatkan Gratis Ongkir.`,
                 type: 'success'
             });
         } else {
             setDistanceResult({
-                text: `⚠️ Jarak: ${distKm.toFixed(1)} km (> 4km). Melebihi batas gratis ongkir (${(distKm - 4.0).toFixed(1)} km).`,
+                text: `⚠️ Jarak ke Konter: ${distKm.toFixed(1)} km (> ${FREE_DELIVERY_KM}km). Melebihi batas gratis ongkir (${(distKm - FREE_DELIVERY_KM).toFixed(1)} km).`,
                 type: 'warning'
             });
         }
@@ -153,6 +144,11 @@ export default function CartPage() {
         }
         // Save only the selected items so checkout processes precisely what the user checked
         setSelectedCheckoutItems(selectedItems);
+        // Persist delivery preferences and address entered in cart to checkout
+        setCheckoutPrefs({
+            deliveryType: deliveryMethod,
+            address: deliveryMethod === 'delivery' && address.trim() ? address.trim() : undefined
+        });
         router.push('/checkout');
     };
 

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { DataService } from '@/lib/store';
 import { TRADE_IN_DB, scoreMatch, TradeInEntry, TradeInVariant } from '@/lib/tradeInDb';
 
-export default function TradeInBookingPage() {
+function TradeInBookingContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     
@@ -460,5 +460,13 @@ export default function TradeInBookingPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function TradeInBookingPage() {
+    return (
+        <Suspense fallback={<div className="max-w-[1440px] mx-auto px-4 py-24 text-center font-mono text-sm text-on-surface-variant">Memuat halaman tukar tambah...</div>}>
+            <TradeInBookingContent />
+        </Suspense>
     );
 }

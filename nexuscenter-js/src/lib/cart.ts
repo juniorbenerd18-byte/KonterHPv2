@@ -16,6 +16,16 @@ export interface CartItem {
 
 const STORAGE_KEY = 'nexus_cart';
 const CHECKOUT_KEY = 'nexus_checkout_cart';
+const CHECKOUT_PREFS_KEY = 'nexus_checkout_prefs';
+
+export type CheckoutDeliveryType = 'delivery' | 'pickup';
+
+export interface CheckoutPrefs {
+    deliveryType: CheckoutDeliveryType;
+    address?: string;
+    lat?: number;
+    lng?: number;
+}
 
 export function parsePrice(val: any): number {
     if (typeof val === 'number') {
@@ -132,11 +142,37 @@ export function setSelectedCheckoutItems(items: CartItem[]): void {
     } catch {}
 }
 
+export function setCheckoutPrefs(prefs: CheckoutPrefs): void {
+    if (typeof window === 'undefined') return;
+    try {
+        localStorage.setItem(CHECKOUT_PREFS_KEY, JSON.stringify(prefs));
+    } catch {}
+}
+
+export function getCheckoutPrefs(): CheckoutPrefs | null {
+    if (typeof window === 'undefined') return null;
+    try {
+        const stored = localStorage.getItem(CHECKOUT_PREFS_KEY);
+        if (!stored) return null;
+        const parsed = JSON.parse(stored);
+        if (parsed?.deliveryType === 'delivery' || parsed?.deliveryType === 'pickup') {
+            return {
+                deliveryType: parsed.deliveryType,
+                address: typeof parsed.address === 'string' ? parsed.address : undefined,
+                lat: typeof parsed.lat === 'number' ? parsed.lat : undefined,
+                lng: typeof parsed.lng === 'number' ? parsed.lng : undefined,
+            };
+        }
+    } catch {}
+    return null;
+}
+
 export function removeItemsFromCart(itemIdsToRemove: number[]): void {
     const current = getCart();
     const remaining = current.filter(it => !itemIdsToRemove.includes(it.id));
     saveCart(remaining);
     try {
         localStorage.removeItem(CHECKOUT_KEY);
+        localStorage.removeItem(CHECKOUT_PREFS_KEY);
     } catch {}
 }

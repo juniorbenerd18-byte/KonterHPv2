@@ -126,6 +126,8 @@ export interface UserProfile {
     email: string;
     phone?: string | null;
     address?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
     role: Role;
     is_active: boolean;
     avatar?: string | null;
@@ -154,4 +156,27 @@ export interface TradeIn {
     appointment_date?: string | null;
     created_at: string;
     updated_at?: string;
+}
+
+export interface StoreLocation {
+    name: string;
+    plus_code: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    phone: string;
+    opening_hours: string;
+    free_delivery_km: number;
+    notes?: string;
+    updated_at?: string;
+}
+
+export interface CustomerAddress {
+    id: number;
+    user_id?: string | number;
+    label: string;
+    address: string;
+    lat: number;
+    lng: number;
+    is_default?: boolean;
 }

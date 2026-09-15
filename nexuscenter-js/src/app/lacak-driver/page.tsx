@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'next/navigation';
+import { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { DataService } from '@/lib/store';
 import { DeliveryOrder } from '@/types/database';
+import { STORE_LAT, STORE_LNG, haversineKm } from '@/lib/geo';
 
-export default function DeliveryTrackPage() {
-    const params = useParams();
-    const code = params.code as string;
+function DeliveryTrackContent() {
+    const searchParams = useSearchParams();
+    const code = searchParams.get('code') || '';
+    const saleId = searchParams.get('sale_id') || '';
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [delivery, setDelivery] = useState<DeliveryOrder | null>(null);
     const [loading, setLoading] = useState(true);
@@ -24,11 +26,14 @@ export default function DeliveryTrackPage() {
         loadDelivery();
         const interval = setInterval(loadDelivery, 4000);
         return () => clearInterval(interval);
-    }, [code]);
+    }, [code, saleId]);
 
     const loadDelivery = async () => {
         const deliveries = await DataService.getDeliveries();
-        const found = deliveries.find(d => d.tracking_code === code || String(d.id) === code) || deliveries[0];
+        const found = deliveries.find(d => 
+            (code && (d.tracking_code.toLowerCase() === code.toLowerCase() || String(d.id) === code)) ||
+            (saleId && String(d.sale_id) === saleId)
+        ) || deliveries[0];
         setDelivery(found || null);
         setLoading(false);
 
@@ -40,13 +45,7 @@ export default function DeliveryTrackPage() {
     };
 
     const calcDistanceMeters = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-        const R = 6371000;
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return haversineKm(lat1, lon1, lat2, lon2) * 1000;
     };
 
     // Initialize & update Leaflet
@@ -56,10 +55,10 @@ export default function DeliveryTrackPage() {
         import('leaflet').then(L => {
             if (!mapContainerRef.current) return;
 
-            const cLat = del.courier_lat || -7.588800;
-            const cLng = del.courier_lng || 110.748300;
-            const dLat = del.customer_lat || -7.588800;
-            const dLng = del.customer_lng || 110.748300;
+            const cLat = del.courier_lat || STORE_LAT;
+            const cLng = del.courier_lng || STORE_LNG;
+            const dLat = del.customer_lat || STORE_LAT;
+            const dLng = del.customer_lng || STORE_LNG;
 
             if (!mapInstanceRef.current) {
                 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -283,3 +282,12 @@ export default function DeliveryTrackPage() {
         </div>
     );
 }
+
+export default function DeliveryTrackPage() {
+    return (
+        <Suspense fallback={<div className="max-w-[1440px] mx-auto px-4 py-24 text-center font-mono text-sm text-on-surface-variant">Memuat pelacakan kurir...</div>}>
+            <DeliveryTrackContent />
+        </Suspense>
+    );
+}
+

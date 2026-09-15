@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { DataService } from '@/lib/store';
 import { DeliveryOrder } from '@/types/database';
+import { STORE_LAT, STORE_LNG, haversineKm } from '@/lib/geo';
 
 export default function DeliveryTrackPage() {
     const params = useParams();
@@ -40,13 +41,7 @@ export default function DeliveryTrackPage() {
     };
 
     const calcDistanceMeters = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-        const R = 6371000;
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return haversineKm(lat1, lon1, lat2, lon2) * 1000;
     };
 
     // Initialize & update Leaflet
@@ -56,10 +51,10 @@ export default function DeliveryTrackPage() {
         import('leaflet').then(L => {
             if (!mapContainerRef.current) return;
 
-            const cLat = del.courier_lat || -7.588800;
-            const cLng = del.courier_lng || 110.748300;
-            const dLat = del.customer_lat || -7.588800;
-            const dLng = del.customer_lng || 110.748300;
+            const cLat = del.courier_lat || STORE_LAT;
+            const cLng = del.courier_lng || STORE_LNG;
+            const dLat = del.customer_lat || STORE_LAT;
+            const dLng = del.customer_lng || STORE_LNG;
 
             if (!mapInstanceRef.current) {
                 delete (L.Icon.Default.prototype as any)._getIconUrl;

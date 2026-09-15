@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { DataService } from '@/lib/store';
 import { DeliveryOrder } from '@/types/database';
+import { STORE_LAT, STORE_LNG } from '@/lib/geo';
 
 export default function CourierTaskPage() {
     const params = useParams();
@@ -48,8 +49,8 @@ export default function CourierTaskPage() {
         import('leaflet').then(L => {
             if (!mapContainerRef.current) return;
 
-            const dLat = selectedDelivery.customer_lat || -7.588800;
-            const dLng = selectedDelivery.customer_lng || 110.748300;
+            const dLat = selectedDelivery.customer_lat || STORE_LAT;
+            const dLng = selectedDelivery.customer_lng || STORE_LNG;
 
             if (mapInstanceRef.current) {
                 mapInstanceRef.current.remove();
@@ -235,7 +236,7 @@ export default function CourierTaskPage() {
                             <div className="space-y-2 pt-2">
                                 {/* Navigasi Google Maps */}
                                 <a
-                                    href={`https://www.google.com/maps/dir/?api=1&destination=${selectedDelivery.customer_lat || -7.588800},${selectedDelivery.customer_lng || 110.748300}&travelmode=driving`}
+                                    href={`https://www.google.com/maps/dir/?api=1&destination=${selectedDelivery.customer_lat || STORE_LAT},${selectedDelivery.customer_lng || STORE_LNG}&travelmode=driving`}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-mono font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs transition-all"

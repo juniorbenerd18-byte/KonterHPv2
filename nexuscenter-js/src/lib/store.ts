@@ -1,7 +1,8 @@
 'use client';
 
-import { Product, Sale, Service, Delivery, Notification, Role, UserProfile, TradeIn } from '@/types/database';
+import { Product, Sale, Service, Delivery, Notification, Role, UserProfile, TradeIn, StoreLocation, CustomerAddress } from '@/types/database';
 import { supabase, isSupabaseConfigured, INITIAL_PRODUCTS, INITIAL_SERVICES, INITIAL_DELIVERIES, INITIAL_SALES, INITIAL_NOTIFICATIONS } from './supabase';
+import { STORE_LAT, STORE_LNG } from './geo';
 
 const STORAGE_KEYS = {
     PRODUCTS: 'nexus_products',
@@ -14,7 +15,33 @@ const STORAGE_KEYS = {
     USERS: 'nexus_users',
     LOGIN_STATE: 'nexus_is_logged_in',
     CURRENT_USER: 'nexus_current_user',
+    STORE_LOCATION: 'nexus_store_location',
+    CUSTOMER_ADDRESSES: 'nexus_customer_saved_addresses',
 };
+
+export const INITIAL_STORE_LOCATION: StoreLocation = {
+    name: 'TECHCELL NexusCenter (Konter Pusat)',
+    plus_code: 'FQ2W+XGM',
+    address: 'FQ2W+XGM, Fajar Indah, Baturan, Kec. Colomadu, Kabupaten Karanganyar, Jawa Tengah 57171',
+    latitude: STORE_LAT,
+    longitude: STORE_LNG,
+    phone: '081234567890',
+    opening_hours: '08:00 - 21:00 WIB',
+    free_delivery_km: 4.0,
+    notes: 'Pusat operasional toko, pangkalan kurir, dan titik servis resmi.'
+};
+
+export const INITIAL_CUSTOMER_ADDRESSES: CustomerAddress[] = [
+    {
+        id: 1,
+        user_id: 3,
+        label: 'Rumah Utama',
+        address: 'Jl. Ahmad Yani No. 88, Kartasura, Sukoharjo',
+        lat: -7.5583,
+        lng: 110.7681,
+        is_default: true
+    }
+];
 
 const INITIAL_USERS: UserProfile[] = [
     {
@@ -23,6 +50,9 @@ const INITIAL_USERS: UserProfile[] = [
         email: 'admin@techcell.com',
         phone: '081234567890',
         role: 'admin',
+        address: 'Fajar Indah, Baturan, Kec. Colomadu, Kabupaten Karanganyar, Jawa Tengah 57171',
+        latitude: STORE_LAT,
+        longitude: STORE_LNG,
         is_active: true,
         created_at: '2026-01-01T08:00:00.000Z'
     },
@@ -32,6 +62,9 @@ const INITIAL_USERS: UserProfile[] = [
         email: 'kasir@techcell.com',
         phone: '085712345678',
         role: 'kasir',
+        address: 'Fajar Indah, Baturan, Kec. Colomadu, Kabupaten Karanganyar, Jawa Tengah 57171',
+        latitude: STORE_LAT,
+        longitude: STORE_LNG,
         is_active: true,
         created_at: '2026-02-15T10:30:00.000Z'
     },
@@ -41,6 +74,9 @@ const INITIAL_USERS: UserProfile[] = [
         email: 'budi@gmail.com',
         phone: '089876543210',
         role: 'pengguna',
+        address: 'Jl. Ahmad Yani No. 88, Kartasura, Sukoharjo',
+        latitude: -7.5583,
+        longitude: 110.7681,
         is_active: true,
         created_at: '2026-03-01T14:15:00.000Z'
     }
@@ -78,12 +114,95 @@ export const DataService = {
         return getLocal<boolean>(STORAGE_KEYS.LOGIN_STATE, false);
     },
 
+    getAllUsersSync(): UserProfile[] {
+        const users = getLocal<UserProfile[]>(STORAGE_KEYS.USERS, INITIAL_USERS);
+        let changed = false;
+        const updated = users.map(u => {
+            if (u.role === 'admin' || u.role === 'kasir') {
+                if (!u.address || u.address.includes('Gawok') || !u.latitude || Math.abs(u.latitude - STORE_LAT) > 0.001) {
+                    changed = true;
+                    return {
+                        ...u,
+                        address: 'Fajar Indah, Baturan, Kec. Colomadu, Kabupaten Karanganyar, Jawa Tengah 57171',
+                        latitude: STORE_LAT,
+                        longitude: STORE_LNG
+                    };
+                }
+            } else if (u.role === 'pengguna') {
+                if (!u.address || u.address.includes('Gawok') || !u.latitude) {
+                    changed = true;
+                    return {
+                        ...u,
+                        address: 'Jl. Ahmad Yani No. 88, Kartasura, Sukoharjo',
+                        latitude: -7.5583,
+                        longitude: 110.7681
+                    };
+                }
+            }
+            return u;
+        });
+        if (changed) {
+            setLocal(STORAGE_KEYS.USERS, updated);
+            return updated;
+        }
+        return users;
+    },
+
     getCurrentUser(): UserProfile | null {
-        return getLocal<UserProfile | null>(STORAGE_KEYS.CURRENT_USER, null);
+        let user = getLocal<UserProfile | null>(STORAGE_KEYS.CURRENT_USER, null);
+        if (!user && typeof window !== 'undefined') {
+            try {
+                const legacy = localStorage.getItem('nexus_user_profile');
+                if (legacy) user = JSON.parse(legacy);
+            } catch {}
+        }
+        if (!user) return null;
+
+        // Auto-heal / sync location if user was saved with old outdated address
+        if ((user.role === 'admin' || user.role === 'kasir') && (!user.address || user.address.includes('Gawok') || !user.latitude || Math.abs(user.latitude - STORE_LAT) > 0.001)) {
+            user = {
+                ...user,
+                address: 'Fajar Indah, Baturan, Kec. Colomadu, Kabupaten Karanganyar, Jawa Tengah 57171',
+                latitude: STORE_LAT,
+                longitude: STORE_LNG
+            };
+            setLocal(STORAGE_KEYS.CURRENT_USER, user);
+        } else if (user.role === 'pengguna' && (!user.address || user.address.includes('Gawok') || !user.latitude)) {
+            user = {
+                ...user,
+                address: 'Jl. Ahmad Yani No. 88, Kartasura, Sukoharjo',
+                latitude: -7.5583,
+                longitude: 110.7681
+            };
+            setLocal(STORAGE_KEYS.CURRENT_USER, user);
+        }
+        return user;
+    },
+
+    updateCurrentUser(updates: Partial<UserProfile>): UserProfile | null {
+        const current = this.getCurrentUser();
+        if (!current) return null;
+        const updated = { ...current, ...updates };
+        setLocal(STORAGE_KEYS.CURRENT_USER, updated);
+        if (typeof window !== 'undefined') {
+            try {
+                localStorage.setItem('nexus_user_profile', JSON.stringify(updated));
+            } catch {}
+        }
+        const users = this.getAllUsersSync();
+        const idx = users.findIndex(u => u.id === current.id || u.email === current.email);
+        if (idx >= 0) {
+            users[idx] = { ...users[idx], ...updates };
+            setLocal(STORAGE_KEYS.USERS, users);
+        }
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('storage'));
+        }
+        return updated;
     },
 
     login(email: string, password: string): { success: boolean; user?: UserProfile; error?: string } {
-        const users = getLocal<UserProfile[]>(STORAGE_KEYS.USERS, INITIAL_USERS);
+        const users = this.getAllUsersSync();
         const user = users.find(u => u.email === email && u.is_active);
         if (!user) {
             return { success: false, error: 'Email tidak ditemukan atau akun tidak aktif.' };
@@ -100,6 +219,12 @@ export const DataService = {
         setLocal(STORAGE_KEYS.LOGIN_STATE, true);
         setLocal(STORAGE_KEYS.CURRENT_USER, user);
         setLocal(STORAGE_KEYS.ROLE, user.role);
+        if (typeof window !== 'undefined') {
+            try {
+                localStorage.setItem('nexus_user_profile', JSON.stringify(user));
+            } catch {}
+            window.dispatchEvent(new Event('storage'));
+        }
         return { success: true, user };
     },
 
@@ -108,6 +233,118 @@ export const DataService = {
         localStorage.removeItem(STORAGE_KEYS.LOGIN_STATE);
         localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
         localStorage.removeItem(STORAGE_KEYS.ROLE);
+        localStorage.removeItem('nexus_user_profile');
+        window.dispatchEvent(new Event('storage'));
+    },
+
+    getStoreLocation(): StoreLocation {
+        const loc = getLocal<StoreLocation>(STORAGE_KEYS.STORE_LOCATION, INITIAL_STORE_LOCATION);
+        // Auto heal if coords or address are outdated
+        if (!loc.latitude || Math.abs(loc.latitude - STORE_LAT) > 0.001 || !loc.address || !loc.address.includes('Baturan')) {
+            const healed: StoreLocation = {
+                ...INITIAL_STORE_LOCATION,
+                ...loc,
+                latitude: STORE_LAT,
+                longitude: STORE_LNG,
+                address: INITIAL_STORE_LOCATION.address
+            };
+            setLocal(STORAGE_KEYS.STORE_LOCATION, healed);
+            return healed;
+        }
+        return loc;
+    },
+
+    updateStoreLocation(updates: Partial<StoreLocation>): StoreLocation {
+        const current = this.getStoreLocation();
+        const updated: StoreLocation = {
+            ...current,
+            ...updates,
+            updated_at: new Date().toISOString()
+        };
+        setLocal(STORAGE_KEYS.STORE_LOCATION, updated);
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('storage'));
+        }
+        return updated;
+    },
+
+    getCustomerAddresses(userId?: string | number): CustomerAddress[] {
+        const key = userId ? `${STORAGE_KEYS.CUSTOMER_ADDRESSES}_${userId}` : STORAGE_KEYS.CUSTOMER_ADDRESSES;
+        let list = getLocal<CustomerAddress[]>(key, []);
+
+        // Fallback / migration from legacy nexus_saved_addresses
+        if (list.length === 0 && typeof window !== 'undefined') {
+            try {
+                const legacy = localStorage.getItem('nexus_saved_addresses');
+                if (legacy) {
+                    const parsed = JSON.parse(legacy);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        list = parsed.map((a: any, idx: number) => ({
+                            id: a.id || (Date.now() + idx),
+                            user_id: userId,
+                            label: a.label || 'Alamat',
+                            address: a.address || '',
+                            lat: a.lat || -7.5583,
+                            lng: a.lng || 110.7681,
+                            is_default: idx === 0
+                        }));
+                        setLocal(key, list);
+                    }
+                }
+            } catch {}
+        }
+
+        // If still empty and it's customer Budi (id 3 or default), seed default
+        if (list.length === 0 && (!userId || String(userId) === '3')) {
+            list = [...INITIAL_CUSTOMER_ADDRESSES];
+            setLocal(key, list);
+        }
+        return list;
+    },
+
+    saveCustomerAddress(address: Omit<CustomerAddress, 'id'> & { id?: number }, userId?: string | number): CustomerAddress[] {
+        const key = userId ? `${STORAGE_KEYS.CUSTOMER_ADDRESSES}_${userId}` : STORAGE_KEYS.CUSTOMER_ADDRESSES;
+        const list = this.getCustomerAddresses(userId);
+        const targetId = address.id || Date.now();
+        const newEntry: CustomerAddress = {
+            id: targetId,
+            user_id: userId,
+            label: address.label,
+            address: address.address,
+            lat: address.lat,
+            lng: address.lng,
+            is_default: address.is_default ?? false
+        };
+        const idx = list.findIndex(a => a.id === targetId);
+        let updated: CustomerAddress[];
+        if (idx >= 0) {
+            updated = list.map((a, i) => i === idx ? newEntry : a);
+        } else {
+            updated = [...list, newEntry];
+        }
+        setLocal(key, updated);
+        // Also mirror to legacy for compatibility
+        if (typeof window !== 'undefined') {
+            try {
+                localStorage.setItem('nexus_saved_addresses', JSON.stringify(updated));
+            } catch {}
+            window.dispatchEvent(new Event('storage'));
+        }
+        return updated;
+    },
+
+    deleteCustomerAddress(id: number, userId?: string | number): CustomerAddress[] {
+        const key = userId ? `${STORAGE_KEYS.CUSTOMER_ADDRESSES}_${userId}` : STORAGE_KEYS.CUSTOMER_ADDRESSES;
+        const list = this.getCustomerAddresses(userId);
+        const updated = list.filter(a => a.id !== id);
+        setLocal(key, updated);
+        if (typeof window !== 'undefined') {
+            try {
+                localStorage.setItem('nexus_saved_addresses', JSON.stringify(updated));
+            } catch {}
+            window.dispatchEvent(new Event('storage'));
+        }
+        return updated;
     },
 
     async getProducts(): Promise<Product[]> {
@@ -115,7 +352,23 @@ export const DataService = {
             const { data, error } = await supabase.from('products').select('*').order('id');
             if (!error && data && data.length > 0) return data as Product[];
         }
-        return getLocal<Product[]>(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
+        const products = getLocal<Product[]>(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
+        let updated = false;
+        // Auto-heal: Ensure all initial products & official images are present in localStorage
+        for (const initP of INITIAL_PRODUCTS) {
+            const existing = products.find(p => p.id === initP.id || p.name.toLowerCase() === initP.name.toLowerCase());
+            if (!existing) {
+                products.push(initP);
+                updated = true;
+            } else if (!existing.image && initP.image) {
+                existing.image = initP.image;
+                updated = true;
+            }
+        }
+        if (updated) {
+            setLocal(STORAGE_KEYS.PRODUCTS, products);
+        }
+        return products;
     },
 
     async saveProduct(product: Partial<Product>): Promise<Product> {
@@ -214,6 +467,8 @@ export const DataService = {
                     customer_name: newSale.customer_name,
                     customer_phone: newSale.customer_phone,
                     customer_address: newSale.customer_address,
+                    customer_lat: newSale.customer_lat,
+                    customer_lng: newSale.customer_lng,
                     subtotal: newSale.subtotal,
                     discount: newSale.discount,
                     total: newSale.total,
@@ -254,17 +509,28 @@ export const DataService = {
         setLocal(STORAGE_KEYS.PRODUCTS, products);
 
         if (saleData.delivery_type === 'delivery') {
-            await this.createDelivery({
-                sale_id: newSale.id,
-                courier_name: 'Kurir Express TECHCELL',
-                courier_phone: '081234567890',
-                customer_name: newSale.customer_name || 'Pelanggan',
-                customer_phone: newSale.customer_phone || '08xxxxxxxx',
-                customer_address: newSale.customer_address || 'Alamat Toko',
-                customer_lat: newSale.customer_lat ?? -7.5678,
-                customer_lng: newSale.customer_lng ?? 110.8250,
-                notes: 'Pengantaran Pesanan Invoice #' + newSale.invoice_number
-            });
+            const allDelivs = getLocal<Delivery[]>(STORAGE_KEYS.DELIVERIES, INITIAL_DELIVERIES);
+            const exists = allDelivs.some(d => d.sale_id === newSale.id);
+            if (!exists) {
+                const trackingCode = `TRK-${Math.floor(100000 + Math.random() * 900000)}`;
+                const pin = String(Math.floor(1000 + Math.random() * 9000));
+                await this.createDelivery({
+                    sale_id: newSale.id,
+                    tracking_code: trackingCode,
+                    delivery_pin: pin,
+                    courier_name: 'Mas Budi Kurir',
+                    courier_phone: '081234567890',
+                    customer_name: newSale.customer_name || 'Pelanggan',
+                    customer_phone: newSale.customer_phone || '08xxxxxxxx',
+                    customer_address: newSale.customer_address || 'Alamat Toko',
+                    customer_lat: newSale.customer_lat ?? STORE_LAT,
+                    customer_lng: newSale.customer_lng ?? STORE_LNG,
+                    courier_lat: STORE_LAT,
+                    courier_lng: STORE_LNG,
+                    status: 'pending',
+                    notes: 'Pengantaran Pesanan Invoice #' + newSale.invoice_number
+                });
+            }
         }
 
         return newSale;
@@ -510,7 +776,7 @@ export const DataService = {
     },
 
     async getUsers(): Promise<UserProfile[]> {
-        return getLocal<UserProfile[]>(STORAGE_KEYS.USERS, INITIAL_USERS);
+        return this.getAllUsersSync();
     },
 
     async createUser(userData: any): Promise<UserProfile> {

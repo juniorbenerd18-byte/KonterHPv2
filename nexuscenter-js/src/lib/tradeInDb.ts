@@ -516,6 +516,23 @@ export const TRADE_IN_DB: TradeInEntry[] = [
     ],
   },
   {
+    keywords: ['poco f6 pro', 'f6 pro', 'poco f6 pro 5g'],
+    name: 'POCO F6 Pro', brand: 'Xiaomi',
+    variants: [
+      { storage: '256GB', min: 4_500_000, max: 5_500_000 },
+      { storage: '512GB', min: 5_200_000, max: 6_200_000 },
+      { storage: '1TB',   min: 6_000_000, max: 7_200_000 },
+    ],
+  },
+  {
+    keywords: ['poco f6', 'f6', 'poco f6 5g'],
+    name: 'POCO F6', brand: 'Xiaomi',
+    variants: [
+      { storage: '256GB', min: 3_800_000, max: 4_600_000 },
+      { storage: '512GB', min: 4_300_000, max: 5_200_000 },
+    ],
+  },
+  {
     keywords: ['poco f5 pro', 'f5 pro'],
     name: 'POCO F5 Pro', brand: 'Xiaomi',
     variants: [
@@ -529,6 +546,78 @@ export const TRADE_IN_DB: TradeInEntry[] = [
     variants: [
       { storage: '256GB', min: 2_600_000, max: 3_200_000 },
       { storage: '512GB', min: 3_000_000, max: 3_800_000 },
+    ],
+  },
+  {
+    keywords: ['poco f4 gt', 'f4 gt'],
+    name: 'POCO F4 GT', brand: 'Xiaomi',
+    variants: [
+      { storage: '128GB', min: 2_800_000, max: 3_500_000 },
+      { storage: '256GB', min: 3_300_000, max: 4_000_000 },
+    ],
+  },
+  {
+    keywords: ['poco f4', 'f4'],
+    name: 'POCO F4', brand: 'Xiaomi',
+    variants: [
+      { storage: '128GB', min: 2_100_000, max: 2_700_000 },
+      { storage: '256GB', min: 2_400_000, max: 3_100_000 },
+    ],
+  },
+  {
+    keywords: ['poco x5', 'x5', 'poco x5 5g'],
+    name: 'POCO X5 5G', brand: 'Xiaomi',
+    variants: [
+      { storage: '128GB', min: 1_500_000, max: 2_000_000 },
+      { storage: '256GB', min: 1_800_000, max: 2_300_000 },
+    ],
+  },
+  {
+    keywords: ['poco m6 pro', 'm6 pro'],
+    name: 'POCO M6 Pro', brand: 'Xiaomi',
+    variants: [
+      { storage: '256GB', min: 1_800_000, max: 2_300_000 },
+      { storage: '512GB', min: 2_100_000, max: 2_700_000 },
+    ],
+  },
+  {
+    keywords: ['poco m6', 'm6'],
+    name: 'POCO M6', brand: 'Xiaomi',
+    variants: [
+      { storage: '128GB', min: 1_300_000, max: 1_700_000 },
+      { storage: '256GB', min: 1_500_000, max: 1_900_000 },
+    ],
+  },
+  {
+    keywords: ['poco m5s', 'm5s'],
+    name: 'POCO M5s', brand: 'Xiaomi',
+    variants: [
+      { storage: '64GB',  min: 1_000_000, max: 1_300_000 },
+      { storage: '128GB', min: 1_200_000, max: 1_500_000 },
+    ],
+  },
+  {
+    keywords: ['poco m5', 'm5'],
+    name: 'POCO M5', brand: 'Xiaomi',
+    variants: [
+      { storage: '64GB',  min: 900_000, max: 1_200_000 },
+      { storage: '128GB', min: 1_100_000, max: 1_400_000 },
+    ],
+  },
+  {
+    keywords: ['poco c75', 'c75'],
+    name: 'POCO C75', brand: 'Xiaomi',
+    variants: [
+      { storage: '128GB', min: 1_000_000, max: 1_300_000 },
+      { storage: '256GB', min: 1_200_000, max: 1_500_000 },
+    ],
+  },
+  {
+    keywords: ['poco c65', 'c65'],
+    name: 'POCO C65', brand: 'Xiaomi',
+    variants: [
+      { storage: '128GB', min: 900_000, max: 1_200_000 },
+      { storage: '256GB', min: 1_100_000, max: 1_400_000 },
     ],
   },
 
@@ -732,36 +821,326 @@ export const TRADE_IN_DB: TradeInEntry[] = [
       { storage: '256GB', min: 1_200_000, max: 1_600_000 },
     ],
   },
+
+  // ─── INFINIX ─────────────────────────────────────────────────────────────
+  // ── HOT 50 SERIES (GEN 50 TERBARU) ──
+  {
+    keywords: ['infinix hot 50 pro+', 'hot 50 pro+', 'hot 50 pro plus', 'infinix hot 50 pro plus', 'hot 50+'],
+    name: 'Infinix Hot 50 Pro+', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 2_000_000, max: 2_500_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 50 pro', 'hot 50 pro'],
+    name: 'Infinix Hot 50 Pro', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 1_600_000, max: 2_000_000 },
+      { storage: '256GB', min: 1_800_000, max: 2_300_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 50 5g', 'hot 50 5g', 'infinix hot 50'],
+    name: 'Infinix Hot 50 5G', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 1_500_000, max: 1_900_000 },
+      { storage: '256GB', min: 1_700_000, max: 2_100_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 50', 'hot 50', 'hot 50 4g'],
+    name: 'Infinix Hot 50', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 1_300_000, max: 1_700_000 },
+      { storage: '256GB', min: 1_500_000, max: 1_900_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 50i', 'hot 50i'],
+    name: 'Infinix Hot 50i', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 1_000_000, max: 1_350_000 },
+      { storage: '256GB', min: 1_200_000, max: 1_550_000 },
+    ],
+  },
+
+  // ── NOTE 50 & 40 SERIES ──
+  {
+    keywords: ['infinix note 50 pro', 'note 50 pro', 'infinix note 50 pro 5g', 'note 50'],
+    name: 'Infinix Note 50 Pro', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 2_600_000, max: 3_300_000 },
+      { storage: '512GB', min: 3_000_000, max: 3_800_000 },
+    ],
+  },
+  {
+    keywords: ['infinix note 50', 'note 50'],
+    name: 'Infinix Note 50', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 2_100_000, max: 2_700_000 },
+    ],
+  },
+  {
+    keywords: ['infinix note 40 pro+', 'note 40 pro+', 'note 40 pro plus', 'infinix note 40 pro plus', 'infinix note 40 pro+ 5g'],
+    name: 'Infinix Note 40 Pro+ 5G', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 2_500_000, max: 3_200_000 },
+    ],
+  },
+  {
+    keywords: ['infinix note 40 pro', 'note 40 pro', 'infinix note 40 pro 5g'],
+    name: 'Infinix Note 40 Pro', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 2_100_000, max: 2_700_000 },
+      { storage: '512GB', min: 2_500_000, max: 3_100_000 },
+    ],
+  },
+  {
+    keywords: ['infinix note 40s', 'note 40s'],
+    name: 'Infinix Note 40s', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 1_800_000, max: 2_300_000 },
+    ],
+  },
+  {
+    keywords: ['infinix note 40', 'note 40'],
+    name: 'Infinix Note 40', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 1_600_000, max: 2_100_000 },
+    ],
+  },
+  {
+    keywords: ['infinix note 30 pro', 'note 30 pro'],
+    name: 'Infinix Note 30 Pro', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 1_600_000, max: 2_100_000 },
+    ],
+  },
+  {
+    keywords: ['infinix note 30', 'note 30'],
+    name: 'Infinix Note 30', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 1_200_000, max: 1_600_000 },
+      { storage: '256GB', min: 1_400_000, max: 1_800_000 },
+    ],
+  },
+
+  // ── ZERO & GT SERIES ──
+  {
+    keywords: ['infinix zero 40 5g', 'zero 40 5g', 'infinix zero 40', 'zero 40'],
+    name: 'Infinix Zero 40 5G', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 3_300_000, max: 4_200_000 },
+      { storage: '512GB', min: 3_800_000, max: 4_800_000 },
+    ],
+  },
+  {
+    keywords: ['infinix zero 40', 'zero 40 4g', 'infinix zero 40 4g'],
+    name: 'Infinix Zero 40', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 2_700_000, max: 3_500_000 },
+    ],
+  },
+  {
+    keywords: ['infinix zero 30 5g', 'zero 30 5g', 'infinix zero 30', 'zero 30'],
+    name: 'Infinix Zero 30', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 2_200_000, max: 2_800_000 },
+    ],
+  },
+  {
+    keywords: ['infinix gt 20 pro', 'gt 20 pro', 'infinix gt 20 pro 5g'],
+    name: 'Infinix GT 20 Pro', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 2_600_000, max: 3_300_000 },
+    ],
+  },
+  {
+    keywords: ['infinix gt 10 pro', 'gt 10 pro'],
+    name: 'Infinix GT 10 Pro', brand: 'Infinix',
+    variants: [
+      { storage: '256GB', min: 1_900_000, max: 2_500_000 },
+    ],
+  },
+
+  // ── HOT 40 & 30 & 20 SERIES ──
+  {
+    keywords: ['infinix hot 40 pro', 'hot 40 pro'],
+    name: 'Infinix Hot 40 Pro', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 1_100_000, max: 1_500_000 },
+      { storage: '256GB', min: 1_300_000, max: 1_700_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 40i', 'hot 40i'],
+    name: 'Infinix Hot 40i', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 900_000, max: 1_200_000 },
+      { storage: '256GB', min: 1_100_000, max: 1_400_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 30', 'hot 30'],
+    name: 'Infinix Hot 30', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 800_000, max: 1_100_000 },
+      { storage: '256GB', min: 1_000_000, max: 1_300_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 30i', 'hot 30i'],
+    name: 'Infinix Hot 30i', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 700_000, max: 1_000_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 30 play', 'hot 30 play'],
+    name: 'Infinix Hot 30 Play', brand: 'Infinix',
+    variants: [
+      { storage: '64GB',  min: 650_000, max: 900_000 },
+      { storage: '128GB', min: 750_000, max: 1_050_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 20s', 'hot 20s'],
+    name: 'Infinix Hot 20s', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 700_000, max: 1_000_000 },
+    ],
+  },
+  {
+    keywords: ['infinix hot 20 5g', 'hot 20 5g'],
+    name: 'Infinix Hot 20 5G', brand: 'Infinix',
+    variants: [
+      { storage: '128GB', min: 800_000, max: 1_100_000 },
+    ],
+  },
+
+  // ── SMART SERIES ──
+  {
+    keywords: ['infinix smart 9', 'smart 9'],
+    name: 'Infinix Smart 9', brand: 'Infinix',
+    variants: [
+      { storage: '64GB',  min: 700_000, max: 950_000 },
+      { storage: '128GB', min: 850_000, max: 1_150_000 },
+    ],
+  },
+  {
+    keywords: ['infinix smart 8', 'smart 8'],
+    name: 'Infinix Smart 8', brand: 'Infinix',
+    variants: [
+      { storage: '64GB',  min: 600_000, max: 850_000 },
+      { storage: '128GB', min: 750_000, max: 1_000_000 },
+    ],
+  },
 ];
 
 // Brands yang dikenal untuk brand-level fallback
-export const KNOWN_BRANDS = ['apple', 'iphone', 'samsung', 'galaxy', 'xiaomi', 'redmi', 'poco', 'oppo', 'reno', 'vivo', 'realme', 'huawei', 'honor'];
+export const KNOWN_BRANDS = ['apple', 'iphone', 'samsung', 'galaxy', 'xiaomi', 'redmi', 'poco', 'oppo', 'reno', 'vivo', 'realme', 'infinix', 'huawei', 'honor'];
 
 /**
- * Token-based matching yang lebih akurat.
- * Menghindari false positive seperti "iphone 1" → "iPhone 15 Pro Max"
+ * Token-based matching yang cerdas & adaptif untuk HP Trade-In database.
+ * Mendukung:
+ * - Pencarian nama lengkap: "Samsung Galaxy S24 Ultra", "iPhone 15 Pro Max", "Infinix Note 40 Pro"
+ * - Pencarian parsial/prefix: "samsung ga", "ip 15", "infinix note", "infinix"
+ * - Pencarian brand umum: "galaxy", "samsung", "infinix", "iphone"
+ * - Toleransi terhadap token noise: "5g", "4g", "hp", "resmi", kapasitas "256gb"
  */
 export function scoreMatch(query: string, entry: TradeInEntry): number {
-  const q = query.toLowerCase().trim();
-  const qTokens = q.split(/[\s\-]+/).filter(t => t.length >= 2);
+  if (!query || query.trim().length < 2) return 0;
+
+  // 1. Bersihkan noise words dan deteksi storage
+  let cleaned = query.toLowerCase().trim();
+  // Hilangkan noise: 5g, 4g, lte, hp, bekas, second, dll
+  cleaned = cleaned.replace(/\b(5g|4g|lte|hp|handphone|bekas|second|resmi|sein|garansi|series|seri)\b/gi, ' ');
+  // Hilangkan storage dari query agar tidak menurunkan skor pencarian model
+  cleaned = cleaned.replace(/\b(64|128|256|512|1tb|1024)\s*gb?\b/gi, ' ');
+  cleaned = cleaned.replace(/[^\w\s+]/g, ' ').replace(/\s+/g, ' ').trim();
+
+  if (cleaned.length < 2) {
+    cleaned = query.toLowerCase().trim();
+  }
+
+  const qTokens = cleaned.split(/[\s\-]+/).filter(t => t.length >= 2 || /^\d+$/.test(t));
   if (qTokens.length === 0) return 0;
 
-  let bestScore = 0;
-  for (const kw of entry.keywords) {
-    const kwTokens = kw.split(/[\s\-+]+/);
-    // Every query token must exactly match or be a prefix of a keyword token
-    const matched = qTokens.filter(qt =>
-      kwTokens.some(kt => kt === qt || (kt.startsWith(qt) && qt.length >= 3))
-    );
-    // Require at least 60% of query tokens to match
-    const ratio = matched.length / qTokens.length;
-    if (ratio >= 0.6) {
-      // Bonus score for exact full match
-      const score = ratio + (kw === q ? 1 : 0) + matched.length * 0.1;
-      if (score > bestScore) bestScore = score;
+  const entryNameLower = entry.name.toLowerCase();
+  const entryBrandLower = entry.brand.toLowerCase();
+
+  // 2. Direct Exact Full Matches
+  if (entryNameLower === cleaned) return 100;
+  if (entryNameLower.startsWith(cleaned)) return 80 + (cleaned.length / entryNameLower.length) * 10;
+  if (entryNameLower.includes(cleaned)) return 70 + (cleaned.length / entryNameLower.length) * 10;
+  if (cleaned.includes(entryNameLower)) return 75;
+
+  // 3. Gabungkan seluruh pool keyword & token yang dimiliki entry
+  const allKeywordPhrases = [
+    entryNameLower,
+    `${entryBrandLower} ${entryNameLower}`,
+    ...entry.keywords.map(k => k.toLowerCase())
+  ];
+
+  const entryWords = new Set<string>();
+  for (const phrase of allKeywordPhrases) {
+    const words = phrase.split(/[\s\-+]+/).filter(Boolean);
+    for (const w of words) entryWords.add(w);
+  }
+
+  // 4. Token-by-token matching
+  let matchedCount = 0;
+  let scoreAccumulator = 0;
+
+  for (const qt of qTokens) {
+    let tokenMatched = false;
+    let tokenScore = 0;
+
+    for (const ew of entryWords) {
+      if (ew === qt) {
+        tokenMatched = true;
+        tokenScore = Math.max(tokenScore, 1.0);
+      } else if (ew.startsWith(qt) && qt.length >= 2) {
+        tokenMatched = true;
+        tokenScore = Math.max(tokenScore, 0.85);
+      } else if (qt.startsWith(ew) && ew.length >= 3) {
+        tokenMatched = true;
+        tokenScore = Math.max(tokenScore, 0.8);
+      }
+    }
+
+    if (tokenMatched) {
+      matchedCount++;
+      scoreAccumulator += tokenScore;
     }
   }
-  return bestScore;
+
+  const matchRatio = matchedCount / qTokens.length;
+
+  if (matchedCount === 0 || matchRatio < 0.4) {
+    return 0;
+  }
+
+  let finalScore = (scoreAccumulator / qTokens.length) * 40 + (matchedCount * 5);
+
+  // Bonus besar jika seluruh token yang diketik cocok
+  if (matchRatio === 1) {
+    finalScore += 30;
+  }
+
+  // Bonus jika nomor model numerik cocok persis
+  for (const qt of qTokens) {
+    if (/\d+/.test(qt)) {
+      for (const ew of entryWords) {
+        if (ew.includes(qt)) {
+          finalScore += 15;
+          break;
+        }
+      }
+    }
+  }
+
+  return finalScore;
 }
 
 /**
