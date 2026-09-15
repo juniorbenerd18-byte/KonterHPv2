@@ -21,12 +21,10 @@ Aplikasi ini menggabungkan fitur **Point of Sale (POS)** dan **Service Managemen
 ### 🏠 Home Menu
 
 <img width="1366" height="768" alt="Home Menu" src="https://github.com/user-attachments/assets/0e9f4d55-2c48-41e9-a8df-f46990a67d07" />
-)
 
 ###  👤 Profil
 
 <img width="1907" height="919" alt="Screenshot 2026-09-14 140908" src="https://github.com/user-attachments/assets/0905d8b9-f414-4263-9f4f-c944abd7a590" />
-
 
 ### 🔧 Booking Service
 
