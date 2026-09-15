@@ -8,7 +8,6 @@ Repository ini memiliki dua implementasi NexusCenter:
 
 | Folder | Teknologi | Keterangan |
 |---|---|---|
-| `NexusCenter/` | Laravel | Versi Laravel |
 | `nexuscenter-js/` | JavaScript Framework | Versi Web App yang digunakan pada Live Demo |
 
 > Live Demo menggunakan versi `nexuscenter-js`.
