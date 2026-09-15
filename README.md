@@ -10,25 +10,28 @@ Repository ini memiliki dua implementasi NexusCenter:
 |---|---|---|
 | `nexuscenter-js/` | JavaScript Framework | Versi Web App yang digunakan pada Live Demo |
 
-> Live Demo menggunakan versi `nexuscenter-js`.
-
 Aplikasi ini menggabungkan fitur **Point of Sale (POS)** dan **Service Management** dalam satu platform.
 
 ## 🖼️ Screenshots
 
 ### 🔐 Login
-![Nexus Center Login](./screenshots/login.p)
+<img width="727" height="783" alt="image" src="https://github.com/user-attachments/assets/05331f95-a928-45e0-a1f4-3961f1ca698e" />
 
-### 📊 HomeMenu
-![Nexus Center HomeMenu](<img width="1366" height="768" alt="HomeMenu - Copy" src="https://github.com/user-attachments/assets/0e9f4d55-2c48-41e9-a8df-f46990a67d07" />
+
+### 🏠 Home Menu
+
+<img width="1366" height="768" alt="Home Menu" src="https://github.com/user-attachments/assets/0e9f4d55-2c48-41e9-a8df-f46990a67d07" />
 )
 
 ###  👤 Profil
-![Nexus Center POS](<img width="390" height="816" alt="Screenshot 2026-09-14 140908" src="https://github.com/user-attachments/assets/8aed561a-87c3-464f-aae4-9fff0e897a4d" />
-)
+
+<img width="1907" height="919" alt="Screenshot 2026-09-14 140908" src="https://github.com/user-attachments/assets/0905d8b9-f414-4263-9f4f-c944abd7a590" />
+
 
 ### 🔧 Booking Service
-![Nexus Center Service](./screenshots/service.png)
+
+<img width="1916" height="917" alt="Screenshot 2026-09-14 140918" src="https://github.com/user-attachments/assets/13950595-080a-4632-9bad-40b62d22f98a" />
+
 
  
 
@@ -135,31 +138,6 @@ Nexus Center
 └── User Management
 ```
 
----
-
-## 🔐 Authentication & Authorization
-
-Sistem menggunakan autentikasi dan pembagian akses berdasarkan role.
-
-### User
-Gmail : Budi@gmail.com
-Password : user123
-
-
-### Kasir
-Gmail : Kasir@techcell.com
-Password : kasir123
-
-Mengelola transaksi pelanggan dan layanan servis.
-
-### Admin
-Gmail : admin@techcell.com
-Password : admin123
-
-Mengelola data produk, pengguna, transaksi, servis, dan operasional sistem.
-
----
-
 ## 💳 Alur Transaksi
 
 ```text
@@ -231,7 +209,7 @@ Masuk ke folder project:
 
 ```bash
 cd nexuscenter-js
-* Ini adalah veri Web App Framework JS
+
 ```
 
 Install dependency:
