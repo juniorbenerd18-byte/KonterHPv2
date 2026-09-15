@@ -1,4 +1,4 @@
-# 📱 Nexus Center — Mobile Phone Store & Service Management System
+ # 📱 Nexus Center — Mobile Phone Store & Service Management System
 
 **Nexus Center** adalah aplikasi berbasis web untuk membantu mengelola operasional **konter HP**, mulai dari penjualan produk, transaksi pembayaran, layanan servis, trade-in, hingga delivery.
 
@@ -20,6 +20,10 @@ Aplikasi ini menggabungkan fitur **Point of Sale (POS)** dan **Service Managemen
 🌐 **Website:** https://nexuscenter-js.juniorbenerd18.workers.dev/
 
 ---
+
+## 🪧 Video Demo
+
+🌐 **Website:** https://youtu.be/Tpc3Yo-yHVs
 
 ## ✨ Fitur Utama
 
