@@ -15,11 +15,27 @@ Repository ini memiliki dua implementasi NexusCenter:
 
 Aplikasi ini menggabungkan fitur **Point of Sale (POS)** dan **Service Management** dalam satu platform.
 
+## 🖼️ Screenshots
+
+### 🔐 Login
+![Nexus Center Login](./screenshots/login.p)
+
+### 📊 HomeMenu
+![Nexus Center HomeMenu](<img width="1366" height="768" alt="HomeMenu - Copy" src="https://github.com/user-attachments/assets/0e9f4d55-2c48-41e9-a8df-f46990a67d07" />
+)
+
+###  👤 Profil
+![Nexus Center POS](<img width="390" height="816" alt="Screenshot 2026-09-14 140908" src="https://github.com/user-attachments/assets/8aed561a-87c3-464f-aae4-9fff0e897a4d" />
+)
+
+### 🔧 Booking Service
+![Nexus Center Service](./screenshots/service.png)
+
+ 
+
 ## 🚀 Live Demo
 
 🌐 **Website:** https://nexuscenter-js.juniorbenerd18.workers.dev/
-
----
 
 ## 🪧 Video Demo
 
@@ -232,6 +248,10 @@ npm run dev
 ```
 
 ---
+
+## 🛖 Portofolio 
+
+https://portfolio.edusoftcenter.com/contributors/junior-alfredo-benerd-setiawan
 
 ## 🌐 Deployment
 
