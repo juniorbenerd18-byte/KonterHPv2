@@ -433,7 +433,7 @@ export default function CheckoutPage() {
                                             <span>💡 <strong>Silakan tentukan titik lokasi rumah:</strong> Ketik alamat atau geser pin di peta untuk mengukur jarak &amp; gratis ongkir.</span>
                                         ) : (
                                             <>
-                                                <strong>Jarak ke Konter Gawok: {distanceKm.toFixed(1)} km</strong> {distanceKm <= FREE_DELIVERY_KM ? (
+                                                <strong>Jarak ke Konter (Fajar Indah, dekat Hotel Aston): {distanceKm.toFixed(1)} km</strong> {distanceKm <= FREE_DELIVERY_KM ? (
                                                     <span className="font-bold text-green-700">(≤ {FREE_DELIVERY_KM}km) — GRATIS ONGKIR!</span>
                                                 ) : (
                                                     <span>(&gt; {FREE_DELIVERY_KM}km) — Melebihi batas {(distanceKm - FREE_DELIVERY_KM).toFixed(1)} km. Ongkir tambahan dihitung oleh kurir.</span>

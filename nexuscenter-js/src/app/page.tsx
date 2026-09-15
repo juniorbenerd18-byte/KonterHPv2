@@ -139,7 +139,7 @@ export default function HomePage() {
                         <span className="text-slate-600 hidden sm:inline">•</span>
                         <span className="flex items-center gap-1.5 text-slate-300">
                             <span className="material-symbols-outlined text-secondary-fixed-dim text-[16px]">storefront</span>
-                            TECHCELL NexusCenter — Palembang
+                            TECHCELL NexusCenter — Solo (Dekat Hotel Aston)
                         </span>
                         <span className="text-slate-600 hidden sm:inline">•</span>
                         <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
@@ -183,7 +183,7 @@ export default function HomePage() {
 
                             {/* Subheadline */}
                             <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
-                                Kunjungi konter fisik resmi kami di <strong className="text-white">Palembang</strong> atau pesan mudah dari rumah dengan <span className="text-cyan-300 font-semibold font-mono">Gratis Ongkir & Jemput Antar hingga 4 KM</span>. Pengerjaan servis kilat 1 jam, sparepart 100% original, dan garansi pasti.
+                                Kunjungi konter fisik resmi kami di <strong className="text-white">Fajar Indah, Solo (Dekat Hotel Aston)</strong> atau pesan mudah dari rumah dengan <span className="text-cyan-300 font-semibold font-mono">Gratis Ongkir & Jemput Antar hingga 4 KM</span>. Pengerjaan servis kilat 1 jam, sparepart 100% original, dan garansi pasti.
                             </p>
 
                             {/* Hero Action Buttons */}

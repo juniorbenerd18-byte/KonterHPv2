@@ -23,7 +23,7 @@ export default function POSPage() {
     // Customer & payment state
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
-    const [customerAddress, setCustomerAddress] = useState('Jl. Raya Gawok No. 12, Sukoharjo');
+    const [customerAddress, setCustomerAddress] = useState('Jl. Ahmad Yani No. 88, Kartasura, Sukoharjo');
     const [customerLat, setCustomerLat] = useState<number>(STORE_LAT);
     const [customerLng, setCustomerLng] = useState<number>(STORE_LNG);
     const [distanceKm, setDistanceKm] = useState<number>(0);
@@ -214,7 +214,7 @@ export default function POSPage() {
             setCart([]);
             setCustomerName('');
             setCustomerPhone('');
-            setCustomerAddress('Jl. Raya Gawok No. 12, Sukoharjo');
+            setCustomerAddress('Jl. Ahmad Yani No. 88, Kartasura, Sukoharjo');
             setCustomerLat(STORE_LAT);
             setCustomerLng(STORE_LNG);
             setDistanceKm(0);

@@ -180,7 +180,7 @@ export default function CartPage() {
                 </span>
                 <div className="relative z-10">
                     <h3 className="font-mono text-sm font-bold text-secondary-fixed-dim mb-1">
-                        Gratis Ongkir untuk pengantaran ke rumah (Maksimal radius 4km dari Gawok)
+                        Gratis Ongkir untuk pengantaran ke rumah (Maksimal radius 4km dari Konter Fajar Indah, dekat Hotel Aston)
                     </h3>
                     <p className="text-xs text-on-primary-container opacity-90 leading-relaxed font-body">
                         Berlaku untuk pembelian produk baru dan HP yang telah diservis. Pengiriman presisi langsung ke lokasi Anda.
@@ -372,7 +372,7 @@ export default function CartPage() {
                                             </p>
                                         )}
                                         <p className="text-[11px] font-mono text-on-surface-variant opacity-70">
-                                            Gratis antar jika jarak &lt; 4km dari konter Gawok.
+                                            Gratis antar jika jarak &lt; 4km dari konter toko (Fajar Indah, dekat Hotel Aston).
                                         </p>
                                     </div>
                                 )}

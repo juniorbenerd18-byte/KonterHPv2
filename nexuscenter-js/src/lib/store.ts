@@ -119,7 +119,7 @@ export const DataService = {
         let changed = false;
         const updated = users.map(u => {
             if (u.role === 'admin' || u.role === 'kasir') {
-                if (!u.address || u.address.includes('Gawok') || !u.latitude || Math.abs(u.latitude - STORE_LAT) > 0.001) {
+                if (!u.address || u.address.includes('Gawok') || u.address.includes('Palembang') || !u.latitude || Math.abs(u.latitude - STORE_LAT) > 0.001) {
                     changed = true;
                     return {
                         ...u,
@@ -129,7 +129,7 @@ export const DataService = {
                     };
                 }
             } else if (u.role === 'pengguna') {
-                if (!u.address || u.address.includes('Gawok') || !u.latitude) {
+                if (!u.address || u.address.includes('Gawok') || u.address.includes('Palembang') || !u.latitude) {
                     changed = true;
                     return {
                         ...u,
@@ -159,7 +159,7 @@ export const DataService = {
         if (!user) return null;
 
         // Auto-heal / sync location if user was saved with old outdated address
-        if ((user.role === 'admin' || user.role === 'kasir') && (!user.address || user.address.includes('Gawok') || !user.latitude || Math.abs(user.latitude - STORE_LAT) > 0.001)) {
+        if ((user.role === 'admin' || user.role === 'kasir') && (!user.address || user.address.includes('Gawok') || user.address.includes('Palembang') || !user.latitude || Math.abs(user.latitude - STORE_LAT) > 0.001)) {
             user = {
                 ...user,
                 address: 'Fajar Indah, Baturan, Kec. Colomadu, Kabupaten Karanganyar, Jawa Tengah 57171',
@@ -167,7 +167,7 @@ export const DataService = {
                 longitude: STORE_LNG
             };
             setLocal(STORAGE_KEYS.CURRENT_USER, user);
-        } else if (user.role === 'pengguna' && (!user.address || user.address.includes('Gawok') || !user.latitude)) {
+        } else if (user.role === 'pengguna' && (!user.address || user.address.includes('Gawok') || user.address.includes('Palembang') || !user.latitude)) {
             user = {
                 ...user,
                 address: 'Jl. Ahmad Yani No. 88, Kartasura, Sukoharjo',

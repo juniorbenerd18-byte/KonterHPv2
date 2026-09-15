@@ -7,7 +7,7 @@ import { Product } from '@/types/database';
 const PROMO_ITEMS = [
   { icon: '🎯', name: 'Diskon Aksesori 20%', description: 'Dapatkan potongan harga 20% untuk semua produk aksesori dan pelindung layar. Berlaku untuk pembelian minimum 2 item.', price: 'Hemat 20%' },
   { icon: '📦', name: 'Bundling HP + Aksesoris', description: 'Beli smartphone pilihan dan dapatkan free aksesoris senilai Rp 150.000. Promo terbatas untuk stok tersedia.', price: 'Free Aksesoris' },
-  { icon: '🔧', name: 'Servis Gratis Ongkir', description: 'Servis HP Anda dan nikmati layanan antar-jemput gratis dalam radius 4km dari toko kami di Gawok.', price: 'Free Ongkir' },
+  { icon: '🔧', name: 'Servis Gratis Ongkir', description: 'Servis HP Anda dan nikmati layanan antar-jemput gratis dalam radius 4km dari konter kami di Fajar Indah (dekat Hotel Aston).', price: 'Free Ongkir' },
   { icon: '💳', name: 'Cashback QRIS 5%', description: 'Bayar menggunakan QRIS dan dapatkan cashback 5% untuk transaksi di atas Rp 500.000. Berlaku harian.', price: 'Cashback 5%' },
   { icon: '⚡', name: 'Flash Sale Harian', description: 'Setiap hari ada produk flash sale dengan diskon hingga 30%. Cek terus halaman ini untuk penawaran terbaru.', price: 'Diskon s/d 30%' },
   { icon: '🎁', name: 'Member Loyal Reward', description: 'Pelanggan setia mendapatkan poin reward setiap transaksi. Tukarkan poin dengan diskon eksklusif.', price: 'Poin Reward' },

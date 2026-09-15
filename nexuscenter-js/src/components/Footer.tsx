@@ -27,7 +27,7 @@ export default function Footer() {
                     </div>
                     <div className="flex flex-col gap-2.5">
                         <h4 className="font-mono text-xs text-secondary-fixed font-bold uppercase tracking-wider mb-1">Lokasi Toko</h4>
-                        <p className="text-on-primary-container text-sm opacity-80 leading-relaxed">Jl. Raya Counter No. 88, Central Tech City, Indonesia.</p>
+                        <p className="text-on-primary-container text-sm opacity-80 leading-relaxed">Fajar Indah, Baturan, Kec. Colomadu, Kab. Karanganyar 57171 (Dekat Hotel Aston Solo)</p>
                     </div>
                 </div>
                 <div className="border-t border-on-primary-container/20 pt-6 flex flex-col md:flex-row justify-between items-center text-on-primary-container text-xs opacity-70 font-mono">

@@ -103,7 +103,7 @@ export default function TradeInConfirmationPage() {
                         <div className="text-center">
                             <h2 className="font-display font-extrabold text-xl mb-1">TECHCELL NexusCenter</h2>
                             <p className="text-xs text-slate-300 font-mono">Pusat Gadget & Servis Terpercaya</p>
-                            <p className="text-xs text-slate-400 mt-2">Jl. Perintis Kemerdekaan, Palembang | WA: 0812-3456-7890</p>
+                            <p className="text-xs text-slate-400 mt-2">Fajar Indah, Baturan, Colomadu (Dekat Hotel Aston Solo) | WA: 0812-3456-7890</p>
                         </div>
                         <div className="mt-4 pt-4 border-t border-white/20 text-center">
                             <p className="text-xs font-mono text-slate-300 uppercase tracking-wide mb-1">Bukti Booking Tukar Tambah</p>
